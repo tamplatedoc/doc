@@ -5,23 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp Message Scheduler</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class'
+      }
+    </script>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow">
+<body class="bg-gray-900 text-white font-sans">
+    <div class="max-w-xl mx-auto mt-10 p-6 bg-gray-800 rounded-lg shadow">
         <h1 class="text-2xl font-bold text-center mb-4">WhatsApp Message Scheduler</h1>
 
         <form id="scheduleForm" class="space-y-4">
             <div>
                 <label class="block font-medium">Nomor WhatsApp (format internasional)</label>
-                <input type="text" id="number" class="w-full p-2 border rounded" placeholder="Contoh: 6281234567890" required>
+                <input type="text" id="number" class="w-full p-2 border rounded bg-gray-700 text-white" placeholder="Contoh: 6281234567890" required>
             </div>
             <div>
                 <label class="block font-medium">Pesan</label>
-                <textarea id="message" class="w-full p-2 border rounded" rows="3" required></textarea>
+                <textarea id="message" class="w-full p-2 border rounded bg-gray-700 text-white" rows="3" required></textarea>
             </div>
             <div>
                 <label class="block font-medium">Jadwal Kirim</label>
-                <input type="datetime-local" id="scheduleTime" class="w-full p-2 border rounded" required>
+                <input type="datetime-local" id="scheduleTime" class="w-full p-2 border rounded bg-gray-700 text-white" required>
             </div>
             <button type="submit" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">Jadwalkan Pesan</button>
         </form>
@@ -59,14 +64,14 @@
                 const time = new Date(item.time);
                 const formattedTime = time.toLocaleDateString() + ' ' + time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-                li.className = 'p-3 bg-gray-50 rounded border flex justify-between items-center';
+                li.className = 'p-3 bg-gray-700 text-white rounded border border-gray-600 flex justify-between items-center';
                 li.innerHTML = `
                     <div>
                         <p class="font-semibold">${item.number}</p>
                         <p>${item.message}</p>
-                        <p class="text-sm text-gray-500">Dijadwalkan: ${formattedTime}</p>
+                        <p class="text-sm text-gray-300">Dijadwalkan: ${formattedTime}</p>
                     </div>
-                    <button onclick="removeSchedule(${index})" class="text-red-500 hover:underline">Hapus</button>
+                    <button onclick="removeSchedule(${index})" class="text-red-400 hover:underline">Hapus</button>
                 `;
                 messagesList.appendChild(li);
             });
