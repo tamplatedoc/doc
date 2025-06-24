@@ -32,7 +32,8 @@
 
   <script>
     async function getDownloadLink() {
-      const url = document.getElementById("igUrl").value.trim();
+      const rawUrl = document.getElementById("igUrl").value.trim();
+      const url = rawUrl.split('?')[0]; // hapus query seperti ?utm_source=...
       const resultDiv = document.getElementById("result");
       const errorDiv = document.getElementById("error");
       const downloadLink = document.getElementById("downloadLink");
