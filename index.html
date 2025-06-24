@@ -88,8 +88,9 @@
             schedules = schedules.filter(schedule => {
                 const sendTime = new Date(schedule.time);
                 if (now >= sendTime) {
+                    alert(`Saatnya kirim pesan ke ${schedule.number}`);
                     const url = `https://wa.me/${schedule.number}?text=${encodeURIComponent(schedule.message)}`;
-                    window.open(url, '_blank');
+                    window.location.href = url;
                     return false;
                 }
                 return true;
