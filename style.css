@@ -1,4 +1,4 @@
-/* Reset */
+<style>
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -272,3 +272,4 @@ footer a {
         height: 180px;
     }
 }
+</style>
