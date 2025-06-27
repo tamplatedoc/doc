@@ -321,19 +321,30 @@
 
     <script>
         // Konfigurasi Firebase (sama dengan yang digunakan di admin)
-        const firebaseConfig = {
-            apiKey: "AIzaSyAya-7QEtbflW7jh_EoPclFBQ43VnrKZrM",
-            authDomain: "rdw-katalog.firebaseapp.com",
-            databaseURL: "https://rdw-katalog-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "rdw-katalog",
-            storageBucket: "rdw-katalog.firebasestorage.app",
-            messagingSenderId: "506572005524",
-            appId: "1:506572005524:web:43b7d27f2c33a1d4071481",
-            measurementId: "G-BDQXKFERCR"
-        };
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+  authDomain: "tamplatedoc.firebaseapp.com",
+  databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tamplatedoc",
+  storageBucket: "tamplatedoc.firebasestorage.app",
+  messagingSenderId: "264966107720",
+  appId: "1:264966107720:web:868abe93cdff209040de7d",
+  measurementId: "G-S5WTZ7S5PG"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
         
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         const ebookGrid = document.getElementById('ebook-grid');
