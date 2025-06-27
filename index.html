@@ -322,19 +322,18 @@
     <script>
         // Konfigurasi Firebase (sama dengan yang digunakan di admin)
 // Import the functions you need from the SDKs you need
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getDatabase } from "firebase/database";  // Import Realtime Database
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
   authDomain: "tamplatedoc.firebaseapp.com",
   databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "tamplatedoc",
-  storageBucket: "tamplatedoc.firebasestorage.app",
+  storageBucket: "tamplatedoc.appspot.com",  // Perbaikan domain
   messagingSenderId: "264966107720",
   appId: "1:264966107720:web:868abe93cdff209040de7d",
   measurementId: "G-S5WTZ7S5PG"
@@ -343,9 +342,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-        
-        // Initialize Firebase
-        const database = firebase.database();
+const database = getDatabase(app);  // Cara modular
+
 
         const ebookGrid = document.getElementById('ebook-grid');
         const modalOverlay = document.getElementById('modal-overlay');
