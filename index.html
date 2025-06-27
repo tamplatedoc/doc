@@ -1,219 +1,461 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - Etalase Buku Cerita</title>
-  <meta name="description" content="Panel admin untuk mengelola konten buku di Etalase Buku Cerita." />
-  <meta name="keywords" content="admin, etalase buku, cerita, manajemen konten" />
-  <meta property="og:title" content="Admin Etalase Buku Cerita" />
-  <meta property="og:description" content="Kelola dan tambahkan buku cerita digital Anda di sini." />
-  <meta property="og:image" content="https://via.placeholder.com/600x400?text=Admin+Buku" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://amdf.web.id/admin.html" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #f4f4f4;
-      color: #333;
-    }
-
-    header {
-      background-color: #2c3e50;
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-
-    main {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 0 15px;
-    }
-
-    form {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    input, textarea, button {
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      background-color: #3498db;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #2980b9;
-    }
-
-    #book-list {
-      margin-top: 30px;
-    }
-
-    .book-item {
-      background: white;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .book-item img {
-      max-width: 100%;
-      border-radius: 4px;
-      margin-top: 10px;
-    }
-
-    .actions {
-      margin-top: 10px;
-    }
-
-    .actions button {
-      margin-right: 10px;
-      background-color: #e74c3c;
-    }
-
-    .actions button.edit {
-      background-color: #f39c12;
-    }
-
-    footer {
-      text-align: center;
-      background-color: #2c3e50;
-      color: white;
-      padding: 20px;
-      margin-top: 40px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Koleksi Ebook - Perpustakaan Digital</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 16px 48px 16px;
+            flex: 1 0 auto;
+        }
+        header {
+            background: linear-gradient(135deg, #4b0082 0%, #00bfa5 100%);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        header .logo {
+            font-weight: 900;
+            font-size: 28px;
+            background: linear-gradient(135deg, #e040fb, #00bfa5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            user-select: none;
+            flex: 1 0 auto;
+        }
+        header nav {
+            flex: 1 1 280px;
+        }
+        header nav input[type="search"] {
+            width: 100%;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        header nav input[type="search"]::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        main {
+            padding-top: 32px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 32px;
+            text-align: center;
+            background: linear-gradient(135deg, #e040fb, #00bfa5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .ebook-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 32px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            height: 100%;
+        }
+        .card:hover, .card:focus-within {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 191, 165, 0.6);
+        }
+        .card img {
+            width: 180px;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            background: #262626;
+        }
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .card .author {
+            font-size: 0.9rem;
+            color: #b0bec5;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .card .category {
+            display: inline-block;
+            background: rgba(0, 191, 165, 0.2);
+            color: #00bfa5;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+        }
+        footer {
+            background: #1a1a1a;
+            color: #606060;
+            padding: 24px 16px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 24px;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal {
+            background: #181818;
+            border-radius: 16px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 32px 80px rgba(0,191,165,0.8);
+            padding: 32px;
+            color: #e0e0e0;
+            position: relative;
+        }
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .modal-header {
+            display: flex;
+            gap: 24px;
+        }
+        .modal-cover {
+            width: 200px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 16px 32px rgba(0,191,165,0.5);
+            flex-shrink: 0;
+        }
+        .modal-info {
+            flex: 1;
+        }
+        .modal h2 {
+            margin-top: 0;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #e040fb, #00bfa5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .modal .author {
+            font-size: 1.2rem;
+            color: #b0bec5;
+            margin-bottom: 12px;
+        }
+        .modal .category {
+            display: inline-block;
+            background: rgba(0, 191, 165, 0.2);
+            color: #00bfa5;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+        .modal .description {
+            font-size: 1rem;
+            color: #b0bec5;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .modal .btn-download {
+            background: linear-gradient(135deg, #00bfa5, #e040fb);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            color: #121212;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            user-select: none;
+            width: 100%;
+            margin-top: 16px;
+        }
+        .modal .btn-download:hover, .modal .btn-download:focus {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px #00bfa5;
+            outline: none;
+        }
+        .modal .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            color: #b0bec5;
+            cursor: pointer;
+            user-select: none;
+        }
+        .modal .close-btn:hover, .modal .close-btn:focus {
+            color: #00bfa5;
+            outline: none;
+        }
+        @media (max-width: 768px) {
+            .modal-header {
+                flex-direction: column;
+            }
+            .modal-cover {
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+            }
+        }
+        @media (max-width: 600px) {
+            header {
+                min-height: auto;
+            }
+            header .logo {
+                font-size: 22px;
+            }
+            header nav {
+                width: 100%;
+            }
+            header nav input[type="search"] {
+                padding: 4px 10px;
+                font-size: 13px;
+                height: 32px;
+                border-radius: 16px;
+            }
+            h1 {
+                font-size: 1.8rem;
+                margin-top: 6px;
+            }
+            main {
+                padding-top: 12px;
+            }
+            .card img {
+                width: 140px;
+                height: 190px;
+            }
+        }
+    </style>
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Admin Etalase Buku Cerita</h1>
-  </header>
-  <main>
-    <form id="book-form">
-      <input type="text" id="title" placeholder="Judul Buku" required />
-      <textarea id="description" placeholder="Deskripsi Buku" required></textarea>
-      <input type="file" id="thumbnail-file" accept="image/*" />
-      <button type="submit">Tambah Buku</button>
-    </form>
+    <header>
+        <div class="logo" tabindex="0" aria-label="Perpustakaan Digital">Ebook Collection</div>
+        <nav>
+            <input type="search" id="search-input" placeholder="Cari ebook..." aria-label="Cari ebook" />
+        </nav>
+    </header>
+    <main class="container" id="main-content">
+        <h1>Koleksi Ebook Terbaru</h1>
+        <section aria-label="Daftar ebook" class="ebook-grid" id="ebook-grid"></section>
+    </main>
+    <footer>
+        &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
+    </footer>
 
-    <section id="book-list">
-      <h2>Daftar Buku</h2>
-      <div id="book-items"></div>
-    </section>
-  </main>
-  <footer>
-    <p>&copy; <span id="year"></span> Admin Etalase Buku Cerita. Semua Hak Dilindungi.</p>
-  </footer>
+    <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+        <div class="modal" tabindex="-1">
+            <button class="close-btn" id="modal-close-btn" aria-label="Tutup detail ebook">&times;</button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img src="" alt="" id="modal-cover" class="modal-cover" />
+                    <div class="modal-info">
+                        <h2 id="modal-title"></h2>
+                        <div class="author" id="modal-author"></div>
+                        <div class="category" id="modal-category"></div>
+                        <p class="description" id="modal-desc"></p>
+                    </div>
+                </div>
+                <button class="btn-download" id="download-btn">Download Ebook</button>
+            </div>
+        </div>
+    </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+    <script>
+        // Konfigurasi Firebase (sama dengan yang digunakan di admin)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAya-7QEtbflW7jh_EoPclFBQ43VnrKZrM",
+            authDomain: "rdw-katalog.firebaseapp.com",
+            databaseURL: "https://rdw-katalog-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "rdw-katalog",
+            storageBucket: "rdw-katalog.firebasestorage.app",
+            messagingSenderId: "506572005524",
+            appId: "1:506572005524:web:43b7d27f2c33a1d4071481",
+            measurementId: "G-BDQXKFERCR"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-      authDomain: "tamplatedoc.firebaseapp.com",
-      databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "tamplatedoc",
-      storageBucket: "tamplatedoc.appspot.com",
-      messagingSenderId: "264966107720",
-      appId: "1:264966107720:web:868abe93cdff209040de7d"
-    };
+        const ebookGrid = document.getElementById('ebook-grid');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalCover = document.getElementById('modal-cover');
+        const modalTitle = document.getElementById('modal-title');
+        const modalAuthor = document.getElementById('modal-author');
+        const modalCategory = document.getElementById('modal-category');
+        const modalDesc = document.getElementById('modal-desc');
+        const downloadBtn = document.getElementById('download-btn');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const searchInput = document.getElementById('search-input');
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const storage = getStorage(app);
+        let allEbooks = [];
+        let currentEbook = null;
 
-    const form = document.getElementById('book-form');
-    const titleInput = document.getElementById('title');
-    const descInput = document.getElementById('description');
-    const fileInput = document.getElementById('thumbnail-file');
-    const bookItems = document.getElementById('book-items');
+        function escapeHTML(text) {
+            return text.replace(/[&<>"']/g, m => {
+                return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+            });
+        }
 
-    let editingKey = null;
+        function renderEbooks(ebooks) {
+            ebookGrid.innerHTML = '';
+            if (ebooks.length === 0) {
+                ebookGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ff5252;font-weight:700;">Ebook tidak ditemukan.</p>';
+                return;
+            }
+            
+            // Urutkan ebook berdasarkan tanggal pembuatan (terbaru pertama)
+            ebooks.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+            
+            ebooks.forEach(ebook => {
+                const card = document.createElement('article');
+                card.className = 'card';
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-pressed', 'false');
+                card.setAttribute('aria-label', `Lihat detail ${ebook.title || ''}`);
+                card.innerHTML = `
+                    <img src="${ebook.cover || ''}" alt="${escapeHTML(ebook.alt || 'Cover ebook')}" loading="lazy" />
+                    <h2>${escapeHTML(ebook.title || '')}</h2>
+                    <div class="author">${escapeHTML(ebook.author || '')}</div>
+                    <div class="category">${escapeHTML(ebook.category || '')}</div>
+                `;
+                card.addEventListener('click', () => openEbookDetail(ebook));
+                card.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openEbookDetail(ebook);
+                    }
+                });
+                ebookGrid.appendChild(card);
+            });
+        }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const title = titleInput.value;
-      const description = descInput.value;
-      const file = fileInput.files[0];
-      const key = editingKey || Date.now();
+        function openEbookDetail(ebook) {
+            currentEbook = ebook;
+            modalCover.src = ebook.cover || '';
+            modalCover.alt = ebook.alt || 'Cover ' + (ebook.title || '');
+            modalTitle.textContent = ebook.title || '';
+            modalAuthor.textContent = 'Penulis: ' + (ebook.author || '');
+            modalCategory.textContent = ebook.category || '';
+            modalDesc.textContent = ebook.description || 'Tidak ada deskripsi tersedia.';
+            
+            // Set download button
+            downloadBtn.onclick = () => {
+                if (ebook.fileUrl) {
+                    window.open(ebook.fileUrl, '_blank', 'noopener');
+                } else {
+                    alert('Link download tidak tersedia.');
+                }
+            };
+            
+            modalOverlay.classList.add('show');
+            modalCloseBtn.focus();
+        }
 
-      let thumbnail = "";
-
-      if (file) {
-        const fileRef = sRef(storage, 'thumbnails/' + key);
-        await uploadBytes(fileRef, file);
-        thumbnail = await getDownloadURL(fileRef);
-      }
-
-      const bookData = { title, description, thumbnail };
-      set(ref(db, 'books/' + key), bookData).then(() => {
-        form.reset();
-        editingKey = null;
-      });
-    });
-
-    onValue(ref(db, 'books/'), (snapshot) => {
-      const data = snapshot.val();
-      bookItems.innerHTML = '';
-      for (const key in data) {
-        const book = data[key];
-        const div = document.createElement('div');
-        div.className = 'book-item';
-        div.innerHTML = `
-          <h3>${book.title}</h3>
-          <p>${book.description}</p>
-          ${book.thumbnail ? `<img src="${book.thumbnail}" alt="Thumbnail">` : ''}
-          <div class="actions">
-            <button class="edit" data-id="${key}">Edit</button>
-            <button class="delete" data-id="${key}">Hapus</button>
-          </div>
-        `;
-        bookItems.appendChild(div);
-      }
-
-      document.querySelectorAll('.delete').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          if (confirm('Yakin ingin menghapus buku ini?')) {
-            remove(ref(db, 'books/' + id));
-          }
+        modalCloseBtn.onclick = () => modalOverlay.classList.remove('show');
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) modalOverlay.classList.remove('show');
         });
-      });
-
-      document.querySelectorAll('.edit').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.getAttribute('data-id');
-          const book = data[id];
-          titleInput.value = book.title;
-          descInput.value = book.description;
-          editingKey = id;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
+                modalOverlay.classList.remove('show');
+            }
         });
-      });
-    });
 
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
+        // Load and listen ebooks from Firebase
+        function loadEbooks() {
+            const ebooksRef = database.ref('ebooks');
+            ebooksRef.on('value', snapshot => {
+                const ebooksObj = snapshot.val() || {};
+                allEbooks = Object.values(ebooksObj);
+                filterAndRender(searchInput.value);
+            });
+        }
+
+        function filterAndRender(query) {
+            const normalized = query.trim().toLowerCase();
+            if (normalized === '') {
+                renderEbooks(allEbooks);
+            } else {
+                const filtered = allEbooks.filter(ebook => {
+                    return (ebook.title && ebook.title.toLowerCase().includes(normalized)) ||
+                           (ebook.author && ebook.author.toLowerCase().includes(normalized)) ||
+                           (ebook.category && ebook.category.toLowerCase().includes(normalized)) ||
+                           (ebook.description && ebook.description.toLowerCase().includes(normalized));
+                });
+                renderEbooks(filtered);
+            }
+        }
+
+        searchInput.addEventListener('input', e => {
+            filterAndRender(e.target.value);
+        });
+
+        // Increment visit counts
+        const visitRef = database.ref('stats/visits');
+        visitRef.transaction(current => (current || 0) + 1);
+
+        loadEbooks();
+    </script>
 </body>
 </html>
