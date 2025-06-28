@@ -136,7 +136,7 @@
     &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
   </footer>
 
- <script>
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
   authDomain: "tamplatedoc.firebaseapp.com",
@@ -153,18 +153,6 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 const content = document.getElementById('content');
 
-let speech = new SpeechSynthesisUtterance();
-speech.lang = 'id-ID';
-speech.rate = 0.9;
-speech.pitch = 1;
-speech.volume = 1;
-
-speech.onend = function () {
-  console.log('Selesai berbicara');
-  document.getElementById('stopBtn').style.display = 'none';
-  document.getElementById('listenBtn').style.display = 'inline-block';
-};
-
 db.ref('cerita/' + id).once('value').then(snap => {
   const cerita = snap.val();
   if (!cerita) {
@@ -172,6 +160,7 @@ db.ref('cerita/' + id).once('value').then(snap => {
     return;
   }
 
+  // Render konten cerita
   content.innerHTML = `
     <h1>${cerita.judul}</h1>
     <p class="genre">Genre: ${cerita.genre}</p>
@@ -184,29 +173,40 @@ db.ref('cerita/' + id).once('value').then(snap => {
     </div>
   `;
 
+  // Setelah DOM sudah update baru kita siapkan SpeechSynthesis
   const listenBtn = document.getElementById('listenBtn');
   const stopBtn = document.getElementById('stopBtn');
-  const storyText = cerita.isi;
+  const storyContent = document.querySelector('.story-content').textContent;
+
+  let speech = new SpeechSynthesisUtterance();
+  speech.lang = 'id-ID';
+  speech.rate = 0.9;
+  speech.pitch = 1;
+  speech.volume = 1;
 
   listenBtn.addEventListener('click', () => {
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
     }
-    speech.text = storyText;
-    console.log('Mulai berbicara');
+    speech.text = storyContent;
     window.speechSynthesis.speak(speech);
     listenBtn.style.display = 'none';
     stopBtn.style.display = 'inline-block';
   });
 
   stopBtn.addEventListener('click', () => {
-    console.log('Berhenti berbicara');
     window.speechSynthesis.cancel();
     stopBtn.style.display = 'none';
     listenBtn.style.display = 'inline-block';
   });
+
+  speech.onend = function() {
+    stopBtn.style.display = 'none';
+    listenBtn.style.display = 'inline-block';
+  };
 });
 </script>
+
 
 
 </body>
