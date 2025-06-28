@@ -72,7 +72,7 @@
       justify-content: center;
       gap: 0.8rem;
       flex-wrap: wrap;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     .btn {
@@ -99,22 +99,33 @@
       margin-top: auto;
       padding: 1rem 0 0.5rem;
     }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
-  <div class="container">
-    <div class="controls">
-      <button class="btn" id="listenBtn" style="display:none;">🔊 Dengarkan Cerita</button>
-      <button class="btn" id="stopBtn" style="display:none;">⏹️ Stop</button>
-      <a href="index.html" class="btn">🏠 Kembali ke Beranda</a>
-    </div>
-    <div id="content">
-      <h1>Memuat...</h1>
-    </div>
+  <div class="container" id="content">
+    <h1>Memuat...</h1>
   </div>
+
+  <footer>
+    <a href="about.html">📖 About</a>
+    <a href="privacy.html">🔒 Privacy Policy</a>
+    <a href="contact.html">☎️ Contact</a>
+    <a href="disclaimer.html">⚠️ Disclaimer</a><br>
+    &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
+  </footer>
 
   <script>
     const firebaseConfig = {
@@ -129,69 +140,67 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const content = document.getElementById('content');
-    const listenBtn = document.getElementById('listenBtn');
-    const stopBtn = document.getElementById('stopBtn');
-
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
+    const content = document.getElementById('content');
 
     if (!id) {
       content.innerHTML = '<p>ID cerita tidak ditemukan di URL.</p>';
     } else {
-      db.ref('cerita/' + id).once('value').then(snapshot => {
-        const cerita = snapshot.val();
+      db.ref('cerita/' + id).once('value').then(snap => {
+        const cerita = snap.val();
         if (!cerita) {
           content.innerHTML = '<p>Cerita tidak ditemukan.</p>';
           return;
         }
+
         content.innerHTML = `
           <h1>${cerita.judul}</h1>
           <p class="genre">Genre: ${cerita.genre}</p>
-          ${cerita.gambar ? `<img src="${cerita.gambar}" alt="${cerita.judul}" class="story-image">` : ''}
+          <img src="${cerita.gambar}" alt="Cover ${cerita.judul}" class="story-image" />
           <div class="story-content" id="storyText">${cerita.isi.replace(/\n/g, '<br>')}</div>
+          <div class="controls">
+            <button class="btn" id="listenBtn">🔊 Dengarkan Cerita</button>
+            <button class="btn" id="stopBtn" style="display:none;">⏹️ Stop</button>
+            <a href="index.html" class="btn">🏠 Kembali ke Beranda</a>
+          </div>
         `;
-        listenBtn.style.display = 'inline-block';
-      }).catch(error => {
-        content.innerHTML = `<p>Gagal memuat cerita: ${error.message}</p>`;
+
+        const listenBtn = document.getElementById('listenBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const storyText = document.getElementById('storyText').innerText;
+
+        let speech = new SpeechSynthesisUtterance();
+
+        listenBtn.addEventListener('click', () => {
+          if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+          }
+          speech.text = storyText;
+          speech.lang = 'id-ID';
+          speech.rate = 0.9;
+          speech.pitch = 1;
+          speech.volume = 1;
+
+          speech.onend = function () {
+            stopBtn.style.display = 'none';
+            listenBtn.style.display = 'inline-block';
+          };
+
+          window.speechSynthesis.speak(speech);
+          listenBtn.style.display = 'none';
+          stopBtn.style.display = 'inline-block';
+        });
+
+        stopBtn.addEventListener('click', () => {
+          window.speechSynthesis.cancel();
+          stopBtn.style.display = 'none';
+          listenBtn.style.display = 'inline-block';
+        });
+      }).catch(err => {
+        content.innerHTML = `<p>Terjadi kesalahan: ${err.message}</p>`;
       });
     }
-
-    listenBtn.addEventListener('click', () => {
-      const text = document.getElementById('storyText')?.innerText;
-      if (!text) return;
-
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-      }
-
-      const speech = new SpeechSynthesisUtterance(text);
-      speech.lang = 'id-ID';
-      speech.rate = 0.9;
-      speech.pitch = 1;
-      speech.volume = 1;
-
-      window.speechSynthesis.speak(speech);
-      listenBtn.style.display = 'none';
-      stopBtn.style.display = 'inline-block';
-
-      speech.onend = () => {
-        stopBtn.style.display = 'none';
-        listenBtn.style.display = 'inline-block';
-      };
-
-      speech.onerror = () => {
-        stopBtn.style.display = 'none';
-        listenBtn.style.display = 'inline-block';
-        alert('Gagal membacakan cerita.');
-      };
-    });
-
-    stopBtn.addEventListener('click', () => {
-      window.speechSynthesis.cancel();
-      stopBtn.style.display = 'none';
-      listenBtn.style.display = 'inline-block';
-    });
   </script>
 
 </body>
