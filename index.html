@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Koleksi Ebook - Perpustakaan Digital</title>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Cerita</title>
+<style>
 /* Reset */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -280,187 +280,60 @@ footer a {
     }
 }
 
-    </style>
-    <!-- Add Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+</style>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
-    <header>
-        <div class="logo" tabindex="0" aria-label="Perpustakaan Digital">Ebook Collection</div>
-        <nav>
-            <input type="search" id="search-input" placeholder="Cari ebook..." aria-label="Cari ebook" />
-        </nav>
-    </header>
-    <main class="container" id="main-content">
-        <h1>Koleksi Ebook Terbaru</h1>
-        <section aria-label="Daftar ebook" class="ebook-grid" id="ebook-grid"></section>
-    </main>
-    <footer>
-        <div>
-            <a href="about.html">📖 About / Tentang Kami</a>
-            <a href="privacy.html">🔒 Privacy Policy / Kebijakan Privasi</a>
-            <a href="contact.html">☎️ Contact / Kontak Kami</a>
-            <a href="disclaimer.html">⚠️ Disclaimer</a>
-        </div>
-        &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
-    </footer>
+<h1>Katalog Cerita</h1>
+<div class="grid" id="cerita-list"></div>
+<p><a href="admin.html" style="color:#00bfa5;">⚙️ Admin Panel</a></p>
+<script>
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+  authDomain: "tamplatedoc.firebaseapp.com",
+  databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tamplatedoc",
+  storageBucket: "tamplatedoc.appspot.com",
+  messagingSenderId: "264966107720",
+  appId: "1:264966107720:web:868abe93cdff209040de7d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
-        <div class="modal" tabindex="-1">
-            <button class="close-btn" id="modal-close-btn" aria-label="Tutup detail ebook">&times;</button>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <img src="" alt="" id="modal-cover" class="modal-cover" />
-                    <div class="modal-info">
-                        <h2 id="modal-title"></h2>
-                        <div class="author" id="modal-author"></div>
-                        <div class="category" id="modal-category"></div>
-                        <p class="description" id="modal-desc"></p>
-                    </div>
-                </div>
-                <button class="btn-download" id="download-btn">Download Ebook</button>
-            </div>
-        </div>
-    </div>
+const list = document.getElementById('cerita-list');
+db.ref('cerita').on('value', snap => {
+  const data = snap.val();
+  list.innerHTML = '';
+  if (data) {
+    Object.values(data).sort((a,b) => b.createdAt - a.createdAt).forEach(cerita => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        <img src="${cerita.gambar}" alt="Cover">
+        <h3>${cerita.judul}</h3>
+        <p>${cerita.genre}</p>
+        <button onclick="narasi('${cerita.isi.replace(/'/g, "\\'")}')">🔊 Dengar Cerita</button>
+      `;
+      list.appendChild(div);
+    });
+  } else {
+    list.innerHTML = '<p>Tidak ada cerita.</p>';
+  }
+});
 
-    <script>
-        // Konfigurasi Firebase (sama dengan yang digunakan di admin)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-            authDomain: "tamplatedoc.firebaseapp.com",
-            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "tamplatedoc",
-            storageBucket: "tamplatedoc.appspot.com",
-            messagingSenderId: "264966107720",
-            appId: "1:264966107720:web:868abe93cdff209040de7d",
-            measurementId: "G-S5WTZ7S5PG"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        const ebookGrid = document.getElementById('ebook-grid');
-        const modalOverlay = document.getElementById('modal-overlay');
-        const modalCover = document.getElementById('modal-cover');
-        const modalTitle = document.getElementById('modal-title');
-        const modalAuthor = document.getElementById('modal-author');
-        const modalCategory = document.getElementById('modal-category');
-        const modalDesc = document.getElementById('modal-desc');
-        const downloadBtn = document.getElementById('download-btn');
-        const modalCloseBtn = document.getElementById('modal-close-btn');
-        const searchInput = document.getElementById('search-input');
-
-        let allEbooks = [];
-        let currentEbook = null;
-
-        function escapeHTML(text) {
-            return text.replace(/[&<>"']/g, m => {
-                return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
-            });
-        }
-
-        function renderEbooks(ebooks) {
-            ebookGrid.innerHTML = '';
-            if (ebooks.length === 0) {
-                ebookGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#ff5252;font-weight:700;">Ebook tidak ditemukan.</p>';
-                return;
-            }
-            
-            // Urutkan ebook berdasarkan tanggal pembuatan (terbaru pertama)
-            ebooks.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-            
-            ebooks.forEach(ebook => {
-                const card = document.createElement('article');
-                card.className = 'card';
-                card.tabIndex = 0;
-                card.setAttribute('role', 'button');
-                card.setAttribute('aria-pressed', 'false');
-                card.setAttribute('aria-label', `Lihat detail ${ebook.title || ''}`);
-                card.innerHTML = `
-                    <img src="${ebook.cover || ''}" alt="${escapeHTML(ebook.alt || 'Cover ebook')}" loading="lazy" />
-                    <h2>${escapeHTML(ebook.title || '')}</h2>
-                    <div class="author">${escapeHTML(ebook.author || '')}</div>
-                    <div class="category">${escapeHTML(ebook.category || '')}</div>
-                `;
-                card.addEventListener('click', () => openEbookDetail(ebook));
-                card.addEventListener('keydown', e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        openEbookDetail(ebook);
-                    }
-                });
-                ebookGrid.appendChild(card);
-            });
-        }
-
-        function openEbookDetail(ebook) {
-            currentEbook = ebook;
-            modalCover.src = ebook.cover || '';
-            modalCover.alt = ebook.alt || 'Cover ' + (ebook.title || '');
-            modalTitle.textContent = ebook.title || '';
-            modalAuthor.textContent = 'Penulis: ' + (ebook.author || '');
-            modalCategory.textContent = ebook.category || '';
-            modalDesc.textContent = ebook.description || 'Tidak ada deskripsi tersedia.';
-            
-            // Set download button
-            downloadBtn.onclick = () => {
-                if (ebook.fileUrl) {
-                    window.open(ebook.fileUrl, '_blank', 'noopener');
-                } else {
-                    alert('Link download tidak tersedia.');
-                }
-            };
-            
-            modalOverlay.classList.add('show');
-            modalCloseBtn.focus();
-        }
-
-        modalCloseBtn.onclick = () => modalOverlay.classList.remove('show');
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) modalOverlay.classList.remove('show');
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
-                modalOverlay.classList.remove('show');
-            }
-        });
-
-        // Load and listen ebooks from Firebase
-        function loadEbooks() {
-            const ebooksRef = database.ref('ebooks');
-            ebooksRef.on('value', snapshot => {
-                const ebooksObj = snapshot.val() || {};
-                allEbooks = Object.values(ebooksObj);
-                filterAndRender(searchInput.value);
-            });
-        }
-
-        function filterAndRender(query) {
-            const normalized = query.trim().toLowerCase();
-            if (normalized === '') {
-                renderEbooks(allEbooks);
-            } else {
-                const filtered = allEbooks.filter(ebook => {
-                    return (ebook.title && ebook.title.toLowerCase().includes(normalized)) ||
-                           (ebook.author && ebook.author.toLowerCase().includes(normalized)) ||
-                           (ebook.category && ebook.category.toLowerCase().includes(normalized)) ||
-                           (ebook.description && ebook.description.toLowerCase().includes(normalized));
-                });
-                renderEbooks(filtered);
-            }
-        }
-
-        searchInput.addEventListener('input', e => {
-            filterAndRender(e.target.value);
-        });
-
-        // Increment visit counts
-        const visitRef = database.ref('stats/visits');
-        visitRef.transaction(current => (current || 0) + 1);
-
-        loadEbooks();
-    </script>
+window.narasi = function(teks) {
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
+  const u = new SpeechSynthesisUtterance(teks);
+  u.lang = 'id-ID';
+  u.rate = 0.95;
+  window.speechSynthesis.speak(u);
+};
+</script>
 </body>
 </html>
+
