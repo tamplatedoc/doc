@@ -5,192 +5,139 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Detail Cerita</title>
   <style>
-    /* CSS kamu untuk modal/detail bisa digunakan di sini */
     :root {
-            --primary: #ff6b9e;
-            --secondary: #a18aff;
-            --dark: #1a1a2e;
-            --light: #fef6fb;
-            --glow: 0 0 15px;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-        
-        body {
-            background-color: var(--dark);
-            color: var(--light);
-            min-height: 100vh;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 107, 158, 0.15) 0%, transparent 20%), 
-                radial-gradient(circle at 90% 80%, rgba(161, 138, 255, 0.15) 0%, transparent 20%);
-            line-height: 1.6;
-            padding: 2rem;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-            background: rgba(26, 26, 46, 0.8);
-            border-radius: 16px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2), 
-                        var(--glow) rgba(255, 107, 158, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                transparent 0%,
-                rgba(255, 107, 158, 0.1) 50%,
-                transparent 100%
-            );
-            animation: rotate 20s linear infinite;
-            z-index: -1;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255, 107, 158, 0.3);
-        }
-        
-        .story-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin: 1.5rem 0;
-            box-shadow: var(--glow) var(--primary), 
-                        var(--glow) var(--secondary);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .story-image:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 25px var(--primary), 
-                        0 0 25px var(--secondary);
-        }
-        
-        .story-content {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-        
-        .story-content p {
-            margin-bottom: 1rem;
-            text-align: justify;
-        }
-        
-        .back-btn {
-            display: inline-block;
-            padding: 0.8rem 1.5rem;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 158, 0.4);
-        }
-        
-        .back-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 107, 158, 0.6);
-            letter-spacing: 1px;
-        }
-        
-        .audio-controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
+      --primary: #ff6b9e;
+      --secondary: #a18aff;
+      --dark: #1a1a2e;
+      --light: #fef6fb;
+      --glow: 0 0 15px;
+    }
 
-        .audio-btn {
-            padding: 0.6rem 1.2rem;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(255, 107, 158, 0.4);
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
 
-        .audio-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 107, 158, 0.6);
-        }
+    body {
+      background-color: var(--dark);
+      color: var(--light);
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
 
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .story-image {
-                height: 200px;
-            }
-        }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: rgba(26, 26, 46, 0.85);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: var(--glow) var(--primary);
+    }
 
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .genre {
+      text-align: center;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .story-image {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 1rem auto;
+      border-radius: 12px;
+      box-shadow: 0 0 20px var(--primary);
+    }
+
+    .story-content {
+      font-size: 1rem;
+      text-align: justify;
+      margin-bottom: 2rem;
+    }
+
+    .audio-controls,
+    .back-control {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .audio-btn,
+    .back-btn {
+      padding: 0.6rem 1.2rem;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border: none;
+      color: white;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .audio-btn:hover,
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px var(--primary);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .story-content {
+        font-size: 0.95rem;
+      }
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
-  <header>
-    <div class="logo">Detail Cerita</div>
-  </header>
-  <main>
-    <section id="content"></section>
-  </main>
+  <div class="container" id="content">
+    <h1>Memuat...</h1>
+  </div>
+
   <footer>
-    <div>
-      <a href="about.html">📖 About</a>
-      <a href="privacy.html">🔒 Privacy Policy</a>
-      <a href="contact.html">☎️ Contact</a>
-      <a href="disclaimer.html">⚠️ Disclaimer</a>
-    </div>
+    <a href="about.html">📖 About</a>
+    <a href="privacy.html">🔒 Privacy Policy</a>
+    <a href="contact.html">☎️ Contact</a>
+    <a href="disclaimer.html">⚠️ Disclaimer</a><br>
     &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
   </footer>
 
@@ -217,12 +164,48 @@
         content.innerHTML = '<p>Cerita tidak ditemukan.</p>';
         return;
       }
+
       content.innerHTML = `
         <h1>${cerita.judul}</h1>
-        <p><em>Genre: ${cerita.genre}</em></p>
-        <img src="${cerita.gambar}" alt="Cover ${cerita.judul}" style="max-width:300px;" />
-        <div>${cerita.isi.replace(/\n/g, '<br>')}</div>
+        <p class="genre">Genre: ${cerita.genre}</p>
+        <img src="${cerita.gambar}" alt="Cover ${cerita.judul}" class="story-image" />
+        <div class="story-content">${cerita.isi.replace(/\n/g, '<br>')}</div>
+        <div class="audio-controls">
+          <button id="listenBtn" class="audio-btn">🔊 Dengarkan Cerita</button>
+          <button id="stopBtn" class="audio-btn" style="display:none;">⏹️ Stop</button>
+        </div>
+        <div class="back-control">
+          <a href="index.html" class="back-btn">🏠 Kembali ke Beranda</a>
+        </div>
       `;
+
+      const listenBtn = document.getElementById('listenBtn');
+      const stopBtn = document.getElementById('stopBtn');
+      const storyText = cerita.isi;
+      let speech = new SpeechSynthesisUtterance();
+
+      listenBtn.addEventListener('click', () => {
+        speech.text = storyText;
+        speech.lang = 'id-ID';
+        speech.rate = 0.9;
+        speech.pitch = 1;
+        speech.volume = 1;
+
+        window.speechSynthesis.speak(speech);
+        listenBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+      });
+
+      stopBtn.addEventListener('click', () => {
+        window.speechSynthesis.cancel();
+        stopBtn.style.display = 'none';
+        listenBtn.style.display = 'inline-block';
+      });
+
+      speech.onend = function() {
+        stopBtn.style.display = 'none';
+        listenBtn.style.display = 'inline-block';
+      };
     });
   </script>
 </body>
