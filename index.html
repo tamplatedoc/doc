@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Katalog Cerita</title>
-<style>
-/* Reset */
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Koleksi Cerita - Perpustakaan Digital</title>
+  <style>
+    /* CSS kamu yang lama tetap dipakai (copy dari file kamu tadi) */
+      /* Reset */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -279,61 +280,88 @@ footer a {
         height: 180px;
     }
 }
-
-
-</style>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
-<h1>Katalog Cerita</h1>
-<div class="grid" id="cerita-list"></div>
-<p><a href="admin.html" style="color:#00bfa5;">⚙️ Admin Panel</a></p>
-<script>
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-  authDomain: "tamplatedoc.firebaseapp.com",
-  databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "tamplatedoc",
-  storageBucket: "tamplatedoc.appspot.com",
-  messagingSenderId: "264966107720",
-  appId: "1:264966107720:web:868abe93cdff209040de7d"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+  <header>
+    <div class="logo">Cerita Collection</div>
+    <nav>
+      <input type="search" id="search-input" placeholder="Cari judul atau genre..." />
+    </nav>
+  </header>
 
-const list = document.getElementById('cerita-list');
-db.ref('cerita').on('value', snap => {
-  const data = snap.val();
-  list.innerHTML = '';
-  if (data) {
-    Object.values(data).sort((a,b) => b.createdAt - a.createdAt).forEach(cerita => {
-      const div = document.createElement('div');
-      div.className = 'card';
-      div.innerHTML = `
-        <img src="${cerita.gambar}" alt="Cover">
-        <h3>${cerita.judul}</h3>
-        <p>${cerita.genre}</p>
-        <button onclick="narasi('${cerita.isi.replace(/'/g, "\\'")}')">🔊 Dengar Cerita</button>
-      `;
-      list.appendChild(div);
+  <main>
+    <h1>Koleksi Cerita</h1>
+    <section class="ebook-grid" id="cerita-grid"></section>
+  </main>
+
+  <footer>
+    <div>
+      <a href="about.html">📖 About</a>
+      <a href="privacy.html">🔒 Privacy Policy</a>
+      <a href="contact.html">☎️ Contact</a>
+      <a href="disclaimer.html">⚠️ Disclaimer</a>
+    </div>
+    &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+      authDomain: "tamplatedoc.firebaseapp.com",
+      databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "tamplatedoc",
+      storageBucket: "tamplatedoc.appspot.com",
+      messagingSenderId: "264966107720",
+      appId: "1:264966107720:web:868abe93cdff209040de7d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const grid = document.getElementById('cerita-grid');
+    const searchInput = document.getElementById('search-input');
+    let semuaCerita = [];
+
+    function renderCerita(ceritaList) {
+      grid.innerHTML = '';
+      if (ceritaList.length === 0) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Cerita tidak ditemukan.</p>';
+        return;
+      }
+      ceritaList.forEach(cerita => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}" />
+          <h2>${cerita.judul}</h2>
+          <div class="author">${cerita.genre}</div>
+          <div class="category"><a href="story.html?id=${cerita.key}">Baca Cerita</a></div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterCerita(query) {
+      const q = query.trim().toLowerCase();
+      const hasil = semuaCerita.filter(c => 
+        c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
+      );
+      renderCerita(hasil);
+    }
+
+    db.ref('cerita').on('value', snap => {
+      const obj = snap.val() || {};
+      semuaCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
+      filterCerita(searchInput.value);
     });
-  } else {
-    list.innerHTML = '<p>Tidak ada cerita.</p>';
-  }
-});
 
-window.narasi = function(teks) {
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-  }
-  const u = new SpeechSynthesisUtterance(teks);
-  u.lang = 'id-ID';
-  u.rate = 0.95;
-  window.speechSynthesis.speak(u);
-};
-</script>
+    searchInput.addEventListener('input', e => {
+      filterCerita(e.target.value);
+    });
+  </script>
 </body>
 </html>
+
 
