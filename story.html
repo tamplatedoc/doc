@@ -72,7 +72,7 @@
       justify-content: center;
       gap: 0.8rem;
       flex-wrap: wrap;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .btn {
@@ -100,23 +100,23 @@
       padding: 1rem 0 0.5rem;
     }
   </style>
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
-  <div class="container" id="content">
-    <h1>Memuat...</h1>
+  <div class="container">
     <div class="controls">
       <button class="btn" id="listenBtn" style="display:none;">🔊 Dengarkan Cerita</button>
       <button class="btn" id="stopBtn" style="display:none;">⏹️ Stop</button>
-      <a href="index.html" class="btn" id="backBtn" style="display:none;">🏠 Kembali ke Beranda</a>
+      <a href="index.html" class="btn">🏠 Kembali ke Beranda</a>
+    </div>
+    <div id="content">
+      <h1>Memuat...</h1>
     </div>
   </div>
 
   <script>
-    // Konfigurasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
       authDomain: "tamplatedoc.firebaseapp.com",
@@ -126,143 +126,72 @@
       messagingSenderId: "264966107720",
       appId: "1:264966107720:web:868abe93cdff209040de7d"
     };
-
-    // Inisialisasi Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Elemen UI
     const content = document.getElementById('content');
     const listenBtn = document.getElementById('listenBtn');
     const stopBtn = document.getElementById('stopBtn');
-    const backBtn = document.getElementById('backBtn');
 
-    // Parameter URL
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
 
-    // Fungsi untuk menampilkan cerita
-    function loadStory(cerita) {
-      content.innerHTML = `
-        <h1>${cerita.judul}</h1>
-        <p class="genre">Genre: ${cerita.genre}</p>
-        ${cerita.gambar ? `<img src="${cerita.gambar}" alt="${cerita.judul}" class="story-image">` : ''}
-        <div class="story-content" id="storyText">${cerita.isi.replace(/\n/g, '<br>')}</div>
-      `;
-      
-      // Tampilkan tombol setelah konten dimuat
-      listenBtn.style.display = 'inline-block';
-      stopBtn.style.display = 'none';
-      backBtn.style.display = 'inline-block';
-      
-      setupSpeechSynthesis();
-    }
-
-    // Fungsi untuk setup text-to-speech
-    function setupSpeechSynthesis() {
-      const storyText = document.getElementById('storyText').innerText;
-      
-      // Cek dukungan browser
-      if (!('speechSynthesis' in window)) {
-        listenBtn.disabled = true;
-        listenBtn.textContent = '🔊 Browser Tidak Mendukung';
-        listenBtn.style.opacity = '0.7';
-        listenBtn.style.cursor = 'not-allowed';
-        return;
-      }
-
-      let speech = new SpeechSynthesisUtterance();
-      let voices = [];
-      
-      // Memuat suara yang tersedia
-      function loadVoices() {
-        voices = window.speechSynthesis.getVoices();
-        const indonesianVoice = voices.find(voice => 
-          voice.lang.includes('id-ID') || voice.lang.includes('id')
-        );
-        return indonesianVoice || voices[0];
-      }
-
-      // Event untuk tombol dengar
-      listenBtn.addEventListener('click', () => {
-        try {
-          if (window.speechSynthesis.speaking) {
-            window.speechSynthesis.cancel();
-          }
-          
-          speech.text = storyText;
-          speech.lang = 'id-ID';
-          speech.rate = 0.9;
-          speech.pitch = 1;
-          speech.volume = 1;
-          
-          if (voices.length === 0) {
-            voices = window.speechSynthesis.getVoices();
-            if (voices.length === 0) {
-              window.speechSynthesis.onvoiceschanged = () => {
-                speech.voice = loadVoices();
-                startSpeaking();
-              };
-              return;
-            }
-          }
-          
-          speech.voice = loadVoices();
-          startSpeaking();
-          
-        } catch (error) {
-          console.error('Error:', error);
-          alert('Error: ' + error.message);
-          resetButtons();
-        }
-      });
-
-      function startSpeaking() {
-        window.speechSynthesis.speak(speech);
-        listenBtn.style.display = 'none';
-        stopBtn.style.display = 'inline-block';
-        
-        speech.onend = () => resetButtons();
-        speech.onerror = (e) => {
-          console.error('Error:', e);
-          alert('Gagal membacakan: ' + e.error);
-          resetButtons();
-        };
-      }
-
-      function resetButtons() {
-        stopBtn.style.display = 'none';
-        listenBtn.style.display = 'inline-block';
-      }
-
-      stopBtn.addEventListener('click', () => {
-        window.speechSynthesis.cancel();
-        resetButtons();
-      });
-
-      // Load voices saat pertama kali
-      window.speechSynthesis.onvoiceschanged = loadVoices;
-      loadVoices();
-    }
-
-    // Load data dari Firebase
     if (!id) {
       content.innerHTML = '<p>ID cerita tidak ditemukan di URL.</p>';
-      backBtn.style.display = 'inline-block';
     } else {
       db.ref('cerita/' + id).once('value').then(snapshot => {
         const cerita = snapshot.val();
         if (!cerita) {
           content.innerHTML = '<p>Cerita tidak ditemukan.</p>';
-          backBtn.style.display = 'inline-block';
           return;
         }
-        loadStory(cerita);
+        content.innerHTML = `
+          <h1>${cerita.judul}</h1>
+          <p class="genre">Genre: ${cerita.genre}</p>
+          ${cerita.gambar ? `<img src="${cerita.gambar}" alt="${cerita.judul}" class="story-image">` : ''}
+          <div class="story-content" id="storyText">${cerita.isi.replace(/\n/g, '<br>')}</div>
+        `;
+        listenBtn.style.display = 'inline-block';
       }).catch(error => {
         content.innerHTML = `<p>Gagal memuat cerita: ${error.message}</p>`;
-        backBtn.style.display = 'inline-block';
       });
     }
+
+    listenBtn.addEventListener('click', () => {
+      const text = document.getElementById('storyText')?.innerText;
+      if (!text) return;
+
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+
+      const speech = new SpeechSynthesisUtterance(text);
+      speech.lang = 'id-ID';
+      speech.rate = 0.9;
+      speech.pitch = 1;
+      speech.volume = 1;
+
+      window.speechSynthesis.speak(speech);
+      listenBtn.style.display = 'none';
+      stopBtn.style.display = 'inline-block';
+
+      speech.onend = () => {
+        stopBtn.style.display = 'none';
+        listenBtn.style.display = 'inline-block';
+      };
+
+      speech.onerror = () => {
+        stopBtn.style.display = 'none';
+        listenBtn.style.display = 'inline-block';
+        alert('Gagal membacakan cerita.');
+      };
+    });
+
+    stopBtn.addEventListener('click', () => {
+      window.speechSynthesis.cancel();
+      stopBtn.style.display = 'none';
+      listenBtn.style.display = 'inline-block';
+    });
   </script>
 
 </body>
