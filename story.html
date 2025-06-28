@@ -10,30 +10,31 @@
       --secondary: #a18aff;
       --dark: #1a1a2e;
       --light: #fef6fb;
-      --glow: 0 0 15px;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: 'Segoe UI', system-ui, sans-serif;
     }
 
     body {
       background-color: var(--dark);
       color: var(--light);
       min-height: 100vh;
-      padding: 1.5rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
     }
 
     .container {
       max-width: 800px;
       margin: auto;
       background: rgba(26, 26, 46, 0.85);
-      padding: 2rem;
+      padding: 1.5rem;
       border-radius: 16px;
-      box-shadow: var(--glow) var(--primary);
+      box-shadow: 0 0 15px var(--primary);
     }
 
     h1 {
@@ -42,7 +43,7 @@
       background: linear-gradient(to right, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
 
     .genre {
@@ -57,48 +58,46 @@
       max-width: 300px;
       margin: 1rem auto;
       border-radius: 12px;
-      box-shadow: 0 0 20px var(--primary);
+      box-shadow: 0 0 15px var(--primary);
     }
 
     .story-content {
       font-size: 1rem;
       text-align: justify;
-      margin-bottom: 2rem;
-    }
-
-    .audio-controls,
-    .back-control {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
       margin-bottom: 1.5rem;
     }
 
-    .audio-btn,
-    .back-btn {
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
       padding: 0.6rem 1.2rem;
       background: linear-gradient(to right, var(--primary), var(--secondary));
       border: none;
-      color: white;
       border-radius: 50px;
-      cursor: pointer;
+      color: white;
       font-weight: 600;
-      transition: 0.3s;
       text-decoration: none;
-      display: inline-block;
+      cursor: pointer;
+      transition: 0.3s;
       text-align: center;
     }
 
-    .audio-btn:hover,
-    .back-btn:hover {
+    .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px var(--primary);
+      box-shadow: 0 4px 10px var(--primary);
     }
 
     footer {
       text-align: center;
-      margin-top: 2rem;
       font-size: 0.9rem;
+      margin-top: auto;
+      padding: 1rem 0 0.5rem;
     }
 
     footer a {
@@ -112,14 +111,9 @@
     }
 
     @media (max-width: 600px) {
-      .container {
-        padding: 1rem;
-      }
-
       h1 {
         font-size: 1.6rem;
       }
-
       .story-content {
         font-size: 0.95rem;
       }
@@ -129,6 +123,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
+
   <div class="container" id="content">
     <h1>Memuat...</h1>
   </div>
@@ -141,76 +136,74 @@
     &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
   </footer>
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-  authDomain: "tamplatedoc.firebaseapp.com",
-  databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "tamplatedoc",
-  storageBucket: "tamplatedoc.appspot.com",
-  messagingSenderId: "264966107720",
-  appId: "1:264966107720:web:868abe93cdff209040de7d"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+      authDomain: "tamplatedoc.firebaseapp.com",
+      databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "tamplatedoc",
+      storageBucket: "tamplatedoc.appspot.com",
+      messagingSenderId: "264966107720",
+      appId: "1:264966107720:web:868abe93cdff209040de7d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-const params = new URLSearchParams(window.location.search);
-const id = params.get('id');
-const content = document.getElementById('content');
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const content = document.getElementById('content');
 
-db.ref('cerita/' + id).once('value').then(snap => {
-  const cerita = snap.val();
-  if (!cerita) {
-    content.innerHTML = '<p>Cerita tidak ditemukan.</p>';
-    return;
-  }
+    db.ref('cerita/' + id).once('value').then(snap => {
+      const cerita = snap.val();
+      if (!cerita) {
+        content.innerHTML = '<p>Cerita tidak ditemukan.</p>';
+        return;
+      }
 
-  content.innerHTML = `
-    <h1>${cerita.judul}</h1>
-    <p class="genre">Genre: ${cerita.genre}</p>
-    <img src="${cerita.gambar}" alt="Cover ${cerita.judul}" class="story-image" />
-    <div class="story-content">${cerita.isi.replace(/\n/g, '<br>')}</div>
-    <div class="audio-controls">
-      <button id="listenBtn" class="audio-btn">🔊 Dengarkan Cerita</button>
-      <button id="stopBtn" class="audio-btn" style="display:none;">⏹️ Stop</button>
-    </div>
-    <div class="back-control">
-      <a href="index.html" class="back-btn">🏠 Kembali ke Beranda</a>
-    </div>
-  `;
+      content.innerHTML = `
+        <h1>${cerita.judul}</h1>
+        <p class="genre">Genre: ${cerita.genre}</p>
+        <img src="${cerita.gambar}" alt="Cover ${cerita.judul}" class="story-image" />
+        <div class="story-content">${cerita.isi.replace(/\n/g, '<br>')}</div>
+        <div class="controls">
+          <button class="btn" id="listenBtn">🔊 Dengarkan Cerita</button>
+          <button class="btn" id="stopBtn" style="display:none;">⏹️ Stop</button>
+          <a href="index.html" class="btn">🏠 Kembali ke Beranda</a>
+        </div>
+      `;
 
-  const listenBtn = document.getElementById('listenBtn');
-  const stopBtn = document.getElementById('stopBtn');
-  const storyText = cerita.isi;
+      const listenBtn = document.getElementById('listenBtn');
+      const stopBtn = document.getElementById('stopBtn');
+      const storyText = cerita.isi;
 
-  let speech = new SpeechSynthesisUtterance();
-  speech.lang = 'id-ID';
-  speech.rate = 0.9;
-  speech.pitch = 1;
-  speech.volume = 1;
+      listenBtn.addEventListener('click', () => {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+        }
 
-  listenBtn.addEventListener('click', () => {
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel(); 
-    }
-    speech.text = storyText;
-    window.speechSynthesis.speak(speech);
-    listenBtn.style.display = 'none';
-    stopBtn.style.display = 'inline-block';
-  });
+        const speech = new SpeechSynthesisUtterance(storyText);
+        speech.lang = 'id-ID';
+        speech.rate = 0.9;
+        speech.pitch = 1;
+        speech.volume = 1;
 
-  stopBtn.addEventListener('click', () => {
-    window.speechSynthesis.cancel();
-    stopBtn.style.display = 'none';
-    listenBtn.style.display = 'inline-block';
-  });
+        speech.onend = function () {
+          stopBtn.style.display = 'none';
+          listenBtn.style.display = 'inline-block';
+        };
 
-  speech.onend = function() {
-    stopBtn.style.display = 'none';
-    listenBtn.style.display = 'inline-block';
-  };
-});
-</script>
+        window.speechSynthesis.speak(speech);
+        listenBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+      });
+
+      stopBtn.addEventListener('click', () => {
+        window.speechSynthesis.cancel();
+        stopBtn.style.display = 'none';
+        listenBtn.style.display = 'inline-block';
+      });
+    });
+  </script>
 
 </body>
 </html>
