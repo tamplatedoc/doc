@@ -127,56 +127,75 @@
     &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
   </footer>
 
-<script>
-  let speech;
-  const listenBtn = document.getElementById('listenBtn');
-  const stopBtn = document.getElementById('stopBtn');
-
-  listenBtn.addEventListener('click', () => {
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-    }
-
-    const plainText = document.getElementById('storyText').innerText;
-    speech = new SpeechSynthesisUtterance(plainText);
-
-    // Coba pilih voice yang tersedia
-    const voices = window.speechSynthesis.getVoices();
-    const idVoice = voices.find(v => v.lang === 'id-ID') || voices.find(v => v.lang.startsWith('en'));
-    if (idVoice) {
-      speech.voice = idVoice;
-      console.log("Pakai voice:", idVoice.name, idVoice.lang);
-    } else {
-      console.log("Voice id-ID tidak tersedia, pakai default.");
-    }
-
-    speech.lang = 'id-ID';
-    speech.rate = 0.9;
-    speech.pitch = 1;
-    speech.volume = 1;
-
-    speech.onend = function () {
-      stopBtn.style.display = 'none';
-      listenBtn.style.display = 'inline-block';
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+      authDomain: "tamplatedoc.firebaseapp.com",
+      databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "tamplatedoc",
+      storageBucket: "tamplatedoc.appspot.com",
+      messagingSenderId: "264966107720",
+      appId: "1:264966107720:web:868abe93cdff209040de7d"
     };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    window.speechSynthesis.speak(speech);
-    listenBtn.style.display = 'none';
-    stopBtn.style.display = 'inline-block';
-  });
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const content = document.getElementById('content');
 
-  stopBtn.addEventListener('click', () => {
-    window.speechSynthesis.cancel();
-    stopBtn.style.display = 'none';
-    listenBtn.style.display = 'inline-block';
-  });
+    db.ref('cerita/' + id).once('value').then(snap => {
+      const cerita = snap.val();
+      if (!cerita) {
+        content.innerHTML = '<p>Cerita tidak ditemukan.</p>';
+        return;
+      }
 
-  // Debug list voice
-  window.speechSynthesis.onvoiceschanged = function() {
-    console.log("Voice list tersedia:", window.speechSynthesis.getVoices());
-  };
-</script>
+      content.innerHTML = `
+        <h1>${cerita.judul}</h1>
+        <p class="genre">Genre: ${cerita.genre}</p>
+        <img src="${cerita.gambar}" alt="Cover ${cerita.judul}" class="story-image" />
+        <div class="story-content" id="storyText">${cerita.isi.replace(/\n/g, '<br>')}</div>
+        <div class="controls">
+          <button class="btn" id="listenBtn">🔊 Dengarkan Cerita</button>
+          <button class="btn" id="stopBtn" style="display:none;">⏹️ Stop</button>
+          <a href="index.html" class="btn">🏠 Kembali ke Beranda</a>
+        </div>
+      `;
 
+      const listenBtn = document.getElementById('listenBtn');
+      const stopBtn = document.getElementById('stopBtn');
+      const storyText = document.getElementById('storyText').innerText;
+
+      let speech = new SpeechSynthesisUtterance();
+
+      listenBtn.addEventListener('click', () => {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+        }
+        speech.text = storyText;
+        speech.lang = 'id-ID';
+        speech.rate = 0.9;
+        speech.pitch = 1;
+        speech.volume = 1;
+
+        speech.onend = function () {
+          stopBtn.style.display = 'none';
+          listenBtn.style.display = 'inline-block';
+        };
+
+        window.speechSynthesis.speak(speech);
+        listenBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+      });
+
+      stopBtn.addEventListener('click', () => {
+        window.speechSynthesis.cancel();
+        stopBtn.style.display = 'none';
+        listenBtn.style.display = 'inline-block';
+      });
+    });
+  </script>
 
 </body>
 </html>
