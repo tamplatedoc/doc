@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Koleksi Cerita - Perpustakaan Digital</title>
-  <style>
-    /* CSS kamu yang lama tetap dipakai (copy dari file kamu tadi) */
-/* Reset */
+  
+  /* Reset */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -24,8 +23,6 @@ a {
     color: inherit;
     text-decoration: none;
 }
-
-/* Header */
 header {
     background: linear-gradient(135deg, #4b0082 0%, #00bfa5 100%);
     padding: 16px 24px;
@@ -63,8 +60,14 @@ header nav input[type="search"] {
 header nav input[type="search"]::placeholder {
     color: rgba(255,255,255,0.7);
 }
-
-/* Main */
+header select {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+}
 main {
     padding: 32px 16px;
     flex: 1;
@@ -78,16 +81,12 @@ h1 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-
-/* Katalog grid */
 .ebook-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 16px;
     padding: 0;
 }
-
-/* Katalog card */
 .card {
     background: rgba(255, 255, 255, 0.06);
     border-radius: 12px;
@@ -132,8 +131,6 @@ h1 {
     border-radius: 12px;
     text-align: center;
 }
-
-/* Footer */
 footer {
     background: #1a1a1a;
     color: #606060;
@@ -145,10 +142,6 @@ footer a {
     color: #00bfa5;
     margin: 0 10px;
 }
-
-/* Modal tetap sama */
-
-/* Responsive */
 @media (max-width: 600px) {
     .ebook-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -179,28 +172,31 @@ footer a {
     }
 }
 
-  </style>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
   <header>
-    <div class="logo">Story Collection</div>
+    <div class="logo" id="logo-text">Story Collection</div>
     <nav>
       <input type="search" id="search-input" placeholder="Cari judul atau genre..." />
     </nav>
+    <select id="language-select">
+      <option value="id" selected>Bahasa Indonesia</option>
+      <option value="en">English</option>
+    </select>
   </header>
 
   <main>
-    <h1>Koleksi Cerita</h1>
+    <h1 id="main-title">Koleksi Cerita</h1>
     <section class="ebook-grid" id="cerita-grid"></section>
   </main>
 
-  <footer>
+  <footer id="footer-text">
     <div>
-      <a href="about.html">📖 About</a>
-      <a href="privacy.html">🔒 Privacy Policy</a>
-      <a href="contact.html">☎️ Contact</a>
+      <a href="about.html">📖 Tentang</a>
+      <a href="privacy.html">🔒 Kebijakan Privasi</a>
+      <a href="contact.html">☎️ Kontak</a>
       <a href="disclaimer.html">⚠️ Disclaimer</a>
     </div>
     &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
@@ -221,12 +217,55 @@ footer a {
 
     const grid = document.getElementById('cerita-grid');
     const searchInput = document.getElementById('search-input');
+    const langSelect = document.getElementById('language-select');
     let semuaCerita = [];
+    let currentLang = 'id';
+
+    const texts = {
+      id: {
+        logo: 'Koleksi Cerita',
+        mainTitle: 'Koleksi Cerita',
+        searchPlaceholder: 'Cari judul atau genre...',
+        notFound: 'Cerita tidak ditemukan.',
+        about: '📖 Tentang',
+        privacy: '🔒 Kebijakan Privasi',
+        contact: '☎️ Kontak',
+        disclaimer: '⚠️ Disclaimer',
+        copyright: '&copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.'
+      },
+      en: {
+        logo: 'Story Collection',
+        mainTitle: 'Story Collection',
+        searchPlaceholder: 'Search title or genre...',
+        notFound: 'No stories found.',
+        about: '📖 About',
+        privacy: '🔒 Privacy Policy',
+        contact: '☎️ Contact',
+        disclaimer: '⚠️ Disclaimer',
+        copyright: '&copy; 2024 Digital Library - All rights reserved.'
+      }
+    };
+
+    function updateTexts(lang) {
+      document.getElementById('logo-text').textContent = texts[lang].logo;
+      document.getElementById('main-title').textContent = texts[lang].mainTitle;
+      searchInput.placeholder = texts[lang].searchPlaceholder;
+      const footer = document.getElementById('footer-text');
+      footer.innerHTML = `
+        <div>
+          <a href="about.html">${texts[lang].about}</a>
+          <a href="privacy.html">${texts[lang].privacy}</a>
+          <a href="contact.html">${texts[lang].contact}</a>
+          <a href="disclaimer.html">${texts[lang].disclaimer}</a>
+        </div>
+        ${texts[lang].copyright}
+      `;
+    }
 
     function renderCerita(ceritaList) {
       grid.innerHTML = '';
       if (ceritaList.length === 0) {
-        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Cerita tidak ditemukan.</p>';
+        grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;">${texts[currentLang].notFound}</p>`;
         return;
       }
       ceritaList.forEach(cerita => {
@@ -236,8 +275,11 @@ footer a {
           <img src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}" />
           <h2>${cerita.judul}</h2>
           <div class="author">${cerita.genre}</div>
-          <div class="category"><a href="story.html?id=${cerita.key}">Baca Cerita</a></div>
+          <div class="category"><a href="story.html?id=${cerita.key}">${currentLang === 'id' ? 'Baca Cerita' : 'Read Story'}</a></div>
         `;
+        card.addEventListener('click', () => {
+          speakText(cerita.judul + ', ' + cerita.genre);
+        });
         grid.appendChild(card);
       });
     }
@@ -250,6 +292,18 @@ footer a {
       renderCerita(hasil);
     }
 
+    function speakText(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = currentLang === 'id' ? 'id-ID' : 'en-GB';
+      window.speechSynthesis.speak(msg);
+    }
+
+    langSelect.addEventListener('change', () => {
+      currentLang = langSelect.value;
+      updateTexts(currentLang);
+      filterCerita(searchInput.value);
+    });
+
     db.ref('cerita').on('value', snap => {
       const obj = snap.val() || {};
       semuaCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
@@ -259,8 +313,8 @@ footer a {
     searchInput.addEventListener('input', e => {
       filterCerita(e.target.value);
     });
+
+    updateTexts(currentLang);
   </script>
 </body>
 </html>
-
-
