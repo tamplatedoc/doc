@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Anti Spam</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6c604d21-0df4-472e-857e-67f7ad89a44b.png') no-repeat center center;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+        
+        .email-text {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 800;
+            color: transparent;
+            background-clip: text;
+            -webkit-background-clip: text;
+            background-image: linear-gradient(90deg, #00dbde 0%, #fc00ff 100%);
+            text-align: center;
+            line-height: 1.2;
+            letter-spacing: -1px;
+            padding: 0.5em;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            background-color: rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            animation: textGlow 3s ease-in-out infinite alternate, float 4s ease-in-out infinite;
+        }
+
+        .char {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+        .lock-icon {
+            font-size: 1.2em;
+            vertical-align: middle;
+            animation: pulse 1.5s infinite alternate;
+        }
+        .space {
+            width: 0.3em;
+        }
+        
+        .email-text:hover .char {
+            animation: bounce 0.5s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .email-text {
+                font-size: 2rem;
+                padding: 0 1rem;
+            }
+        }
+
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 5px #00dbde, 0 0 10px #fc00ff;
+            }
+            100% {
+                text-shadow: 0 0 15px #00dbde, 0 0 30px #fc00ff;
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-text">
+        <span class="char">E</span>
+        <span class="char">M</span>
+        <span class="char">A</span>
+        <span class="char">I</span>
+        <span class="char">L</span>
+        <span class="char">&nbsp;</span>
+        <span class="char">U</span>
+        <span class="char">N</span>
+        <span class="char">T</span>
+        <span class="char">U</span>
+        <span class="char">K</span>
+        <span class="char">&nbsp;</span>
+        <span class="char">M</span>
+        <span class="char">E</span>
+        <span class="char">N</span>
+        <span class="char">G</span>
+        <span class="char">H</span>
+        <span class="char">I</span>
+        <span class="char">N</span>
+        <span class="char">D</span>
+        <span class="char">A</span>
+        <span class="char">R</span>
+        <span class="char">I</span>
+        <span class="char">&nbsp;</span>
+        <span class="char">S</span>
+        <span class="char">P</span>
+        <span class="char">A</span>
+        <span class="char">M</span>
+        <span class="char">!</span>
+    </div>
+</body>
+</html>
+
