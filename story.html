@@ -4,117 +4,143 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Detail Cerita</title>
-  <style>
-    :root {
-      --primary: #ff6b9e;
-      --secondary: #a18aff;
-      --dark: #1a1a2e;
-      --light: #fef6fb;
-    }
+ <style>
+:root {
+  --primary: #ff6b9e;
+  --secondary: #a18aff;
+  --dark: #1a1a2e;
+  --light: #fef6fb;
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
 
-    body {
-      background-color: var(--dark);
-      color: var(--light);
-      min-height: 100vh;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
+body {
+  background-color: var(--dark);
+  color: var(--light);
+  min-height: 100vh;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
 
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: rgba(26, 26, 46, 0.85);
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 0 15px var(--primary);
-    }
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: rgba(26, 26, 46, 0.85);
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 0 15px var(--primary);
+}
 
-    h1 {
-      font-size: 2rem;
-      text-align: center;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      color: transparent;
-      margin-bottom: 0.5rem;
-    }
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 0.5rem;
+}
 
-    .genre {
-      text-align: center;
-      font-style: italic;
-      margin-bottom: 1rem;
-    }
+.genre {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
 
-    .story-image {
-      display: block;
-      width: 100%;
-      max-width: 300px;
-      margin: 1rem auto;
-      border-radius: 12px;
-      box-shadow: 0 0 15px var(--primary);
-    }
+.story-image {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 1rem auto;
+  border-radius: 12px;
+  box-shadow: 0 0 15px var(--primary);
+}
 
-    .story-content {
-      font-size: 1rem;
-      text-align: justify;
-      margin-bottom: 1.5rem;
-    }
+.story-content {
+  font-size: 1rem;
+  text-align: justify;
+  margin-bottom: 1.5rem;
+}
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
 
-    .btn {
-      padding: 0.6rem 1.2rem;
-      background: linear-gradient(to right, var(--primary), var(--secondary));
-      border: none;
-      border-radius: 50px;
-      color: white;
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      transition: 0.3s;
-      text-align: center;
-    }
+.btn {
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
+}
 
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px var(--primary);
-    }
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--primary);
+}
 
-    footer {
-      text-align: center;
-      font-size: 0.9rem;
-      margin-top: auto;
-      padding: 1rem 0 0.5rem;
-    }
+.comment-rating {
+  margin-top: 1rem;
+}
 
-    footer a {
-      color: var(--primary);
-      text-decoration: none;
-      margin: 0 0.5rem;
-    }
+.comment-rating textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  border: none;
+}
 
-    footer a:hover {
-      text-decoration: underline;
-    }
-  </style>
+.comment-rating input[type="number"] {
+  width: 100px;
+  padding: 0.3rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  border: none;
+}
+
+.comment-item {
+  border-bottom: 1px solid #555;
+  padding: 0.3rem 0;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: auto;
+  padding: 1rem 0 0.5rem;
+}
+
+footer a {
+  color: var(--primary);
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+</style>
+  
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
-
   <div class="container" id="content">
     <h1>Memuat...</h1>
   </div>
@@ -164,12 +190,19 @@
             <button class="btn" id="stopBtn" style="display:none;">⏹️ Stop</button>
             <a href="index.html" class="btn">🏠 Kembali ke Beranda</a>
           </div>
+          <div class="comment-rating">
+            <h3>💬 Komentar & Rating</h3>
+            <textarea id="commentText" placeholder="Tulis komentar Anda..." rows="3"></textarea>
+            <input type="number" id="ratingValue" placeholder="Rating 1-5" min="1" max="5">
+            <button class="btn" id="submitComment">Kirim</button>
+            <div id="commentsSection"></div>
+          </div>
         `;
 
+        // Speech
         const listenBtn = document.getElementById('listenBtn');
         const stopBtn = document.getElementById('stopBtn');
         const storyText = document.getElementById('storyText').innerText;
-
         let speech = new SpeechSynthesisUtterance();
 
         listenBtn.addEventListener('click', () => {
@@ -179,14 +212,6 @@
           speech.text = storyText;
           speech.lang = 'id-ID';
           speech.rate = 0.9;
-          speech.pitch = 1;
-          speech.volume = 1;
-
-          speech.onend = function () {
-            stopBtn.style.display = 'none';
-            listenBtn.style.display = 'inline-block';
-          };
-
           window.speechSynthesis.speak(speech);
           listenBtn.style.display = 'none';
           stopBtn.style.display = 'inline-block';
@@ -197,11 +222,63 @@
           stopBtn.style.display = 'none';
           listenBtn.style.display = 'inline-block';
         });
+
+        // Komentar + rating
+        const commentText = document.getElementById('commentText');
+        const ratingValue = document.getElementById('ratingValue');
+        const submitComment = document.getElementById('submitComment');
+        const commentsSection = document.getElementById('commentsSection');
+
+        submitComment.addEventListener('click', () => {
+          const text = commentText.value.trim();
+          const rating = parseFloat(ratingValue.value);
+          if (!text || isNaN(rating) || rating < 1 || rating > 5) {
+            alert('Masukkan komentar dan rating 1-5 yang valid!');
+            return;
+          }
+          const newComment = {
+            text,
+            rating,
+            time: Date.now()
+          };
+          db.ref(`cerita/${id}/komentar`).push(newComment).then(() => {
+            commentText.value = '';
+            ratingValue.value = '';
+            loadComments();
+            updateAverageRating();
+          });
+        });
+
+        function loadComments() {
+          db.ref(`cerita/${id}/komentar`).once('value').then(snap => {
+            const comments = snap.val() || {};
+            commentsSection.innerHTML = '<h4>Komentar:</h4>';
+            Object.values(comments).forEach(c => {
+              commentsSection.innerHTML += `
+                <div class="comment-item">
+                  ⭐ ${c.rating} - ${c.text}
+                </div>
+              `;
+            });
+          });
+        }
+
+        function updateAverageRating() {
+          db.ref(`cerita/${id}/komentar`).once('value').then(snap => {
+            const comments = snap.val() || {};
+            const ratings = Object.values(comments).map(c => c.rating);
+            if (ratings.length > 0) {
+              const avg = ratings.reduce((a,b)=>a+b,0)/ratings.length;
+              db.ref(`cerita/${id}/rating`).set(avg.toFixed(1));
+            }
+          });
+        }
+
+        loadComments();
       }).catch(err => {
         content.innerHTML = `<p>Terjadi kesalahan: ${err.message}</p>`;
       });
     }
   </script>
-
 </body>
 </html>
