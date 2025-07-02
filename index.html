@@ -56,35 +56,6 @@ header .logo {
   user-select: none;
 }
 
-header nav {
-  flex: 1 1 280px;
-}
-
-header nav input[type="search"],
-nav input {
-  width: 100%;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: none;
-  outline: none;
-  font-size: 16px;
-  background: rgba(255,255,255,0.2);
-  color: white;
-}
-
-header nav input[type="search"]::placeholder {
-  color: rgba(255,255,255,0.7);
-}
-
-header select {
-  background: rgba(255,255,255,0.2);
-  border: none;
-  padding: 6px 12px;
-  border-radius: 12px;
-  color: #fff;
-  font-size: 14px;
-}
-
 main {
   padding: 32px 16px;
   flex: 1;
@@ -100,20 +71,18 @@ h1 {
   -webkit-text-fill-color: transparent;
 }
 
-.ebook-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
-  padding: 0;
-}
-
+/* Group judul sama: flex agar horizontal */
 .group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-bottom: 20px;
 }
 
 .group-title {
+  width: 100%;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .card {
@@ -126,7 +95,7 @@ h1 {
   align-items: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
-  width: 150px;
+  width: 180px;
   text-align: center;
 }
 
@@ -207,17 +176,14 @@ footer a {
   z-index: 1000;
 }
 
+/* Responsive tetap */
 @media (max-width: 600px) {
-  .ebook-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
   .card {
-    width: auto;
+    width: 140px;
   }
   .card img {
-    width: 120px;
-    height: 160px;
+    width: 100%;
+    height: auto;
   }
   .card h2 {
     font-size: 0.8rem;
@@ -230,20 +196,9 @@ footer a {
   }
 }
 
-@media (max-width: 400px) {
-  .card .rating, .card .views {
-    font-size: 0.8rem;
-  }
-}
-
 @media (min-width: 768px) {
-  .ebook-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-  }
-  .card img {
-    width: 180px;
-    height: 240px;
+  .card {
+    width: 200px;
   }
 }
 
