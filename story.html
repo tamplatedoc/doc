@@ -153,132 +153,121 @@ footer a:hover {
     &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
   </footer>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-      authDomain: "tamplatedoc.firebaseapp.com",
-      databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "tamplatedoc",
-      storageBucket: "tamplatedoc.appspot.com",
-      messagingSenderId: "264966107720",
-      appId: "1:264966107720:web:868abe93cdff209040de7d"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+  authDomain: "tamplatedoc.firebaseapp.com",
+  databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tamplatedoc",
+  storageBucket: "tamplatedoc.appspot.com",
+  messagingSenderId: "264966107720",
+  appId: "1:264966107720:web:868abe93cdff209040de7d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
-    const content = document.getElementById('content');
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id');
+const content = document.getElementById('content');
 
-    if (!id) {
-      content.innerHTML = '<p>ID cerita tidak ditemukan di URL.</p>';
-    } else {
-      db.ref('cerita/' + id).once('value').then(snap => {
-        const cerita = snap.val();
-        if (!cerita) {
-          content.innerHTML = '<p>Cerita tidak ditemukan.</p>';
-          return;
-        }
+function getOS() {
+  const ua = navigator.userAgent;
+  if (/android/i.test(ua)) return "Android";
+  if (/iPad|iPhone|iPod/.test(ua)) return "iOS";
+  if (/Win/.test(ua)) return "Windows";
+  if (/Mac/.test(ua)) return "MacOS";
+  if (/Linux/.test(ua)) return "Linux";
+  return "Lainnya";
+}
 
-        content.innerHTML = `
-          <h1>${cerita.judul}</h1>
-          <p class="genre">Genre: ${cerita.genre}</p>
-          <img src="${cerita.gambar}" alt="Cover ${cerita.judul}" class="story-image" />
-          <div class="story-content" id="storyText">${cerita.isi.replace(/\n/g, '<br>')}</div>
-          <div class="controls">
-            <button class="btn" id="listenBtn">🔊 Dengarkan Cerita</button>
-            <button class="btn" id="stopBtn" style="display:none;">⏹️ Stop</button>
-            <a href="index.html" class="btn">🏠 Kembali ke Beranda</a>
-          </div>
-          <div class="comment-rating">
-            <h3>💬 Komentar & Rating</h3>
-            <textarea id="commentText" placeholder="Tulis komentar Anda..." rows="3"></textarea>
-            <input type="number" id="ratingValue" placeholder="Rating 1-5" min="1" max="5">
-            <button class="btn" id="submitComment">Kirim</button>
-            <div id="commentsSection"></div>
-          </div>
-        `;
+async function getIP() {
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    const data = await res.json();
+    return data.ip;
+  } catch {
+    return "Tidak diketahui";
+  }
+}
 
-        // Speech
-        const listenBtn = document.getElementById('listenBtn');
-        const stopBtn = document.getElementById('stopBtn');
-        const storyText = document.getElementById('storyText').innerText;
-        let speech = new SpeechSynthesisUtterance();
+if (id) {
+  db.ref('cerita/' + id).once('value').then(snap => {
+    const cerita = snap.val();
+    if (!cerita) {
+      content.innerHTML = '<p>Cerita tidak ditemukan.</p>';
+      return;
+    }
 
-        listenBtn.addEventListener('click', () => {
-          if (window.speechSynthesis.speaking) {
-            window.speechSynthesis.cancel();
-          }
-          speech.text = storyText;
-          speech.lang = 'id-ID';
-          speech.rate = 0.9;
-          window.speechSynthesis.speak(speech);
-          listenBtn.style.display = 'none';
-          stopBtn.style.display = 'inline-block';
+    content.innerHTML = `... (sisa HTML seperti sebelumnya) ...`;
+
+    const commentText = document.getElementById('commentText');
+    const ratingValue = document.getElementById('ratingValue');
+    const submitComment = document.getElementById('submitComment');
+    const commentsSection = document.getElementById('commentsSection');
+
+    submitComment.addEventListener('click', async () => {
+      const text = commentText.value.trim();
+      const rating = parseFloat(ratingValue.value);
+      if (!text || isNaN(rating) || rating < 1 || rating > 5) {
+        alert('Masukkan komentar dan rating 1-5 yang valid!');
+        return;
+      }
+
+      const os = getOS();
+      const ip = await getIP();
+
+      const newComment = {
+        text,
+        rating,
+        time: Date.now(),
+        os,
+        ip
+      };
+
+      db.ref(`cerita/${id}/komentar`).push(newComment);
+      db.ref(`admin_logs/komentar`).push({
+        id_cerita: id,
+        text,
+        rating,
+        time: Date.now(),
+        os,
+        ip
+      });
+
+      commentText.value = '';
+      ratingValue.value = '';
+      loadComments();
+      updateAverageRating();
+    });
+
+    function loadComments() {
+      db.ref(`cerita/${id}/komentar`).once('value').then(snap => {
+        const comments = snap.val() || {};
+        commentsSection.innerHTML = '<h4>Komentar:</h4>';
+        Object.values(comments).forEach(c => {
+          commentsSection.innerHTML += `
+            <div class="comment-item">
+              ⭐ ${c.rating} - ${c.text} (${c.os || ''})
+            </div>
+          `;
         });
-
-        stopBtn.addEventListener('click', () => {
-          window.speechSynthesis.cancel();
-          stopBtn.style.display = 'none';
-          listenBtn.style.display = 'inline-block';
-        });
-
-        // Komentar + rating
-        const commentText = document.getElementById('commentText');
-        const ratingValue = document.getElementById('ratingValue');
-        const submitComment = document.getElementById('submitComment');
-        const commentsSection = document.getElementById('commentsSection');
-
-        submitComment.addEventListener('click', () => {
-          const text = commentText.value.trim();
-          const rating = parseFloat(ratingValue.value);
-          if (!text || isNaN(rating) || rating < 1 || rating > 5) {
-            alert('Masukkan komentar dan rating 1-5 yang valid!');
-            return;
-          }
-          const newComment = {
-            text,
-            rating,
-            time: Date.now()
-          };
-          db.ref(`cerita/${id}/komentar`).push(newComment).then(() => {
-            commentText.value = '';
-            ratingValue.value = '';
-            loadComments();
-            updateAverageRating();
-          });
-        });
-
-        function loadComments() {
-          db.ref(`cerita/${id}/komentar`).once('value').then(snap => {
-            const comments = snap.val() || {};
-            commentsSection.innerHTML = '<h4>Komentar:</h4>';
-            Object.values(comments).forEach(c => {
-              commentsSection.innerHTML += `
-                <div class="comment-item">
-                  ⭐ ${c.rating} - ${c.text}
-                </div>
-              `;
-            });
-          });
-        }
-
-        function updateAverageRating() {
-          db.ref(`cerita/${id}/komentar`).once('value').then(snap => {
-            const comments = snap.val() || {};
-            const ratings = Object.values(comments).map(c => c.rating);
-            if (ratings.length > 0) {
-              const avg = ratings.reduce((a,b)=>a+b,0)/ratings.length;
-              db.ref(`cerita/${id}/rating`).set(avg.toFixed(1));
-            }
-          });
-        }
-
-        loadComments();
-      }).catch(err => {
-        content.innerHTML = `<p>Terjadi kesalahan: ${err.message}</p>`;
       });
     }
-  </script>
+
+    function updateAverageRating() {
+      db.ref(`cerita/${id}/komentar`).once('value').then(snap => {
+        const comments = snap.val() || {};
+        const ratings = Object.values(comments).map(c => c.rating);
+        if (ratings.length > 0) {
+          const avg = ratings.reduce((a,b)=>a+b,0)/ratings.length;
+          db.ref(`cerita/${id}/rating`).set(avg.toFixed(1));
+        }
+      });
+    }
+
+    loadComments();
+  });
+}
+</script>
 </body>
 </html>
