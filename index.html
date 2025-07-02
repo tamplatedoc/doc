@@ -5,30 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Koleksi Cerita - Perpustakaan Digital</title>
   <link rel="icon" href="images/FAVVV.png" type="image/png">
-  <!-- META SEO -->
   <meta name="description" content="Koleksi e-book, cerita fantasi, cerita roman, dan hiburan cerita menarik di Perpustakaan Digital. Baca gratis dan nikmati pengalaman membaca online." />
   <meta name="keywords" content="e-book, cerita fantasi, cerita roman, hiburan cerita, koleksi cerita, perpustakaan digital, cerita online, buku gratis, bacaan online, cerita anak, cerita petualangan, novel digital" />
   <meta name="author" content="Perpustakaan Digital" />
   <meta name="robots" content="index, follow" />
-
-  <!-- Open Graph untuk social media -->
-  <meta property="og:title" content="Koleksi Cerita - Perpustakaan Digital" />
-  <meta property="og:description" content="Koleksi e-book, cerita fantasi, roman, dan cerita hiburan lainnya. Baca cerita online gratis di Perpustakaan Digital." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://yourwebsite.com" />
-  <meta property="og:image" content="https://yourwebsite.com/assets/cover.jpg" />
-  
-<style>
-  *, *::before, *::after {
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
   font-family: 'Poppins', sans-serif;
   background: #121212;
   color: #e0e0e0;
   line-height: 1.6;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -40,17 +34,17 @@ a {
 }
 
 header {
-  background: linear-gradient(135deg, #4b0082 0%, #00bfa5 100%);
   padding: 16px 24px;
-  position: relative;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  background: linear-gradient(135deg, #4b0082 0%, #00bfa5 100%);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
+  position: relative;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
 header .logo {
@@ -66,7 +60,8 @@ header nav {
   flex: 1 1 280px;
 }
 
-header nav input[type="search"] {
+header nav input[type="search"],
+nav input {
   width: 100%;
   padding: 8px 16px;
   border-radius: 20px;
@@ -112,16 +107,27 @@ h1 {
   padding: 0;
 }
 
+.group {
+  margin-bottom: 20px;
+}
+
+.group-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
 .card {
-  background: rgba(255, 255, 255, 0.06);
+  background: #1e1e1e;
   border-radius: 12px;
+  padding: 10px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
+  width: 150px;
+  text-align: center;
 }
 
 .card:hover {
@@ -130,19 +136,18 @@ h1 {
 }
 
 .card img {
-  width: 140px;
-  height: 180px;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
   object-fit: cover;
-  border-radius: 8px;
   background: #262626;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
   margin-bottom: 8px;
 }
 
 .card h2 {
-  font-size: 0.9rem;
-  text-align: center;
-  margin: 4px 0;
+  font-size: 14px;
+  margin: 5px 0;
   color: #00bfa5;
 }
 
@@ -169,11 +174,11 @@ h1 {
 }
 
 .card .rating {
-  color: #ffa726; /* orange rating */
+  color: #ffa726;
 }
 
 .card .views {
-  color: #90caf9; /* light blue views */
+  color: #90caf9;
 }
 
 footer {
@@ -182,6 +187,7 @@ footer {
   padding: 24px 16px;
   text-align: center;
   flex-shrink: 0;
+  font-size: 12px;
 }
 
 footer a {
@@ -192,7 +198,7 @@ footer a {
 #tts-warning {
   display: none;
   background: #ff9800;
-  color: #121212;
+  color: #000;
   padding: 10px;
   text-align: center;
   font-size: 14px;
@@ -205,6 +211,9 @@ footer a {
   .ebook-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+  }
+  .card {
+    width: auto;
   }
   .card img {
     width: 120px;
@@ -237,16 +246,13 @@ footer a {
     height: 240px;
   }
 }
-</style>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  </style>
 </head>
 <body>
   <header>
     <div class="logo" id="logo-text">Koleksi Cerita</div>
-    <nav>
-      <input type="search" id="search-input" placeholder="Cari judul atau genre..." />
-    </nav>
+    <nav><input type="search" id="search-input" placeholder="Cari judul atau genre..." /></nav>
     <select id="language-select">
       <option value="id" selected>Bahasa Indonesia</option>
       <option value="en">English</option>
@@ -269,8 +275,7 @@ footer a {
   </footer>
 
   <div id="tts-warning">
-    ⚠️ Untuk suara bahasa Indonesia, aktifkan TTS Indonesia di 
-    <strong>Pengaturan > Bahasa & masukan > Keluaran Teks ke Suara</strong>
+    ⚠️ Untuk suara bahasa Indonesia, aktifkan TTS Indonesia di <strong>Pengaturan > Bahasa & masukan > Keluaran Teks ke Suara</strong>
   </div>
 
   <script>
@@ -293,30 +298,8 @@ footer a {
     let currentLang = 'id';
 
     const texts = {
-      id: {
-        logo: 'Koleksi Cerita',
-        mainTitle: 'Koleksi Cerita',
-        searchPlaceholder: 'Cari judul atau genre...',
-        notFound: 'Cerita tidak ditemukan.',
-        about: '📖 Tentang',
-        privacy: '🔒 Kebijakan Privasi',
-        contact: '☎️ Kontak',
-        disclaimer: '⚠️ Disclaimer',
-        copyright: '&copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.',
-        read: 'Baca Cerita'
-      },
-      en: {
-        logo: 'Story Collection',
-        mainTitle: 'Story Collection',
-        searchPlaceholder: 'Search title or genre...',
-        notFound: 'No stories found.',
-        about: '📖 About',
-        privacy: '🔒 Privacy Policy',
-        contact: '☎️ Contact',
-        disclaimer: '⚠️ Disclaimer',
-        copyright: '&copy; 2024 Digital Library - All rights reserved.',
-        read: 'Read Story'
-      }
+      id: { logo: 'Koleksi Cerita', mainTitle: 'Koleksi Cerita', searchPlaceholder: 'Cari judul atau genre...', notFound: 'Cerita tidak ditemukan.', about: '📖 Tentang', privacy: '🔒 Kebijakan Privasi', contact: '☎️ Kontak', disclaimer: '⚠️ Disclaimer', copyright: '&copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.', read: 'Baca Cerita' },
+      en: { logo: 'Story Collection', mainTitle: 'Story Collection', searchPlaceholder: 'Search title or genre...', notFound: 'No stories found.', about: '📖 About', privacy: '🔒 Privacy Policy', contact: '☎️ Contact', disclaimer: '⚠️ Disclaimer', copyright: '&copy; 2024 Digital Library - All rights reserved.', read: 'Read Story' }
     };
 
     function updateTexts(lang) {
@@ -334,69 +317,80 @@ footer a {
       `;
     }
 
-    function renderCerita(ceritaList) {
+    function renderGrouped(ceritaList) {
       grid.innerHTML = '';
       if (ceritaList.length === 0) {
-        grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;">${texts[currentLang].notFound}</p>`;
+        grid.innerHTML = `<p>${texts[currentLang].notFound}</p>`;
         return;
       }
-      ceritaList.forEach(cerita => {
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.innerHTML = `
-          <img src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}" />
-          <h2>${cerita.judul}</h2>
-          <div class="author">${cerita.genre}</div>
-          <div class="rating">⭐ ${cerita.rating || '0.0'}</div>
-          <div class="views">👁 ${cerita.views || 0} ${currentLang === 'id' ? 'dilihat' : 'views'}</div>
-          <div class="category"><a href="story.html?id=${cerita.key}">${texts[currentLang].read}</a></div>
-        `;
-        card.addEventListener('click', () => {
-          speakText(`${cerita.judul}, ${cerita.genre}`);
-          db.ref(`cerita/${cerita.key}/views`).transaction(current => (current || 0) + 1);
+      const groups = {};
+      ceritaList.forEach(c => {
+        const kataAwal = c.judul.split(' ')[0].toLowerCase();
+        if (!groups[kataAwal]) groups[kataAwal] = [];
+        groups[kataAwal].push(c);
+      });
+      Object.keys(groups).sort().forEach(kata => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'group';
+        wrapper.innerHTML = `<div class="group-title">${kata}</div>`;
+        const groupGrid = document.createElement('div');
+        groupGrid.style.display = 'flex';
+        groupGrid.style.flexWrap = 'wrap';
+        groupGrid.style.gap = '10px';
+        groups[kata].forEach(cerita => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <img src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
+            <h2>${cerita.judul}</h2>
+            <div>${cerita.genre}</div>
+            <div>⭐ ${cerita.rating || '0.0'}</div>
+            <div>👁 ${cerita.views || 0} ${currentLang === 'id' ? 'dilihat' : 'views'}</div>
+            <div><a href="story.html?id=${cerita.key}">${texts[currentLang].read}</a></div>
+          `;
+          card.onclick = () => {
+            speakText(`${cerita.judul}, ${cerita.genre}`);
+            db.ref(`cerita/${cerita.key}/views`).transaction(current => (current || 0) + 1);
+          };
+          groupGrid.appendChild(card);
         });
-        grid.appendChild(card);
+        wrapper.appendChild(groupGrid);
+        grid.appendChild(wrapper);
       });
     }
 
     function filterCerita(query) {
       const q = query.trim().toLowerCase();
-      const hasil = semuaCerita.filter(c => 
+      const hasil = semuaCerita.filter(c =>
         c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
       );
-      renderCerita(hasil);
+      renderGrouped(hasil);
     }
 
     function speakText(text) {
       const msg = new SpeechSynthesisUtterance(text);
       const voices = window.speechSynthesis.getVoices();
-      const targetLang = currentLang === 'id' ? 'id' : 'en';
-      const voice = voices.find(v => v.lang.startsWith(targetLang));
-      if (voice) {
-        msg.voice = voice;
-      } else {
-        msg.lang = currentLang === 'id' ? 'id-ID' : 'en-GB';
-      }
+      const langCode = currentLang === 'id' ? 'id' : 'en';
+      const voice = voices.find(v => v.lang.startsWith(langCode));
+      if (voice) msg.voice = voice;
+      else msg.lang = currentLang === 'id' ? 'id-ID' : 'en-GB';
       window.speechSynthesis.speak(msg);
     }
 
     function checkTTSAvailability() {
       const voices = window.speechSynthesis.getVoices();
-      const hasIdVoice = voices.some(v => v.lang.startsWith('id'));
-      const warning = document.getElementById('tts-warning');
-      if (currentLang === 'id' && !hasIdVoice) {
-        warning.style.display = 'block';
-      } else {
-        warning.style.display = 'none';
-      }
+      const hasId = voices.some(v => v.lang.startsWith('id'));
+      document.getElementById('tts-warning').style.display = (currentLang === 'id' && !hasId) ? 'block' : 'none';
     }
 
-    langSelect.addEventListener('change', () => {
+    langSelect.onchange = () => {
       currentLang = langSelect.value;
       updateTexts(currentLang);
       filterCerita(searchInput.value);
       checkTTSAvailability();
-    });
+    };
+
+    searchInput.oninput = e => filterCerita(e.target.value);
 
     db.ref('cerita').on('value', snap => {
       const obj = snap.val() || {};
@@ -404,13 +398,7 @@ footer a {
       filterCerita(searchInput.value);
     });
 
-    searchInput.addEventListener('input', e => {
-      filterCerita(e.target.value);
-    });
-
-    window.speechSynthesis.onvoiceschanged = () => {
-      checkTTSAvailability();
-    };
+    window.speechSynthesis.onvoiceschanged = checkTTSAvailability;
 
     updateTexts(currentLang);
   </script>
