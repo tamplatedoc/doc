@@ -196,127 +196,138 @@ footer a {
     crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-      authDomain: "tamplatedoc.firebaseapp.com",
-      databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "tamplatedoc",
-      storageBucket: "tamplatedoc.appspot.com",
-      messagingSenderId: "264966107720",
-      appId: "1:264966107720:web:868abe93cdff209040de7d"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+ <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+  authDomain: "tamplatedoc.firebaseapp.com",
+  databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tamplatedoc",
+  storageBucket: "tamplatedoc.appspot.com",
+  messagingSenderId: "264966107720",
+  appId: "1:264966107720:web:868abe93cdff209040de7d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    const grid = document.getElementById('cerita-grid');
-    const searchInput = document.getElementById('search-input');
-    const langSelect = document.getElementById('language-select');
-    let semuaCerita = [];
-    let currentLang = 'id';
+const grid = document.getElementById('cerita-grid');
+const searchInput = document.getElementById('search-input');
+const langSelect = document.getElementById('language-select');
+let semuaCerita = [];
+let currentLang = 'id';
 
-    const texts = {
-      id: { logo: 'Koleksi Cerita', mainTitle: 'Koleksi Cerita', searchPlaceholder: 'Cari judul atau genre...', notFound: 'Cerita tidak ditemukan.', about: '📖 Tentang', privacy: '🔒 Kebijakan Privasi', contact: '☎️ Kontak', disclaimer: '⚠️ Disclaimer', copyright: '&copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.', read: 'Baca Cerita' },
-      en: { logo: 'Story Collection', mainTitle: 'Story Collection', searchPlaceholder: 'Search title or genre...', notFound: 'No stories found.', about: '📖 About', privacy: '🔒 Privacy Policy', contact: '☎️ Contact', disclaimer: '⚠️ Disclaimer', copyright: '&copy; 2024 Digital Library - All rights reserved.', read: 'Read Story' }
-    };
+const texts = {
+  id: { logo: 'Koleksi Cerita', mainTitle: 'Koleksi Cerita', searchPlaceholder: 'Cari judul atau genre...', notFound: 'Cerita tidak ditemukan.', about: '📖 Tentang', privacy: '🔒 Kebijakan Privasi', contact: '☎️ Kontak', disclaimer: '⚠️ Disclaimer', copyright: '&copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.', read: 'Baca Cerita' },
+  en: { logo: 'Story Collection', mainTitle: 'Story Collection', searchPlaceholder: 'Search title or genre...', notFound: 'No stories found.', about: '📖 About', privacy: '🔒 Privacy Policy', contact: '☎️ Contact', disclaimer: '⚠️ Disclaimer', copyright: '&copy; 2024 Digital Library - All rights reserved.', read: 'Read Story' }
+};
 
-    function updateTexts(lang) {
-      document.getElementById('logo-text').textContent = texts[lang].logo;
-      document.getElementById('main-title').textContent = texts[lang].mainTitle;
-      searchInput.placeholder = texts[lang].searchPlaceholder;
-      document.getElementById('footer-text').innerHTML = `
-        <div>
-          <a href="about.html">${texts[lang].about}</a>
-          <a href="privacy.html">${texts[lang].privacy}</a>
-          <a href="contact.html">${texts[lang].contact}</a>
-          <a href="disclaimer.html">${texts[lang].disclaimer}</a>
-        </div>
-        ${texts[lang].copyright}
-      `;
-    }
+function updateTexts(lang) {
+  document.getElementById('logo-text').textContent = texts[lang].logo;
+  document.getElementById('main-title').textContent = texts[lang].mainTitle;
+  searchInput.placeholder = texts[lang].searchPlaceholder;
+  document.getElementById('footer-text').innerHTML = `
+    <div>
+      <a href="about.html">${texts[lang].about}</a>
+      <a href="privacy.html">${texts[lang].privacy}</a>
+      <a href="contact.html">${texts[lang].contact}</a>
+      <a href="disclaimer.html">${texts[lang].disclaimer}</a>
+    </div>
+    ${texts[lang].copyright}
+  `;
+}
 
-    function renderGrouped(ceritaList) {
-      grid.innerHTML = '';
-      if (ceritaList.length === 0) {
-        grid.innerHTML = `<p>${texts[currentLang].notFound}</p>`;
-        return;
-      }
-      const groups = {};
-      ceritaList.forEach(c => {
-        const kataAwal = c.judul.split(' ')[0].toLowerCase();
-        if (!groups[kataAwal]) groups[kataAwal] = [];
-        groups[kataAwal].push(c);
-      });
-      Object.keys(groups).sort().forEach(kata => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'group';
-        wrapper.innerHTML = `<div class="group-title">${kata}</div>`;
-        const groupGrid = document.createElement('div');
-        groupGrid.className = 'group-grid';
-        groups[kata].forEach(cerita => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <img loading="lazy" src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
-            <h2>${cerita.judul}</h2>
-            <div class="genre">${cerita.genre}</div>
-            <div class="rating">⭐ ${cerita.rating || '0.0'}</div>
-            <div class="views">👁 ${cerita.views || 0} ${currentLang === 'id' ? 'dilihat' : 'views'}</div>
-            <div><a href="story.html?id=${cerita.key}">${texts[currentLang].read}</a></div>
-          `;
-          card.onclick = () => {
-            speakText(`${cerita.judul}, ${cerita.genre}`);
-            db.ref(`cerita/${cerita.key}/views`).transaction(current => (current || 0) + 1);
-          };
-          groupGrid.appendChild(card);
-        });
-        wrapper.appendChild(groupGrid);
-        grid.appendChild(wrapper);
-      });
-    }
+let batchSize = 30;
+let currentIndex = 0;
+let filteredCerita = [];
 
-    function filterCerita(query) {
-      const q = query.trim().toLowerCase();
-      const hasil = semuaCerita.filter(c =>
-        c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
-      );
-      renderGrouped(hasil);
-    }
+function renderBatch() {
+  const batch = filteredCerita.slice(currentIndex, currentIndex + batchSize);
+  if (batch.length === 0 && currentIndex === 0) {
+    grid.innerHTML = `<p>${texts[currentLang].notFound}</p>`;
+    return;
+  }
+  batch.forEach(cerita => appendCard(cerita));
+  currentIndex += batchSize;
+}
 
-    function speakText(text) {
-      const msg = new SpeechSynthesisUtterance(text);
-      const voices = window.speechSynthesis.getVoices();
-      const langCode = currentLang === 'id' ? 'id' : 'en';
-      const voice = voices.find(v => v.lang.startsWith(langCode));
-      if (voice) msg.voice = voice;
-      else msg.lang = currentLang === 'id' ? 'id-ID' : 'en-GB';
-      window.speechSynthesis.speak(msg);
-    }
+function appendCard(cerita) {
+  const kataAwal = cerita.judul.split(' ')[0].toLowerCase();
+  let groupWrapper = grid.querySelector(`.group[data-group="${kataAwal}"]`);
+  if (!groupWrapper) {
+    groupWrapper = document.createElement('div');
+    groupWrapper.className = 'group';
+    groupWrapper.dataset.group = kataAwal;
+    groupWrapper.innerHTML = `<div class="group-title">${kataAwal}</div><div class="group-grid"></div>`;
+    grid.appendChild(groupWrapper);
+  }
+  const groupGrid = groupWrapper.querySelector('.group-grid');
 
-    function checkTTSAvailability() {
-      const voices = window.speechSynthesis.getVoices();
-      const hasId = voices.some(v => v.lang.startsWith('id'));
-      document.getElementById('tts-warning').style.display = (currentLang === 'id' && !hasId) ? 'block' : 'none';
-    }
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <img loading="lazy" src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
+    <h2>${cerita.judul}</h2>
+    <div class="genre">${cerita.genre}</div>
+    <div class="rating">⭐ ${cerita.rating || '0.0'}</div>
+    <div class="views">👁 ${cerita.views || 0} ${currentLang === 'id' ? 'dilihat' : 'views'}</div>
+    <div><a href="story.html?id=${cerita.key}">${texts[currentLang].read}</a></div>
+  `;
+  card.onclick = () => {
+    speakText(`${cerita.judul}, ${cerita.genre}`);
+    db.ref(`cerita/${cerita.key}/views`).transaction(current => (current || 0) + 1);
+  };
+  groupGrid.appendChild(card);
+}
 
-    langSelect.onchange = () => {
-      currentLang = langSelect.value;
-      updateTexts(currentLang);
-      filterCerita(searchInput.value);
-      checkTTSAvailability();
-    };
+function filterCerita(query) {
+  const q = query.trim().toLowerCase();
+  filteredCerita = semuaCerita.filter(c =>
+    c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
+  );
+  grid.innerHTML = '';
+  currentIndex = 0;
+  renderBatch();
+}
 
-    searchInput.oninput = e => filterCerita(e.target.value);
+langSelect.onchange = () => {
+  currentLang = langSelect.value;
+  updateTexts(currentLang);
+  filterCerita(searchInput.value);
+  checkTTSAvailability();
+};
 
-    db.ref('cerita').limitToFirst(20).on('value', snap => {
-      const obj = snap.val() || {};
-      semuaCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
-      filterCerita(searchInput.value);
-    });
+searchInput.oninput = e => filterCerita(e.target.value);
 
-    window.speechSynthesis.onvoiceschanged = checkTTSAvailability;
+db.ref('cerita').on('value', snap => {
+  const obj = snap.val() || {};
+  semuaCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
+  filterCerita(searchInput.value);
+});
 
-    updateTexts(currentLang);
-  </script>
+window.addEventListener('scroll', () => {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+    renderBatch();
+  }
+});
+
+function speakText(text) {
+  const msg = new SpeechSynthesisUtterance(text);
+  const voices = window.speechSynthesis.getVoices();
+  const langCode = currentLang === 'id' ? 'id' : 'en';
+  const voice = voices.find(v => v.lang.startsWith(langCode));
+  if (voice) msg.voice = voice;
+  else msg.lang = currentLang === 'id' ? 'id-ID' : 'en-GB';
+  window.speechSynthesis.speak(msg);
+}
+
+function checkTTSAvailability() {
+  const voices = window.speechSynthesis.getVoices();
+  const hasId = voices.some(v => v.lang.startsWith('id'));
+  document.getElementById('tts-warning').style.display = (currentLang === 'id' && !hasId) ? 'block' : 'none';
+}
+
+window.speechSynthesis.onvoiceschanged = checkTTSAvailability;
+updateTexts(currentLang);
+</script>
+
 </body>
 </html>
