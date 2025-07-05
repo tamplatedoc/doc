@@ -196,7 +196,7 @@ footer a {
     crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
- <script>
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
   authDomain: "tamplatedoc.firebaseapp.com",
@@ -213,6 +213,7 @@ const grid = document.getElementById('cerita-grid');
 const searchInput = document.getElementById('search-input');
 const langSelect = document.getElementById('language-select');
 let semuaCerita = [];
+let filteredCerita = [];
 let currentLang = 'id';
 
 const texts = {
@@ -237,7 +238,6 @@ function updateTexts(lang) {
 
 let batchSize = 30;
 let currentIndex = 0;
-let filteredCerita = [];
 
 function renderBatch() {
   const batch = filteredCerita.slice(currentIndex, currentIndex + batchSize);
@@ -261,8 +261,11 @@ function appendCard(cerita) {
   }
   const groupGrid = groupWrapper.querySelector('.group-grid');
 
+  if (groupGrid.querySelector(`[data-key="${cerita.key}"]`)) return;
+
   const card = document.createElement('div');
   card.className = 'card';
+  card.setAttribute('data-key', cerita.key);
   card.innerHTML = `
     <img loading="lazy" src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
     <h2>${cerita.judul}</h2>
@@ -322,11 +325,18 @@ function speakText(text) {
 function checkTTSAvailability() {
   const voices = window.speechSynthesis.getVoices();
   const hasId = voices.some(v => v.lang.startsWith('id'));
-  document.getElementById('tts-warning').style.display = (currentLang === 'id' && !hasId) ? 'block' : 'none';
+  const warning = document.getElementById('tts-warning');
+  if (currentLang === 'id' && !hasId) {
+    warning.style.display = 'block';
+  } else {
+    warning.style.display = 'none';
+  }
 }
 
-window.speechSynthesis.onvoiceschanged = checkTTSAvailability;
+// Initial call
 updateTexts(currentLang);
+checkTTSAvailability();
+window.speechSynthesis.onvoiceschanged = checkTTSAvailability;
 </script>
 
 </body>
