@@ -10,7 +10,6 @@
   <meta name="keywords" content="ebook, cerita fantasi, cerita roman, hiburan cerita, koleksi cerita, perpustakaan digital, cerita online, buku gratis, bacaan online, cerita anak, cerita petualangan, novel digital" />
   <meta name="author" content="Perpustakaan Digital" />
   <meta name="robots" content="index, follow" />
-
 <style>
  *, *::before, *::after {
   box-sizing: border-box;
@@ -177,6 +176,9 @@ footer a {
   <main>
     <h1 id="main-title">Koleksi Cerita</h1>
     <section id="cerita-grid"></section>
+    <div id="loading-indicator" style="text-align: center; padding: 20px; display: none;">
+      Memuat cerita lebih banyak...
+    </div>
   </main>
 
   <footer id="footer-text">
@@ -192,152 +194,295 @@ footer a {
   <div id="tts-warning">
     ⚠️ Untuk suara bahasa Indonesia, aktifkan TTS Indonesia di <strong>Pengaturan > Bahasa & masukan > Keluaran Teks ke Suara</strong>
   </div>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6115422527383784"
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6115422527383784"
     crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-  authDomain: "tamplatedoc.firebaseapp.com",
-  databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "tamplatedoc",
-  storageBucket: "tamplatedoc.appspot.com",
-  messagingSenderId: "264966107720",
-  appId: "1:264966107720:web:868abe93cdff209040de7d"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-const grid = document.getElementById('cerita-grid');
-const searchInput = document.getElementById('search-input');
-const langSelect = document.getElementById('language-select');
-let semuaCerita = [];
-let filteredCerita = [];
-let currentLang = 'id';
-
-const texts = {
-  id: { logo: 'Koleksi Cerita', mainTitle: 'Koleksi Cerita', searchPlaceholder: 'Cari judul atau genre...', notFound: 'Cerita tidak ditemukan.', about: '📖 Tentang', privacy: '🔒 Kebijakan Privasi', contact: '☎️ Kontak', disclaimer: '⚠️ Disclaimer', copyright: '&copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.', read: 'Baca Cerita' },
-  en: { logo: 'Story Collection', mainTitle: 'Story Collection', searchPlaceholder: 'Search title or genre...', notFound: 'No stories found.', about: '📖 About', privacy: '🔒 Privacy Policy', contact: '☎️ Contact', disclaimer: '⚠️ Disclaimer', copyright: '&copy; 2024 Digital Library - All rights reserved.', read: 'Read Story' }
-};
-
-function updateTexts(lang) {
-  document.getElementById('logo-text').textContent = texts[lang].logo;
-  document.getElementById('main-title').textContent = texts[lang].mainTitle;
-  searchInput.placeholder = texts[lang].searchPlaceholder;
-  document.getElementById('footer-text').innerHTML = `
-    <div>
-      <a href="about.html">${texts[lang].about}</a>
-      <a href="privacy.html">${texts[lang].privacy}</a>
-      <a href="contact.html">${texts[lang].contact}</a>
-      <a href="disclaimer.html">${texts[lang].disclaimer}</a>
-    </div>
-    ${texts[lang].copyright}
-  `;
-}
-
-let batchSize = 30;
-let currentIndex = 0;
-
-function renderBatch() {
-  const batch = filteredCerita.slice(currentIndex, currentIndex + batchSize);
-  if (batch.length === 0 && currentIndex === 0) {
-    grid.innerHTML = `<p>${texts[currentLang].notFound}</p>`;
-    return;
-  }
-  batch.forEach(cerita => appendCard(cerita));
-  currentIndex += batchSize;
-}
-
-function appendCard(cerita) {
-  const kataAwal = cerita.judul.split(' ')[0].toLowerCase();
-  let groupWrapper = grid.querySelector(`.group[data-group="${kataAwal}"]`);
-  if (!groupWrapper) {
-    groupWrapper = document.createElement('div');
-    groupWrapper.className = 'group';
-    groupWrapper.dataset.group = kataAwal;
-    groupWrapper.innerHTML = `<div class="group-title">${kataAwal}</div><div class="group-grid"></div>`;
-    grid.appendChild(groupWrapper);
-  }
-  const groupGrid = groupWrapper.querySelector('.group-grid');
-
-  if (groupGrid.querySelector(`[data-key="${cerita.key}"]`)) return;
-
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.setAttribute('data-key', cerita.key);
-  card.innerHTML = `
-    <img loading="lazy" src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
-    <h2>${cerita.judul}</h2>
-    <div class="genre">${cerita.genre}</div>
-    <div class="rating">⭐ ${cerita.rating || '0.0'}</div>
-    <div class="views">👁 ${cerita.views || 0} ${currentLang === 'id' ? 'dilihat' : 'views'}</div>
-    <div><a href="story.html?id=${cerita.key}">${texts[currentLang].read}</a></div>
-  `;
-  card.onclick = () => {
-    speakText(`${cerita.judul}, ${cerita.genre}`);
-    db.ref(`cerita/${cerita.key}/views`).transaction(current => (current || 0) + 1);
+  
+  <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+    authDomain: "tamplatedoc.firebaseapp.com",
+    databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "tamplatedoc",
+    storageBucket: "tamplatedoc.appspot.com",
+    messagingSenderId: "264966107720",
+    appId: "1:264966107720:web:868abe93cdff209040de7d"
   };
-  groupGrid.appendChild(card);
-}
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
 
-function filterCerita(query) {
-  const q = query.trim().toLowerCase();
-  filteredCerita = semuaCerita.filter(c =>
-    c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
-  );
-  grid.innerHTML = '';
-  currentIndex = 0;
-  renderBatch();
-}
+  const grid = document.getElementById('cerita-grid');
+  const searchInput = document.getElementById('search-input');
+  const langSelect = document.getElementById('language-select');
+  const loadingIndicator = document.getElementById('loading-indicator');
+  let semuaCerita = [];
+  let filteredCerita = [];
+  let currentLang = 'id';
+  let isLoading = false;
+  let allDataLoaded = false;
 
-langSelect.onchange = () => {
-  currentLang = langSelect.value;
-  updateTexts(currentLang);
-  filterCerita(searchInput.value);
-  checkTTSAvailability();
-};
+  // Konfigurasi batch loading
+  const INITIAL_BATCH_SIZE = 30;
+  const SCROLL_BATCH_SIZE = 20;
+  let currentIndex = 0;
 
-searchInput.oninput = e => filterCerita(e.target.value);
+  const texts = {
+    id: { 
+      logo: 'Koleksi Cerita', 
+      mainTitle: 'Koleksi Cerita', 
+      searchPlaceholder: 'Cari judul atau genre...', 
+      notFound: 'Cerita tidak ditemukan.', 
+      about: '📖 Tentang', 
+      privacy: '🔒 Kebijakan Privasi', 
+      contact: '☎️ Kontak', 
+      disclaimer: '⚠️ Disclaimer', 
+      copyright: '&copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.', 
+      read: 'Baca Cerita',
+      loading: 'Memuat cerita lebih banyak...'
+    },
+    en: { 
+      logo: 'Story Collection', 
+      mainTitle: 'Story Collection', 
+      searchPlaceholder: 'Search title or genre...', 
+      notFound: 'No stories found.', 
+      about: '📖 About', 
+      privacy: '🔒 Privacy Policy', 
+      contact: '☎️ Contact', 
+      disclaimer: '⚠️ Disclaimer', 
+      copyright: '&copy; 2024 Digital Library - All rights reserved.', 
+      read: 'Read Story',
+      loading: 'Loading more stories...'
+    }
+  };
 
-db.ref('cerita').on('value', snap => {
-  const obj = snap.val() || {};
-  semuaCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
-  filterCerita(searchInput.value);
-});
+  function updateTexts(lang) {
+    document.getElementById('logo-text').textContent = texts[lang].logo;
+    document.getElementById('main-title').textContent = texts[lang].mainTitle;
+    searchInput.placeholder = texts[lang].searchPlaceholder;
+    loadingIndicator.textContent = texts[lang].loading;
+    document.getElementById('footer-text').innerHTML = `
+      <div>
+        <a href="about.html">${texts[lang].about}</a>
+        <a href="privacy.html">${texts[lang].privacy}</a>
+        <a href="contact.html">${texts[lang].contact}</a>
+        <a href="disclaimer.html">${texts[lang].disclaimer}</a>
+      </div>
+      ${texts[lang].copyright}
+    `;
+  }
 
-window.addEventListener('scroll', () => {
-  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+  // Fungsi untuk memuat data awal
+  function loadInitialData() {
+    showLoading(true);
+    db.ref('cerita').limitToFirst(INITIAL_BATCH_SIZE).once('value')
+      .then(snap => {
+        const obj = snap.val() || {};
+        semuaCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
+        filteredCerita = [...semuaCerita];
+        renderBatch();
+        showLoading(false);
+        
+        // Set up listener untuk perubahan data
+        setupDataListener();
+      })
+      .catch(error => {
+        console.error("Error loading initial data:", error);
+        showLoading(false);
+      });
+  }
+
+  // Fungsi untuk setup listener perubahan data
+  function setupDataListener() {
+    db.ref('cerita').on('child_changed', snap => {
+      const updatedCerita = { key: snap.key, ...snap.val() };
+      // Update data yang ada
+      const index = semuaCerita.findIndex(c => c.key === updatedCerita.key);
+      if (index !== -1) {
+        semuaCerita[index] = updatedCerita;
+      }
+      
+      // Update tampilan jika cerita ini sedang ditampilkan
+      const card = grid.querySelector(`[data-key="${updatedCerita.key}"]`);
+      if (card) {
+        updateCard(card, updatedCerita);
+      }
+    });
+  }
+
+  // Fungsi untuk memuat data tambahan
+  function loadMoreData() {
+    if (isLoading || allDataLoaded) return;
+    
+    showLoading(true);
+    isLoading = true;
+    
+    // Gunakan last key untuk query berikutnya
+    const lastKey = semuaCerita[semuaCerita.length - 1]?.key;
+    
+    if (!lastKey) {
+      allDataLoaded = true;
+      showLoading(false);
+      isLoading = false;
+      return;
+    }
+    
+    db.ref('cerita').orderByKey().startAfter(lastKey).limitToFirst(SCROLL_BATCH_SIZE).once('value')
+      .then(snap => {
+        const obj = snap.val() || {};
+        if (Object.keys(obj).length === 0) {
+          allDataLoaded = true;
+          showLoading(false);
+          isLoading = false;
+          return;
+        }
+        
+        const newCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
+        semuaCerita = [...semuaCerita, ...newCerita];
+        
+        // Filter data baru sesuai pencarian jika ada
+        if (searchInput.value.trim()) {
+          const q = searchInput.value.trim().toLowerCase();
+          filteredCerita = semuaCerita.filter(c =>
+            c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
+          );
+        } else {
+          filteredCerita = [...semuaCerita];
+        }
+        
+        renderBatch();
+        showLoading(false);
+        isLoading = false;
+      })
+      .catch(error => {
+        console.error("Error loading more data:", error);
+        showLoading(false);
+        isLoading = false;
+      });
+  }
+
+  function showLoading(show) {
+    loadingIndicator.style.display = show ? 'block' : 'none';
+  }
+
+  function renderBatch() {
+    const batch = filteredCerita.slice(currentIndex, currentIndex + SCROLL_BATCH_SIZE);
+    
+    if (batch.length === 0 && currentIndex === 0) {
+      grid.innerHTML = `<p>${texts[currentLang].notFound}</p>`;
+      return;
+    }
+    
+    batch.forEach(cerita => appendCard(cerita));
+    currentIndex += batch.length;
+    
+    // Jika tidak ada data yang ditambahkan, mungkin semua data sudah dimuat
+    if (batch.length < SCROLL_BATCH_SIZE) {
+      allDataLoaded = true;
+    }
+  }
+
+  function appendCard(cerita) {
+    const kataAwal = cerita.judul.split(' ')[0].toLowerCase();
+    let groupWrapper = grid.querySelector(`.group[data-group="${kataAwal}"]`);
+    
+    if (!groupWrapper) {
+      groupWrapper = document.createElement('div');
+      groupWrapper.className = 'group';
+      groupWrapper.dataset.group = kataAwal;
+      groupWrapper.innerHTML = `<div class="group-title">${kataAwal}</div><div class="group-grid"></div>`;
+      grid.appendChild(groupWrapper);
+    }
+    
+    const groupGrid = groupWrapper.querySelector('.group-grid');
+    if (groupGrid.querySelector(`[data-key="${cerita.key}"]`)) return;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('data-key', cerita.key);
+    updateCard(card, cerita);
+    groupGrid.appendChild(card);
+  }
+
+  function updateCard(card, cerita) {
+    card.innerHTML = `
+      <img loading="lazy" src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
+      <h2>${cerita.judul}</h2>
+      <div class="genre">${cerita.genre}</div>
+      <div class="rating">⭐ ${cerita.rating || '0.0'}</div>
+      <div class="views">👁 ${cerita.views || 0} ${currentLang === 'id' ? 'dilihat' : 'views'}</div>
+      <div><a href="story.html?id=${cerita.key}">${texts[currentLang].read}</a></div>
+    `;
+    card.onclick = () => {
+      speakText(`${cerita.judul}, ${cerita.genre}`);
+      db.ref(`cerita/${cerita.key}/views`).transaction(current => (current || 0) + 1);
+    };
+  }
+
+  function filterCerita(query) {
+    const q = query.trim().toLowerCase();
+    filteredCerita = semuaCerita.filter(c =>
+      c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
+    );
+    grid.innerHTML = '';
+    currentIndex = 0;
+    allDataLoaded = false;
     renderBatch();
+    
+    // Jika hasil filter kosong dan masih ada data di Firebase, coba muat lebih banyak
+    if (filteredCerita.length === 0 && !allDataLoaded) {
+      loadMoreData();
+    }
   }
-});
 
-function speakText(text) {
-  const msg = new SpeechSynthesisUtterance(text);
-  const voices = window.speechSynthesis.getVoices();
-  const langCode = currentLang === 'id' ? 'id' : 'en';
-  const voice = voices.find(v => v.lang.startsWith(langCode));
-  if (voice) msg.voice = voice;
-  else msg.lang = currentLang === 'id' ? 'id-ID' : 'en-GB';
-  window.speechSynthesis.speak(msg);
-}
+  // Event listeners
+  langSelect.onchange = () => {
+    currentLang = langSelect.value;
+    updateTexts(currentLang);
+    filterCerita(searchInput.value);
+    checkTTSAvailability();
+  };
 
-function checkTTSAvailability() {
-  const voices = window.speechSynthesis.getVoices();
-  const hasId = voices.some(v => v.lang.startsWith('id'));
-  const warning = document.getElementById('tts-warning');
-  if (currentLang === 'id' && !hasId) {
-    warning.style.display = 'block';
-  } else {
-    warning.style.display = 'none';
+  searchInput.oninput = e => filterCerita(e.target.value);
+
+  // Infinite scroll handler
+  window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500 && !isLoading) {
+      loadMoreData();
+    }
+  });
+
+  // Fungsi text-to-speech
+  function speakText(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    const langCode = currentLang === 'id' ? 'id' : 'en';
+    const voice = voices.find(v => v.lang.startsWith(langCode));
+    if (voice) msg.voice = voice;
+    else msg.lang = currentLang === 'id' ? 'id-ID' : 'en-GB';
+    window.speechSynthesis.speak(msg);
   }
-}
 
-// Initial call
-updateTexts(currentLang);
-checkTTSAvailability();
-window.speechSynthesis.onvoiceschanged = checkTTSAvailability;
-</script>
+  function checkTTSAvailability() {
+    const voices = window.speechSynthesis.getVoices();
+    const hasId = voices.some(v => v.lang.startsWith('id'));
+    const warning = document.getElementById('tts-warning');
+    if (currentLang === 'id' && !hasId) {
+      warning.style.display = 'block';
+    } else {
+      warning.style.display = 'none';
+    }
+  }
 
+  // Inisialisasi
+  updateTexts(currentLang);
+  checkTTSAvailability();
+  window.speechSynthesis.onvoiceschanged = checkTTSAvailability;
+  
+  // Mulai dengan memuat data awal
+  loadInitialData();
+  </script>
 </body>
 </html>
+  
