@@ -257,7 +257,7 @@ footer a {
           const card = document.createElement('div');
           card.className = 'card';
           card.innerHTML = `
-            <img src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
+            <img loading="lazy" src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
             <h2>${cerita.judul}</h2>
             <div class="genre">${cerita.genre}</div>
             <div class="rating">⭐ ${cerita.rating || '0.0'}</div>
@@ -308,7 +308,7 @@ footer a {
 
     searchInput.oninput = e => filterCerita(e.target.value);
 
-    db.ref('cerita').on('value', snap => {
+    db.ref('cerita').limitToFirst(20).on('value', snap => {
       const obj = snap.val() || {};
       semuaCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
       filterCerita(searchInput.value);
