@@ -309,6 +309,25 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // Contoh fungsi loadInitialData
+    async function loadInitialData() {
+        const ceritaRef = query(ref(db, 'cerita'), limitToFirst(10));
+        try {
+            const snapshot = await get(ceritaRef);
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                console.log("Data awal:", data);
+            } else {
+                console.log("Tidak ada data.");
+            }
+        } catch (error) {
+            console.error("Gagal mengambil data:", error);
+        }
+    }
+
+    // Jalankan saat halaman siap
+    loadInitialData();
+
     // State management
     const state = {
         semuaCerita: [],
