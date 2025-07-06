@@ -289,8 +289,10 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-<script>
-    // Konfigurasi Firebase
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, onValue, limitToFirst, query, orderByKey, startAt, runTransaction, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
     const firebaseConfig = {
         apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
         authDomain: "tamplatedoc.firebaseapp.com",
@@ -301,9 +303,8 @@
         appId: "1:264966107720:web:868abe93cdff209040de7d"
     };
 
-    // Inisialisasi Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
     // State management
     const state = {
