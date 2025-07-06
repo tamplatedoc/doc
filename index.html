@@ -16,7 +16,7 @@
 /* Variabel untuk konsistensi */
 :root {
   --spacing-unit: 4px;
-  --border-radius: 8px;
+  --border-radius: 16px;
   --transition-speed: 0.2s;
   --primary: #4b0082;
   --secondary: #00bfa5;
@@ -47,9 +47,8 @@ header {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   padding: calc(var(--spacing-unit) * 2) var(--spacing-unit);
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-unit);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -80,14 +79,28 @@ nav {
   margin: 0 auto;
 }
 
+/* Box Pencarian */
 .search-input {
   width: 100%;
   padding: calc(var(--spacing-unit) * 1.5) var(--spacing-unit);
-  border-radius: var(--border-radius);
   border: none;
   background: rgba(255,255,255,0.2);
   color: var(--text);
   font-size: calc(0.9rem + 0.2vw);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all var(--transition-speed) ease;
+}
+
+.search-input::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0,191,165,0.2);
+  background: rgba(255,255,255,0.15);
 }
 
 /* Genre Dropdown */
@@ -113,23 +126,6 @@ nav {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-}
-
-.genre-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(calc(100% / 3), 1fr));
-  gap: var(--spacing-unit);
-  padding: var(--spacing-unit);
-}
-
-.genre-item {
-  padding: calc(var(--spacing-unit) * 1.5);
-  background: rgba(0,191,165,0.1);
-  border-radius: var(--border-radius);
-  font-size: calc(0.8rem + 0.1vw);
-  cursor: pointer;
-  transition: all var(--transition-speed) ease;
-  text-align: center;
 }
 
 /* Main Content */
@@ -164,39 +160,26 @@ h1 {
 
 .group-grid {
   display: grid;
-  grid-template-rows: auto auto;
-  grid-auto-flow: column;
-  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: calc(var(--spacing-unit) * 2);
   justify-content: center;
-  padding: 12px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  padding: calc(var(--spacing-unit) * 2);
 }
 
-.group-grid::-webkit-scrollbar {
-  display: none;
-}
-
+/* Card Styling */
 .card {
-  background: rgba(255,255,255,0.06);
-  border-radius: 12px;
-  padding: 8px;
-  min-width: 150px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacing-unit) * 1.5);
+  transition: all var(--transition-speed) ease;
   cursor: pointer;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,191,165,0.5);
-}
-
-@media (max-width: 599px) {
-  .group-grid {
-    grid-template-rows: auto;
-    grid-auto-flow: row;
-  }
+  transform: translateY(calc(-1 * var(--spacing-unit)));
+  box-shadow: 0 8px 24px rgba(0,191,165,0.3);
 }
 
 .card img {
@@ -210,6 +193,27 @@ h1 {
   margin-bottom: var(--spacing-unit);
 }
 
+.card h2 {
+  font-size: calc(0.9rem + 0.2vw);
+  margin: 0.25rem 0;
+  color: var(--secondary);
+}
+
+.card .genre {
+  font-size: calc(0.75rem + 0.1vw);
+  margin-bottom: 0.25rem;
+}
+
+.card .rating {
+  font-size: calc(0.7rem + 0.1vw);
+  color: #ffa726;
+}
+
+.card .views {
+  font-size: calc(0.7rem + 0.1vw);
+  color: #90caf9;
+}
+
 /* Footer */
 footer {
   background: #1a1a1a;
@@ -219,39 +223,20 @@ footer {
   font-size: calc(0.8rem + 0.1vw);
 }
 
-/* Media Queries */
-@media (min-width: 600px) {
-  header {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 4);
-  }
-
-  .logo {
-    margin-bottom: 0;
-  }
-
-  nav {
-    flex-direction: row;
-    gap: calc(var(--spacing-unit) * 3);
-  }
-
-  .search-container {
-    max-width: 400px;
-  }
-
-  .genre-list {
-    grid-template-columns: repeat(auto-fit, minmax(calc(100% / 4), 1fr));
-  }
-
-  .group-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
+footer a {
+  color: var(--secondary);
+  margin: 0 calc(var(--spacing-unit));
 }
 
-@media (min-width: 900px) {
+/* Media Queries */
+@media (max-width: 599px) {
   .group-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: 1fr;
+  }
+  
+  .search-container {
+    max-width: none;
+    padding: 0 var(--spacing-unit);
   }
 }
   </style>
