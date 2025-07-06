@@ -309,7 +309,33 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-
+    function loadInitialData() {
+        if (state.isLoading) return;
+        
+        state.isLoading = true;
+        showLoading(true);
+        
+        db.ref('cerita')
+            .limitToFirst(config.INITIAL_BATCH_SIZE)
+            .once('value')
+            .then(snap => {
+                const data = snap.val() || {};
+                state.semuaCerita = Object.entries(data).map(([key, val]) => ({ key, ...val }));
+                state.filteredCerita = [...state.semuaCerita];
+                extractGenres(state.semuaCerita);
+                renderBatch();
+                setupDataListener();
+            })
+            .catch(error => {
+                console.error("Error loading initial data:", error);
+                showLoading(false);
+                state.isLoading = false;
+            })
+            .finally(() => {
+                state.isLoading = false;
+                showLoading(false);
+            });
+    }
 
     // State management
     const state = {
@@ -414,33 +440,7 @@
         });
     }
 
-    function loadInitialData() {
-        if (state.isLoading) return;
-        
-        state.isLoading = true;
-        showLoading(true);
-        
-        db.ref('cerita')
-            .limitToFirst(config.INITIAL_BATCH_SIZE)
-            .once('value')
-            .then(snap => {
-                const data = snap.val() || {};
-                state.semuaCerita = Object.entries(data).map(([key, val]) => ({ key, ...val }));
-                state.filteredCerita = [...state.semuaCerita];
-                extractGenres(state.semuaCerita);
-                renderBatch();
-                setupDataListener();
-            })
-            .catch(error => {
-                console.error("Error loading initial data:", error);
-                showLoading(false);
-                state.isLoading = false;
-            })
-            .finally(() => {
-                state.isLoading = false;
-                showLoading(false);
-            });
-    }
+
 
     function loadMoreData() {
         if (state.isLoading || state.allDataLoaded) return;
