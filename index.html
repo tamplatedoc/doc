@@ -5,167 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Koleksi Cerita - Perpustakaan Digital</title>
   <link rel="icon" href="favicon.png" type="image/png">
-  <meta name="google-adsense-account" content="ca-pub-6115422527383784">
   <meta name="description" content="Koleksi e-book gratis, cerita fantasi, cerita roman, dan hiburan cerita menarik di Perpustakaan Digital. Baca gratis dan nikmati pengalaman membaca online." />
   <meta name="keywords" content="ebook, cerita fantasi, cerita roman, hiburan cerita, koleksi cerita, perpustakaan digital, cerita online, buku gratis, bacaan online, cerita anak, cerita petualangan, novel digital" />
   <meta name="author" content="Perpustakaan Digital" />
   <meta name="robots" content="index, follow" />
   <script async custom-element="amp-auto-ads"
-        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
-</script>
+          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+  </script>
   <style>
-    *, *::before, *::after {
+    /* CSS yang dioptimalkan */
+    :root {
+      --primary: #4b0082;
+      --secondary: #00bfa5;
+      --background: #121212;
+      --text: #e0e0e0;
+      --card-bg: rgba(255,255,255,0.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
+
     body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #121212;
-      color: #e0e0e0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+
     header {
-      background: linear-gradient(135deg, #4b0082, #00bfa5);
-      padding: 16px 24px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      position: relative;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    header .logo {
+
+    .logo {
+      font-size: 1.75rem;
       font-weight: 900;
-      font-size: 28px;
-      background: linear-gradient(135deg, #e040fb, #00bfa5);
+      background: linear-gradient(135deg, #e040fb, var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    header nav {
-      flex: 1 1 280px;
+
+    nav {
+      flex: 1;
+      max-width: 600px;
+      margin: 0 1rem;
       position: relative;
     }
-    header nav input {
+
+    .search-container {
+      position: relative;
       width: 100%;
-      padding: 8px 16px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
       border-radius: 20px;
       border: none;
       background: rgba(255,255,255,0.2);
-      color: #fff;
-      font-size: 16px;
+      color: var(--text);
+      font-size: 1rem;
     }
-    header nav input::placeholder {
+
+    .search-input::placeholder {
       color: rgba(255,255,255,0.7);
     }
-    header select {
-      background: rgba(255,255,255,0.2);
-      border: none;
-      padding: 6px 12px;
-      border-radius: 12px;
-      color: #fff;
-      font-size: 14px;
-    }
-    main {
-      padding: 24px 16px;
-      flex: 1;
-    }
-    h1 {
-      font-size: 2rem;
-      text-align: center;
-      margin-bottom: 24px;
-      background: linear-gradient(135deg, #e040fb, #00bfa5);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .group {
-      margin-bottom: 24px;
-    }
-    .group-title {
-      font-weight: bold;
-      margin-bottom: 8px;
-      font-size: 1.2rem;
-      color: #00bfa5;
-    }
-    .group-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-    .card {
-      background: rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 8px;
-      flex: 1 1 calc(50% - 12px);
-      max-width: calc(50% - 12px);
-      text-align: center;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,191,165,0.5);
-    }
-    .card img {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 3/4;
-      object-fit: cover;
-      border-radius: 8px;
-      background: #262626;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      margin-bottom: 8px;
-    }
-    .card h2 {
-      font-size: 0.9rem;
-      margin: 4px 0;
-      color: #00bfa5;
-    }
-    .card .genre {
-      font-size: 0.75rem;
-      margin-bottom: 4px;
-    }
-    .card .rating {
-      font-size: 0.7rem;
-      color: #ffa726;
-    }
-    .card .views {
-      font-size: 0.7rem;
-      color: #90caf9;
-    }
-    footer {
-      background: #1a1a1a;
-      color: #606060;
-      text-align: center;
-      padding: 16px;
-      font-size: 12px;
-    }
-    footer a {
-      color: #00bfa5;
-      margin: 0 6px;
-    }
-    #tts-warning {
-      display: none;
-      background: #ff9800;
-      color: #000;
-      padding: 10px;
-      text-align: center;
-      font-size: 14px;
-    }
-    #loading-indicator {
-      text-align: center;
-      padding: 20px;
-      display: none;
-      color: #00bfa5;
-    }
+
     .genre-dropdown {
-      display: none;
       position: absolute;
       top: 100%;
       left: 0;
@@ -176,60 +94,157 @@
       z-index: 100;
       max-height: 300px;
       overflow-y: auto;
-      margin-top: 5px;
+      margin-top: 0.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
     }
+
     .genre-dropdown.show {
-      display: block;
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
-    .genre-header {
-      padding: 12px;
-      font-weight: bold;
-      border-bottom: 1px solid #333;
-      background: #252525;
-      position: sticky;
-      top: 0;
-    }
+
     .genre-list {
       display: flex;
       flex-wrap: wrap;
-      padding: 8px;
+      padding: 1rem;
+      gap: 0.5rem;
     }
+
     .genre-item {
-      padding: 8px 12px;
-      margin: 4px;
+      padding: 0.5rem 1rem;
       background: rgba(0,191,165,0.1);
       border-radius: 16px;
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       cursor: pointer;
       transition: all 0.2s ease;
     }
+
     .genre-item:hover {
       background: rgba(0,191,165,0.3);
       transform: scale(1.05);
     }
-    .search-container {
-      position: relative;
+
+    main {
+      flex: 1;
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    .clear-search {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.5);
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin: 1.5rem 0;
+      background: linear-gradient(135deg, #e040fb, var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .group {
+      margin-bottom: 1.5rem;
+    }
+
+    .group-title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      font-size: 1.125rem;
+      color: var(--secondary);
+    }
+
+    .group-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 0.75rem;
+      flex: 1 1 calc(50% - 1rem);
+      max-width: calc(50% - 1rem);
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
       cursor: pointer;
-      display: none;
     }
-    .clear-search:hover {
-      color: #fff;
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,191,165,0.5);
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #262626;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      margin-bottom: 0.5rem;
+    }
+
+    .card h2 {
+      font-size: 0.9rem;
+      margin: 0.25rem 0;
+      color: var(--secondary);
+    }
+
+    .card .genre {
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .card .rating {
+      font-size: 0.7rem;
+      color: #ffa726;
+    }
+
+    .card .views {
+      font-size: 0.7rem;
+      color: #90caf9;
+    }
+
+    footer {
+      background: #1a1a1a;
+      color: #606060;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.875rem;
+    }
+
+    footer a {
+      color: var(--secondary);
+      margin: 0 0.5rem;
+    }
+
+    #tts-warning {
+      display: none;
+      background: #ff9800;
+      color: #000;
+      padding: 0.75rem;
+      text-align: center;
+      font-size: 0.875rem;
+    }
+
+    #loading-indicator {
+      text-align: center;
+      padding: 1rem;
+      display: none;
+      color: var(--secondary);
     }
 
     @media (min-width: 600px) {
       .card {
-        flex: 1 1 calc(25% - 12px);
-        max-width: calc(25% - 12px);
+        flex: 1 1 calc(25% - 1rem);
+        max-width: calc(25% - 1rem);
       }
+      
       .genre-item {
         flex: 1 0 18%;
       }
@@ -245,18 +260,18 @@
 <body>
   <amp-auto-ads type="adsense"
         data-ad-client="ca-pub-6115422527383784">
-</amp-auto-ads>
+  </amp-auto-ads>
   <header>
     <div class="logo" id="logo-text">Koleksi Cerita</div>
     <nav class="search-container">
-      <input type="search" id="search-input" placeholder="Cari judul atau genre..." />
-      <button class="clear-search" id="clear-search">×</button>
-      <div id="genre-dropdown" class="genre-dropdown">
+      <input type="search" id="search-input" placeholder="Cari judul atau genre..." aria-label="Cari cerita">
+      <button class="clear-search" id="clear-search" aria-label="Hapus pencarian">×</button>
+      <div id="genre-dropdown" class="genre-dropdown" role="listbox" aria-label="Pilih Genre">
         <div class="genre-header">Pilih Genre</div>
-        <div id="genre-list" class="genre-list"></div>
+        <div id="genre-list" class="genre-list" role="list"></div>
       </div>
     </nav>
-    <select id="language-select">
+    <select id="language-select" aria-label="Pilih Bahasa">
       <option value="id" selected>Bahasa Indonesia</option>
       <option value="en">English</option>
     </select>
@@ -264,7 +279,7 @@
 
   <main>
     <h1 id="main-title">Koleksi Cerita</h1>
-    <section id="cerita-grid"></section>
+    <section id="cerita-grid" role="feed" aria-live="polite"></section>
     <div id="loading-indicator">
       Memuat cerita lebih banyak...
     </div>
@@ -272,15 +287,15 @@
 
   <footer id="footer-text">
     <div>
-      <a href="about.html">📖 Tentang</a>
-      <a href="privacy.html">🔒 Kebijakan Privasi</a>
-      <a href="contact.html">☎️ Kontak</a>
-      <a href="disclaimer.html">⚠️ Disclaimer</a>
+      <a href="about.html" aria-label="Tentang Perpustakaan Digital">📖 Tentang</a>
+      <a href="privacy.html" aria-label="Kebijakan Privasi">🔒 Kebijakan Privasi</a>
+      <a href="contact.html" aria-label="Kontak Kami">☎️ Kontak</a>
+      <a href="disclaimer.html" aria-label="Disclaimer">⚠️ Disclaimer</a>
     </div>
     &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
   </footer>
 
-  <div id="tts-warning">
+  <div id="tts-warning" role="alert">
     ⚠️ Untuk suara bahasa Indonesia, aktifkan TTS Indonesia di <strong>Pengaturan > Bahasa & masukan > Keluaran Teks ke Suara</strong>
   </div>
   
@@ -290,342 +305,320 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   
   <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-    authDomain: "tamplatedoc.firebaseapp.com",
-    databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "tamplatedoc",
-    storageBucket: "tamplatedoc.appspot.com",
-    messagingSenderId: "264966107720",
-    appId: "1:264966107720:web:868abe93cdff209040de7d"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-
-  // Elemen DOM
-  const grid = document.getElementById('cerita-grid');
-  const searchInput = document.getElementById('search-input');
-  const langSelect = document.getElementById('language-select');
-  const loadingIndicator = document.getElementById('loading-indicator');
-  const genreDropdown = document.getElementById('genre-dropdown');
-  const genreList = document.getElementById('genre-list');
-  const clearSearchBtn = document.getElementById('clear-search');
-
-  // Variabel state
-  let semuaCerita = [];
-  let filteredCerita = [];
-  let currentLang = 'id';
-  let isLoading = false;
-  let allDataLoaded = false;
-  let allGenres = [];
-
-  // Konfigurasi
-  const INITIAL_BATCH_SIZE = 30;
-  const SCROLL_BATCH_SIZE = 20;
-  let currentIndex = 0;
-
-  // Teks multilingual
-  const texts = {
-    id: { 
-      logo: 'Koleksi Cerita', 
-      mainTitle: 'Koleksi Cerita', 
-      searchPlaceholder: 'Cari judul atau genre...', 
-      notFound: 'Cerita tidak ditemukan.', 
-      about: '📖 Tentang', 
-      privacy: '🔒 Kebijakan Privasi', 
-      contact: '☎️ Kontak', 
-      disclaimer: '⚠️ Disclaimer', 
-      copyright: '&copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.', 
-      read: 'Baca Cerita',
-      loading: 'Memuat cerita lebih banyak...',
-      genreHeader: 'Pilih Genre'
-    },
-    en: { 
-      logo: 'Story Collection', 
-      mainTitle: 'Story Collection', 
-      searchPlaceholder: 'Search title or genre...', 
-      notFound: 'No stories found.', 
-      about: '📖 About', 
-      privacy: '🔒 Privacy Policy', 
-      contact: '☎️ Contact', 
-      disclaimer: '⚠️ Disclaimer', 
-      copyright: '&copy; 2024 Digital Library - All rights reserved.', 
-      read: 'Read Story',
-      loading: 'Loading more stories...',
-      genreHeader: 'Select Genre'
-    }
-  };
-
-  // Fungsi utama
-  function updateTexts(lang) {
-    document.getElementById('logo-text').textContent = texts[lang].logo;
-    document.getElementById('main-title').textContent = texts[lang].mainTitle;
-    searchInput.placeholder = texts[lang].searchPlaceholder;
-    loadingIndicator.textContent = texts[lang].loading;
-    document.querySelector('.genre-header').textContent = texts[lang].genreHeader;
-    document.getElementById('footer-text').innerHTML = `
-      <div>
-        <a href="about.html">${texts[lang].about}</a>
-        <a href="privacy.html">${texts[lang].privacy}</a>
-        <a href="contact.html">${texts[lang].contact}</a>
-        <a href="disclaimer.html">${texts[lang].disclaimer}</a>
-      </div>
-      ${texts[lang].copyright}
-    `;
-  }
-
-  function loadInitialData() {
-    showLoading(true);
-    db.ref('cerita').limitToFirst(INITIAL_BATCH_SIZE).once('value')
-      .then(snap => {
-        const obj = snap.val() || {};
-        semuaCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
-        filteredCerita = [...semuaCerita];
-        extractGenres(semuaCerita);
-        renderBatch();
-        showLoading(false);
-        setupDataListener();
-      })
-      .catch(error => {
-        console.error("Error loading initial data:", error);
-        showLoading(false);
-      });
-  }
-
-  function extractGenres(ceritaList) {
-    const genreSet = new Set();
-    ceritaList.forEach(cerita => {
-      if (cerita.genre) {
-        cerita.genre.split(',').map(g => g.trim()).forEach(g => genreSet.add(g));
-      }
-    });
-    allGenres = Array.from(genreSet).sort();
-    renderGenreDropdown();
-  }
-
-  function renderGenreDropdown() {
-    genreList.innerHTML = '';
-    
-    if (allGenres.length === 0) {
-      genreList.innerHTML = '<div class="genre-item">Tidak ada genre tersedia</div>';
-      return;
-    }
-    
-    allGenres.forEach(genre => {
-      const genreItem = document.createElement('div');
-      genreItem.className = 'genre-item';
-      genreItem.textContent = genre;
-      genreItem.onclick = () => {
-        searchInput.value = genre;
-        filterCerita(genre);
-        toggleGenreDropdown(false);
-        clearSearchBtn.style.display = 'block';
-      };
-      genreList.appendChild(genreItem);
-    });
-  }
-
-  function toggleGenreDropdown(show) {
-    genreDropdown.classList.toggle('show', show);
-  }
-
-  function setupDataListener() {
-    db.ref('cerita').on('child_changed', snap => {
-      const updatedCerita = { key: snap.key, ...snap.val() };
-      const index = semuaCerita.findIndex(c => c.key === updatedCerita.key);
-      if (index !== -1) {
-        semuaCerita[index] = updatedCerita;
-      }
-      const card = grid.querySelector(`[data-key="${updatedCerita.key}"]`);
-      if (card) {
-        updateCard(card, updatedCerita);
-      }
-    });
-  }
-
-  function loadMoreData() {
-    if (isLoading || allDataLoaded) return;
-    
-    showLoading(true);
-    isLoading = true;
-    
-    const lastKey = semuaCerita[semuaCerita.length - 1]?.key;
-    
-    if (!lastKey) {
-      allDataLoaded = true;
-      showLoading(false);
-      isLoading = false;
-      return;
-    }
-    
-    db.ref('cerita').orderByKey().startAfter(lastKey).limitToFirst(SCROLL_BATCH_SIZE).once('value')
-      .then(snap => {
-        const obj = snap.val() || {};
-        if (Object.keys(obj).length === 0) {
-          allDataLoaded = true;
-          showLoading(false);
-          isLoading = false;
-          return;
-        }
-        
-        const newCerita = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
-        semuaCerita = [...semuaCerita, ...newCerita];
-        extractGenres(newCerita);
-        
-        if (searchInput.value.trim()) {
-          const q = searchInput.value.trim().toLowerCase();
-          filteredCerita = semuaCerita.filter(c =>
-            c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
-          );
-        } else {
-          filteredCerita = [...semuaCerita];
-        }
-        
-        renderBatch();
-        showLoading(false);
-        isLoading = false;
-      })
-      .catch(error => {
-        console.error("Error loading more data:", error);
-        showLoading(false);
-        isLoading = false;
-      });
-  }
-
-  function showLoading(show) {
-    loadingIndicator.style.display = show ? 'block' : 'none';
-  }
-
-  function renderBatch() {
-    const batch = filteredCerita.slice(currentIndex, currentIndex + SCROLL_BATCH_SIZE);
-    
-    if (batch.length === 0 && currentIndex === 0) {
-      grid.innerHTML = `<p>${texts[currentLang].notFound}</p>`;
-      return;
-    }
-    
-    batch.forEach(cerita => appendCard(cerita));
-    currentIndex += batch.length;
-    
-    if (batch.length < SCROLL_BATCH_SIZE) {
-      allDataLoaded = true;
-    }
-  }
-
-  function appendCard(cerita) {
-    const kataAwal = cerita.judul.split(' ')[0].toLowerCase();
-    let groupWrapper = grid.querySelector(`.group[data-group="${kataAwal}"]`);
-    
-    if (!groupWrapper) {
-      groupWrapper = document.createElement('div');
-      groupWrapper.className = 'group';
-      groupWrapper.dataset.group = kataAwal;
-      groupWrapper.innerHTML = `<div class="group-title">${kataAwal}</div><div class="group-grid"></div>`;
-      grid.appendChild(groupWrapper);
-    }
-    
-    const groupGrid = groupWrapper.querySelector('.group-grid');
-    if (groupGrid.querySelector(`[data-key="${cerita.key}"]`)) return;
-
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.setAttribute('data-key', cerita.key);
-    updateCard(card, cerita);
-    groupGrid.appendChild(card);
-  }
-
-  function updateCard(card, cerita) {
-    card.innerHTML = `
-      <img loading="lazy" src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
-      <h2>${cerita.judul}</h2>
-      <div class="genre">${cerita.genre}</div>
-      <div class="rating">⭐ ${cerita.rating || '0.0'}</div>
-      <div class="views">👁 ${cerita.views || 0} ${currentLang === 'id' ? 'dilihat' : 'views'}</div>
-      <div><a href="story.html?id=${cerita.key}">${texts[currentLang].read}</a></div>
-    `;
-    card.onclick = () => {
-      speakText(`${cerita.judul}, ${cerita.genre}`);
-      db.ref(`cerita/${cerita.key}/views`).transaction(current => (current || 0) + 1);
+    // JavaScript yang dioptimalkan
+    const firebaseConfig = {
+      apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+      authDomain: "tamplatedoc.firebaseapp.com",
+      databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "tamplatedoc",
+      storageBucket: "tamplatedoc.appspot.com",
+      messagingSenderId: "264966107720",
+      appId: "1:264966107720:web:868abe93cdff209040de7d"
     };
-  }
 
-  function filterCerita(query) {
-    const q = query.trim().toLowerCase();
-    filteredCerita = semuaCerita.filter(c =>
-      c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
-    );
-    grid.innerHTML = '';
-    currentIndex = 0;
-    allDataLoaded = false;
-    renderBatch();
-    
-    if (filteredCerita.length === 0 && !allDataLoaded) {
-      loadMoreData();
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const state = {
+      semuaCerita: [],
+      filteredCerita: [],
+      currentLang: 'id',
+      isLoading: false,
+      allDataLoaded: false,
+      allGenres: [],
+      currentIndex: 0
+    };
+
+    const config = {
+      INITIAL_BATCH_SIZE: 30,
+      SCROLL_BATCH_SIZE: 20,
+      CACHE_TIME: 5 * 60 * 1000 // 5 menit
+    };
+
+    const texts = {
+      id: {
+        logo: 'Koleksi Cerita',
+        mainTitle: 'Koleksi Cerita',
+        searchPlaceholder: 'Cari judul atau genre...',
+        notFound: 'Cerita tidak ditemukan.',
+        about: '📖 Tentang',
+        privacy: '🔒 Kebijakan Privasi',
+        contact: '☎️ Kontak',
+        disclaimer: '⚠️ Disclaimer',
+        copyright: '&copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.',
+        read: 'Baca Cerita',
+        loading: 'Memuat cerita lebih banyak...',
+        genreHeader: 'Pilih Genre'
+      },
+      en: {
+        logo: 'Story Collection',
+        mainTitle: 'Story Collection',
+        searchPlaceholder: 'Search title or genre...',
+        notFound: 'No stories found.',
+        about: '📖 About',
+        privacy: '🔒 Privacy Policy',
+        contact: '☎️ Contact',
+        disclaimer: '⚠️ Disclaimer',
+        copyright: '&copy; 2024 Digital Library - All rights reserved.',
+        read: 'Read Story',
+        loading: 'Loading more stories...',
+        genreHeader: 'Select Genre'
+      }
+    };
+
+    // Fungsi-fungsi yang dioptimalkan
+    function updateTexts(lang) {
+      document.getElementById('logo-text').textContent = texts[lang].logo;
+      document.getElementById('main-title').textContent = texts[lang].mainTitle;
+      document.getElementById('search-input').placeholder = texts[lang].searchPlaceholder;
+      document.getElementById('loading-indicator').textContent = texts[lang].loading;
+      document.querySelector('.genre-header').textContent = texts[lang].genreHeader;
+      document.getElementById('footer-text').innerHTML = `
+        <div>
+          <a href="about.html">${texts[lang].about}</a>
+          <a href="privacy.html">${texts[lang].privacy}</a>
+          <a href="contact.html">${texts[lang].contact}</a>
+          <a href="disclaimer.html">${texts[lang].disclaimer}</a>
+        </div>
+        ${texts[lang].copyright}
+      `;
     }
-  }
 
-  function speakText(text) {
-    const msg = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices();
-    const langCode = currentLang === 'id' ? 'id' : 'en';
-    const voice = voices.find(v => v.lang.startsWith(langCode));
-    if (voice) msg.voice = voice;
-    else msg.lang = currentLang === 'id' ? 'id-ID' : 'en-GB';
-    window.speechSynthesis.speak(msg);
-  }
-
-  function checkTTSAvailability() {
-    const voices = window.speechSynthesis.getVoices();
-    const hasId = voices.some(v => v.lang.startsWith('id'));
-    const warning = document.getElementById('tts-warning');
-    if (currentLang === 'id' && !hasId) {
-      warning.style.display = 'block';
-    } else {
-      warning.style.display = 'none';
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
     }
-  }
 
-  // Event listeners
-  langSelect.onchange = () => {
-    currentLang = langSelect.value;
-    updateTexts(currentLang);
-    filterCerita(searchInput.value);
-    checkTTSAvailability();
-  };
+    function throttle(func, limit) {
+      let inThrottle;
+      return function(...args) {
+        if (!inThrottle) {
+          func(...args);
+          inThrottle = true;
+          setTimeout(() => inThrottle = false, limit);
+        }
+      }
+    }
 
-  searchInput.addEventListener('input', e => {
-    filterCerita(e.target.value);
-    clearSearchBtn.style.display = e.target.value ? 'block' : 'none';
-  });
+    function loadInitialData() {
+      if (state.isLoading) return;
+      
+      state.isLoading = true;
+      showLoading(true);
+      
+      db.ref('cerita')
+        .limitToFirst(config.INITIAL_BATCH_SIZE)
+        .once('value')
+        .then(snap => {
+          const data = snap.val() || {};
+          state.semuaCerita = Object.entries(data).map(([key, val]) => ({ key, ...val }));
+          state.filteredCerita = [...state.semuaCerita];
+          extractGenres(state.semuaCerita);
+          renderBatch();
+          setupDataListener();
+        })
+        .catch(error => {
+          console.error("Error loading initial data:", error);
+          showLoading(false);
+          state.isLoading = false;
+        })
+        .finally(() => {
+          state.isLoading = false;
+          showLoading(false);
+        });
+    }
 
-  searchInput.addEventListener('focus', () => {
-    toggleGenreDropdown(true);
-  });
+    function extractGenres(ceritaList) {
+      const genreSet = new Set();
+      ceritaList.forEach(cerita => {
+        if (cerita.genre) {
+          cerita.genre.split(',').map(g => g.trim()).forEach(g => genreSet.add(g));
+        }
+      });
+      state.allGenres = Array.from(genreSet).sort();
+      renderGenreDropdown();
+    }
 
-  clearSearchBtn.onclick = () => {
-    searchInput.value = '';
-    filterCerita('');
-    clearSearchBtn.style.display = 'none';
-    toggleGenreDropdown(false);
-  };
+    function renderGenreDropdown() {
+      const genreList = document.getElementById('genre-list');
+      genreList.innerHTML = '';
+      
+      if (state.allGenres.length === 0) {
+        genreList.innerHTML = '<div class="genre-item">Tidak ada genre tersedia</div>';
+        return;
+      }
+      
+      state.allGenres.forEach(genre => {
+        const genreItem = document.createElement('div');
+        genreItem.className = 'genre-item';
+        genreItem.textContent = genre;
+        genreItem.setAttribute('role', 'option');
+        genreItem.setAttribute('aria-selected', 'false');
+        genreItem.onclick = () => {
+          document.getElementById('search-input').value = genre;
+          filterCerita(genre);
+          toggleGenreDropdown(false);
+          document.getElementById('clear-search').style.display = 'block';
+        };
+        genreList.appendChild(genreItem);
+      });
+    }
 
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.search-container')) {
+    function toggleGenreDropdown(show) {
+      document.getElementById('genre-dropdown').classList.toggle('show', show);
+    }
+
+    function showLoading(show) {
+      document.getElementById('loading-indicator').style.display = show ? 'block' : 'none';
+    }
+
+    function renderBatch() {
+      const batch = state.filteredCerita.slice(
+        state.currentIndex,
+        state.currentIndex + config.SCROLL_BATCH_SIZE
+      );
+      
+      if (batch.length === 0 && state.currentIndex === 0) {
+        document.getElementById('cerita-grid').innerHTML = `<p>${texts[state.currentLang].notFound}</p>`;
+        return;
+      }
+      
+      batch.forEach(cerita => appendCard(cerita));
+      state.currentIndex += batch.length;
+      
+      if (batch.length < config.SCROLL_BATCH_SIZE) {
+        state.allDataLoaded = true;
+      }
+    }
+
+    function appendCard(cerita) {
+      const kataAwal = cerita.judul.split(' ')[0].toLowerCase();
+      let groupWrapper = document.getElementById('cerita-grid').querySelector(`.group[data-group="${kataAwal}"]`);
+      
+      if (!groupWrapper) {
+        groupWrapper = document.createElement('div');
+        groupWrapper.className = 'group';
+        groupWrapper.dataset.group = kataAwal;
+        groupWrapper.innerHTML = `<div class="group-title">${kataAwal}</div><div class="group-grid"></div>`;
+        document.getElementById('cerita-grid').appendChild(groupWrapper);
+      }
+
+      const groupGrid = groupWrapper.querySelector('.group-grid');
+      if (groupGrid.querySelector(`[data-key="${cerita.key}"]`)) return;
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.setAttribute('data-key', cerita.key);
+      updateCard(card, cerita);
+      groupGrid.appendChild(card);
+    }
+
+    function updateCard(card, cerita) {
+      card.innerHTML = `
+        <img loading="lazy" src="${cerita.gambar || ''}" alt="Cover ${cerita.judul}">
+        <h2>${cerita.judul}</h2>
+        <div class="genre">${cerita.genre}</div>
+        <div class="rating">⭐ ${cerita.rating || '0.0'}</div>
+        <div class="views">👁 ${cerita.views || 0} ${state.currentLang === 'id' ? 'dilihat' : 'views'}</div>
+        <div><a href="story.html?id=${cerita.key}" class="read-button">${texts[state.currentLang].read}</a></div>
+      `;
+      card.onclick = () => {
+        speakText(`${cerita.judul}, ${cerita.genre}`);
+        db.ref(`cerita/${cerita.key}/views`).transaction(current => (current || 0) + 1);
+      };
+    }
+
+    function filterCerita(query) {
+      const q = query.trim().toLowerCase();
+      state.filteredCerita = state.semuaCerita.filter(c =>
+        c.judul.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q)
+      );
+      document.getElementById('cerita-grid').innerHTML = '';
+      state.currentIndex = 0;
+      state.allDataLoaded = false;
+      renderBatch();
+      
+      if (state.filteredCerita.length === 0 && !state.allDataLoaded) {
+        loadMoreData();
+      }
+    }
+
+    function speakText(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      const voices = window.speechSynthesis.getVoices();
+      const langCode = state.currentLang === 'id' ? 'id' : 'en';
+      const voice = voices.find(v => v.lang.startsWith(langCode));
+      if (voice) msg.voice = voice;
+      else msg.lang = state.currentLang === 'id' ? 'id-ID' : 'en-GB';
+      window.speechSynthesis.speak(msg);
+    }
+
+    function checkTTSAvailability() {
+      const voices = window.speechSynthesis.getVoices();
+      const hasId = voices.some(v => v.lang.startsWith('id'));
+      const warning = document.getElementById('tts-warning');
+      if (state.currentLang === 'id' && !hasId) {
+        warning.style.display = 'block';
+      } else {
+        warning.style.display = 'none';
+      }
+    }
+
+    // Event listeners yang dioptimalkan
+    document.getElementById('language-select').onchange = () => {
+      state.currentLang = document.getElementById('language-select').value;
+      updateTexts(state.currentLang);
+      filterCerita(document.getElementById('search-input').value);
+      checkTTSAvailability();
+    };
+
+    const debouncedSearch = debounce(e => {
+      filterCerita(e.target.value);
+      document.getElementById('clear-search').style.display = e.target.value ? 'block' : 'none';
+    }, 300);
+
+    document.getElementById('search-input').addEventListener('input', debouncedSearch);
+    document.getElementById('search-input').addEventListener('focus', () => {
+      toggleGenreDropdown(true);
+    });
+
+    document.getElementById('clear-search').onclick = () => {
+      document.getElementById('search-input').value = '';
+      filterCerita('');
+      document.getElementById('clear-search').style.display = 'none';
       toggleGenreDropdown(false);
-    }
-  });
+    };
 
-  window.addEventListener('scroll', () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500 && !isLoading) {
-      loadMoreData();
-    }
-  });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-container')) {
+        toggleGenreDropdown(false);
+      }
+    });
 
-  // Inisialisasi
-  updateTexts(currentLang);
-  checkTTSAvailability();
-  window.speechSynthesis.onvoiceschanged = checkTTSAvailability;
-  loadInitialData();
+    const throttledScroll = throttle(() => {
+      const grid = document.getElementById('cerita-grid');
+      if (grid) {
+        const { scrollTop, scrollHeight, clientHeight } = grid;
+        if (scrollHeight - scrollTop <= clientHeight + 500 && !state.isLoading) {
+          loadMoreData();
+        }
+      }
+    }, 100);
+
+    window.addEventListener('scroll', throttledScroll);
+
+    // Inisialisasi
+    updateTexts(state.currentLang);
+    checkTTSAvailability();
+    window.speechSynthesis.onvoiceschanged = checkTTSAvailability;
+    loadInitialData();
   </script>
 </body>
 </html>
