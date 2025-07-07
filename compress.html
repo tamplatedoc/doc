@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter to WebP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .dropzone {
+            border: 2px dashed #3b82f6;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        .dropzone.active {
+            border-color: #10b981;
+            background-color: #f0fdf4;
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+        #previewImage {
+            max-height: 300px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Image Converter to WebP</h1>
+            <p class="text-gray-600">Unggah gambar PNG, JPG, atau IMG dan dapatkan file WebP yang dikompres (30-100KB)</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+            <div id="dropzone" class="dropzone p-8 text-center cursor-pointer">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/08567ad3-370e-405c-9f51-9d22ff0f42eb.png" alt="Upload icon with blue background and white upload symbol" class="w-16 h-16 mx-auto">
+                    <h3 class="text-lg font-medium text-gray-700">Unggah Gambar Anda</h3>
+                    <p class="text-gray-500 text-sm">Seret gambar ke sini atau klik untuk memilih file</p>
+                    <input type="file" id="fileInput" class="hidden" accept="image/png,image/jpeg,image/jpg">
+                </div>
+            </div>
+        </div>
+
+        <div id="processingSection" class="hidden bg-white rounded-xl shadow-md overflow-hidden mb-8 p-6">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="w-full md:w-1/2">
+                    <h3 class="text-lg font-medium text-gray-700 mb-4">Original Image</h3>
+                    <div class="border rounded-lg overflow-hidden">
+                        <img id="previewImage" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2a6c71bd-db27-4ab5-a07c-dc27079e7c92.png" alt="Preview area for original image that will be converted to WebP">
+                    </div>
+                    <div class="mt-2 text-sm text-gray-500">
+                        Ukuran: <span id="originalSize">0 KB</span> | 
+                        Dimensi: <span id="originalDimensions">0 x 0 px</span>
+                    </div>
+                </div>
+                
+                <div class="w-full md:w-1/2">
+                    <h3 class="text-lg font-medium text-gray-700 mb-4">WebP Result</h3>
+                    <div class="border rounded-lg overflow-hidden">
+                        <img id="resultImage" src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9cea9859-bd56-4134-954e-428028087d1e.png" alt="Preview area for converted WebP image">
+                    </div>
+                    <div class="mt-2 text-sm text-gray-500">
+                        Ukuran: <span id="resultSize">0 KB</span> | 
+                        Kualitas: <span id="qualityLevel">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <label for="qualityRange" class="block text-sm font-medium text-gray-700 mb-2">Atur Kualitas</label>
+                <input type="range" id="qualityRange" min="1" max="100" value="80" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>Smaller File</span>
+                    <span>Better Quality</span>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="mb-2 flex justify-between text-sm text-gray-700">
+                    <span>Progress:</span>
+                    <span id="progressText">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progressBar" class="progress-bar bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-3">
+                <button id="downloadBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50" disabled>
+                    Download WebP
+                </button>
+                <button id="compressBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50" disabled>
+                    Kompres Otomatis
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer-text">
+    <div>
+      <a href="about.html" aria-label="Tentang Perpustakaan Digital">📖 Tentang</a>
+      <a href="privacy.html" aria-label="Kebijakan Privasi">🔒 Kebijakan Privasi</a>
+      <a href="contact.html" aria-label="Kontak Kami">☎️ Kontak</a>
+      <a href="disclaimer.html" aria-label="Disclaimer">⚠️ Disclaimer</a>
+    </div>
+    &copy; 2024 Perpustakaan Digital - Semua hak cipta dilindungi.
+  </footer>
+
+  <div id="tts-warning" role="alert">
+    ⚠️ Untuk suara bahasa Indonesia, aktifkan TTS Indonesia di <strong>Pengaturan > Bahasa & masukan > Keluaran Teks ke Suara</strong>
+  </div>
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const previewImage = document.getElementById('previewImage');
+        const resultImage = document.getElementById('resultImage');
+        const originalSize = document.getElementById('originalSize');
+        const originalDimensions = document.getElementById('originalDimensions');
+        const resultSize = document.getElementById('resultSize');
+        const qualityLevel = document.getElementById('qualityLevel');
+        const qualityRange = document.getElementById('qualityRange');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const compressBtn = document.getElementById('compressBtn');
+        const processingSection = document.getElementById('processingSection');
+
+        let originalFile = null;
+        let compressedBlob = null;
+        let targetSizeKB = 30;
+
+        // Handle drag and drop events
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropzone.classList.add('active');
+        }
+
+        function unhighlight() {
+            dropzone.classList.remove('active');
+        }
+
+        dropzone.addEventListener('drop', handleDrop, false);
+        dropzone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFiles);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles({ target: { files } });
+        }
+
+        function handleFiles(e) {
+            const files = e.target.files;
+            if (!files.length) return;
+
+            const file = files[0];
+            if (!file.type.match('image.*')) {
+                alert('Silakan unggah file gambar (PNG, JPG, JPEG)');
+                return;
+            }
+
+            originalFile = file;
+            processImage(file);
+        }
+
+        function processImage(file) {
+            updateProgress(0);
+            
+            // Show file info
+            originalSize.textContent = formatFileSize(file.size);
+            
+            // Preview original image
+            const img = new Image();
+            img.onload = function() {
+                originalDimensions.textContent = `${this.width} x ${this.height} px`;
+                previewImage.src = this.src;
+                
+                // Show processing section
+                processingSection.classList.remove('hidden');
+                
+                // Convert to WebP with default quality
+                convertToWebP(file, parseInt(qualityRange.value));
+            };
+            img.src = URL.createObjectURL(file);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        qualityRange.addEventListener('input', function() {
+            if (!originalFile) return;
+            convertToWebP(originalFile, parseInt(this.value));
+        });
+
+        function convertToWebP(file, quality) {
+            updateProgress(10);
+            
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = this.width;
+                canvas.height = this.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                updateProgress(30);
+                
+                // Convert to WebP
+                setTimeout(() => {
+                    canvas.toBlob(async (blob) => {
+                        compressedBlob = blob;
+                        const url = URL.createObjectURL(blob);
+                        resultImage.src = url;
+                        resultSize.textContent = formatFileSize(blob.size);
+                        qualityLevel.textContent = quality + '%';
+                        
+                        updateProgress(100);
+                        downloadBtn.disabled = false;
+                        compressBtn.disabled = false;
+                    }, 'image/webp', quality / 100);
+                }, 200);
+            };
+            img.src = URL.createObjectURL(file);
+        }
+
+        compressBtn.addEventListener('click', async function() {
+            if (!originalFile) return;
+            
+            let low = 1;
+            let high = 100;
+            let quality = 80;
+            let blob = null;
+            let tries = 0;
+            const maxTries = 10;
+            
+            compressBtn.disabled = true;
+            compressBtn.textContent = 'Mengkompres...';
+            
+            targetSizeKB = Math.max(30, Math.min(100, Math.floor(originalFile.size / 1024 * 0.3)));
+            
+            while (tries < maxTries) {
+                updateProgress((tries + 1) * (100 / maxTries));
+                
+                quality = Math.round((low + high) / 2);
+                blob = await getWebPBlob(originalFile, quality);
+                const sizeKB = blob.size / 1024;
+                
+                if (sizeKB > targetSizeKB * 1.1) {
+                    // File too big, decrease quality
+                    high = quality - 1;
+                } else if (sizeKB < targetSizeKB * 0.9 && quality < 100) {
+                    // File too small, increase quality
+                    low = quality + 1;
+                } else {
+                    // Within target range
+                    break;
+                }
+                
+                tries++;
+            }
+            
+            compressedBlob = blob;
+            const url = URL.createObjectURL(blob);
+            resultImage.src = url;
+            resultSize.textContent = formatFileSize(blob.size);
+            qualityLevel.textContent = `${quality}%`;
+            qualityRange.value = quality;
+            
+            updateProgress(100);
+            downloadBtn.disabled = false;
+            compressBtn.disabled = false;
+            compressBtn.textContent = 'Kompres Otomatis';
+        });
+
+        function getWebPBlob(file, quality) {
+            return new Promise(resolve => {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = this.width;
+                    canvas.height = this.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    canvas.toBlob(blob => {
+                        resolve(blob);
+                    }, 'image/webp', quality / 100);
+                };
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        downloadBtn.addEventListener('click', function() {
+            if (!compressedBlob) return;
+            
+            const url = URL.createObjectURL(compressedBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = originalFile.name.replace(/\.[^/.]+$/, '') + '.webp';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        function updateProgress(percent) {
+            progressBar.style.width = `${percent}%`;
+            progressText.textContent = `${percent}%`;
+        }
+    </script>
+  <script async="async" data-cfasync="false" src="//pl27093350.profitableratecpm.com/830ae6ee7b7572376212c48dff0eeeb8/invoke.js"></script>
+<div id="container-830ae6ee7b7572376212c48dff0eeeb8"></div>
+</body>
+</html>
+
