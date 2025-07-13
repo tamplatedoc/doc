@@ -536,372 +536,414 @@
     </footer>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, getDoc, updateDoc, deleteDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
-        import { getDatabase, ref as rtdbRef, remove as rtdbRemove } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, getDoc, updateDoc, deleteDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+import { getDatabase, ref as rtdbRef, remove as rtdbRemove } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
-        // Konfigurasi Firebase Anda
-        const firebaseConfig = {
-            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-            authDomain: "tamplatedoc.firebaseapp.com",
-            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "tamplatedoc",
-            storageBucket: "tamplatedoc.firebasestorage.app",
-            messagingSenderId: "264966107720",
-            appId: "1:264966107720:web:868abe93cdff209040de7d",
-            measurementId: "G-S5WTZ7S5PG"
-        };
+// Konfigurasi Firebase Anda
+const firebaseConfig = {
+    apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+    authDomain: "tamplatedoc.firebaseapp.com",
+    databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "tamplatedoc",
+    storageBucket: "tamplatedoc.firebasestorage.app",
+    messagingSenderId: "264966107720",
+    appId: "1:264966107720:web:868abe93cdff209040de7d",
+    measurementId: "G-S5WTZ7S5PG"
+};
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-        const rtdb = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const rtdb = getDatabase(app);
 
-        // --- Dark Mode / Light Mode Logic ---
-        function applyTheme() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-        }
+// --- Dark Mode / Light Mode Logic ---
+function applyTheme() {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+}
 
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-            } else {
-                localStorage.setItem('theme', 'light');
-            }
-        }
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+    } else {
+        localStorage.setItem('theme', 'light');
+    }
+}
 
-        document.addEventListener('DOMContentLoaded', () => {
-            applyTheme(); // Apply theme on load
-            const toggleButton = document.querySelector('.mode-toggle');
-            if (toggleButton) {
-                toggleButton.addEventListener('click', toggleDarkMode);
-            }
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme(); // Apply theme on load
+    const toggleButton = document.querySelector('.mode-toggle');
+    if (toggleButton) {
+        toggleButton.addEventListener('click', toggleDarkMode);
+    }
+});
 
-        // --- DOM Elements ---
-        const welcomeMessage = document.getElementById('welcomeMessage');
-        const logoutButton = document.getElementById('logoutButton');
-        const storyForm = document.getElementById('storyForm');
-        const storyIdInput = document.getElementById('storyId');
-        const storyTitleInput = document.getElementById('storyTitle');
-        const storyGenreInput = document.getElementById('storyGenre');
-        const storyContentInput = document.getElementById('storyContent');
-        const storyThumbnailInput = document.getElementById('storyThumbnail');
-        const submitStoryBtn = document.getElementById('submitStoryBtn');
-        const cancelEditBtn = document.getElementById('cancelEditBtn');
-        const storyFormTitle = document.getElementById('storyFormTitle');
-        const messageDiv = document.getElementById('message');
-        const storyListDiv = document.getElementById('storyList');
+// --- DOM Elements ---
+const welcomeMessage = document.getElementById('welcomeMessage');
+const logoutButton = document.getElementById('logoutButton');
+const storyForm = document.getElementById('storyForm');
+const storyIdInput = document.getElementById('storyId');
+const storyTitleInput = document.getElementById('storyTitle');
+const storyGenreInput = document.getElementById('storyGenre');
+const storyContentInput = document.getElementById('storyContent');
+const storyThumbnailInput = document.getElementById('storyThumbnail');
+const submitStoryBtn = document.getElementById('submitStoryBtn');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const storyFormTitle = document.getElementById('storyFormTitle');
+const messageDiv = document.getElementById('message');
+const storyListDiv = document.getElementById('storyList');
 
-        let currentAuthorName = '';
-        let currentUserId = '';
-        let creatorStoryCount = 0; // To keep track of stories created by the current user
+// Section elements to hide/show based on email verification
+const storyManagementSection = document.getElementById('storyManagementSection');
+const myStoriesSection = document.getElementById('myStoriesSection');
 
-        // --- Authentication State Listener ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUserId = user.uid;
-                const authorDocRef = doc(db, "authors", user.uid);
-                const authorDocSnap = await getDoc(authorDocRef);
-                if (authorDocSnap.exists()) {
-                    currentAuthorName = authorDocSnap.data().name;
-                    welcomeMessage.textContent = `Welcome, ${currentAuthorName}!`;
-                    listenForCreatorStories(user.uid);
-                } else {
-                    welcomeMessage.textContent = `Welcome, Creator!`;
-                    // If author data not found, you might want to create it or prompt the user.
-                    // For now, proceed and allow story creation, but authorName might be empty.
-                    listenForCreatorStories(user.uid);
-                }
-            } else {
-                // Redirect to login if not authenticated
-                window.location.href = 'login_register_creator.html';
-            }
-        });
 
-        // --- Logout Functionality ---
-        logoutButton.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                window.location.href = 'login_register_creator.html';
-            } catch (error) {
-                showMessage("Logout failed: " + error.message, "error");
-            }
-        });
+let currentAuthorName = '';
+let currentUserId = '';
+let creatorStoryCount = 0; // To keep track of stories created by the current user
 
-        // --- Message Display Function ---
-        function showMessage(text, type) {
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 5000);
-        }
+// --- Authentication State Listener ---
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        // Pengguna sudah login
+        currentUserId = user.uid;
 
-        // --- Thumbnail Management Functions ---
-        async function uploadThumbnail(file, storyFirestoreDocId) { // Changed storyId to storyFirestoreDocId for clarity
-            if (!file) return null;
-            // Use the Firestore document ID as part of the path to keep thumbnails organized
-            const storagePath = `thumbnails/${storyFirestoreDocId}/${file.name}`;
-            const imageRef = storageRef(storage, storagePath);
-            await uploadBytes(imageRef, file);
-            return storagePath; // Return the path to be saved in Firestore
-        }
+        // **PENTING: Pemeriksaan Verifikasi Email**
+        if (!user.emailVerified) {
+            // Email belum diverifikasi
+            welcomeMessage.textContent = `Welcome, ${user.displayName || user.email}! Please verify your email.`;
+            showMessage("Your email is not verified. Please check your inbox for a verification link. " +
+                      "If you haven't received one, click here to <a href='#' id='resendVerificationLink'>resend</a>.", "error");
 
-        async function deleteThumbnail(path) {
-            if (!path) return;
-            const imageRef = storageRef(storage, path);
-            try {
-                await deleteObject(imageRef);
-            } catch (error) {
-                if (error.code === 'storage/object-not-found') {
-                    // Ignore if the file doesn't exist (already deleted or never uploaded)
-                    console.warn("Attempted to delete a thumbnail that doesn't exist:", path);
-                } else {
-                    console.error("Error deleting old thumbnail:", error);
-                }
-            }
-        }
+            // Sembunyikan bagian dashboard yang memerlukan verifikasi
+            if (storyManagementSection) storyManagementSection.style.display = 'none';
+            if (myStoriesSection) myStoriesSection.style.display = 'none';
 
-        // --- Function to generate Story ID (for public display, not Firestore Doc ID) ---
-        function generateStoryId(creatorUid, storyCount) {
-            const now = new Date();
-            const year = String(now.getFullYear()).slice(2); // Last two digits of the year
-            const month = String(now.getMonth() + 1).padStart(2, '0'); // Month (01-12)
-            const day = String(now.getDate()).padStart(2, '0'); // Day (01-31)
-
-            // Simple hash of creator UID for the 4 digits
-            let creatorIdHash = 0;
-            for (let i = 0; i < Math.min(creatorUid.length, 4); i++) {
-                creatorIdHash += creatorUid.charCodeAt(i);
-            }
-            creatorIdHash = String(creatorIdHash % 10000).padStart(4, '0'); // Ensure 4 digits
-
-            // Ensure storyCount is treated as a number
-            const storyNum = String(storyCount || 0).slice(-1); // Last digit of story count (handle 0 if first story)
-
-            return `${year}${month}${day}${creatorIdHash}${storyNum}`;
-        }
-
-        // --- Story Form Submission Handler ---
-        storyForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const storyFirestoreDocId = storyIdInput.value; // This is the Firestore document ID
-            const title = storyTitleInput.value.trim();
-            const genre = storyGenreInput.value.trim();
-            const content = storyContentInput.value.trim();
-            const thumbnailFile = storyThumbnailInput.files[0];
-
-            if (!title || !genre || !content) {
-                showMessage("Please fill in all required fields (Title, Genre, Content).", "error");
-                return;
-            }
-
-            if (!currentUserId || !currentAuthorName) {
-                showMessage("Authentication error. Please log in again.", "error");
-                return;
-            }
-
-            submitStoryBtn.disabled = true; // Disable button to prevent double submission
-            submitStoryBtn.textContent = storyFirestoreDocId ? 'Updating...' : 'Publishing...';
-
-            try {
-                let thumbnailPath = null; // Will store the storage path of the thumbnail
-
-                if (storyFirestoreDocId) {
-                    // --- Editing an existing story ---
-                    const storyDocRef = doc(db, "stories", storyFirestoreDocId);
-                    const storyDocSnap = await getDoc(storyDocRef);
-                    const oldThumbnailPath = storyDocSnap.exists() ? storyDocSnap.data().thumbnailPath : null;
-
-                    if (thumbnailFile) {
-                        // New thumbnail uploaded, delete old one if exists
-                        if (oldThumbnailPath) {
-                            await deleteThumbnail(oldThumbnailPath);
-                        }
-                        thumbnailPath = await uploadThumbnail(thumbnailFile, storyFirestoreDocId);
-                    } else {
-                        // No new thumbnail, retain old path
-                        thumbnailPath = oldThumbnailPath;
-                    }
-
-                    await updateDoc(storyDocRef, {
-                        title: title,
-                        genre: genre,
-                        content: content,
-                        thumbnailPath: thumbnailPath, // Update with new or old path
-                        lastModified: serverTimestamp(), // Use serverTimestamp for updates
-                        status: 'pending' // Status changes to pending upon edit
-                    });
-                    showMessage("Story updated successfully! Awaiting staff approval.", "success");
-
-                } else {
-                    // --- Creating a new story ---
-                    // Firestore generates its own unique ID when using addDoc.
-                    // We'll use this ID for the thumbnail storage path.
-                    // The custom storyId will be generated and stored as a field within the document.
-                    const newStoryData = {
-                        authorUid: currentUserId,
-                        authorName: currentAuthorName,
-                        title: title,
-                        genre: genre,
-                        content: content,
-                        createdAt: serverTimestamp(), // Use serverTimestamp for creation
-                        lastModified: serverTimestamp(), // Use serverTimestamp for creation
-                        status: 'pending',
-                        thumbnailPath: null // Placeholder for thumbnail path
-                    };
-
-                    const docRef = await addDoc(collection(db, "stories"), newStoryData);
-                    const newFirestoreDocId = docRef.id; // Get the Firestore-generated ID
-
-                    // Generate custom story ID AFTER knowing the new document count (updated by onSnapshot)
-                    // The `creatorStoryCount` is kept updated by the `onSnapshot` listener.
-                    const newCustomStoryId = generateStoryId(currentUserId, creatorStoryCount + 1);
-
-                    if (thumbnailFile) {
-                        thumbnailPath = await uploadThumbnail(thumbnailFile, newFirestoreDocId);
-                    }
-
-                    // Update the newly created document with the custom storyId and thumbnailPath
-                    await updateDoc(doc(db, "stories", newFirestoreDocId), {
-                        storyId: newCustomStoryId,
-                        thumbnailPath: thumbnailPath // Update the thumbnail path
-                    });
-
-                    showMessage("Story published successfully! Awaiting staff approval.", "success");
-                }
-                resetForm();
-            } catch (error) {
-                console.error("Error submitting story:", error);
-                showMessage("Error submitting story: " + error.message, "error");
-            } finally {
-                submitStoryBtn.disabled = false;
-                submitStoryBtn.textContent = storyIdInput.value ? 'Update Story' : 'Publish Story';
-            }
-        });
-
-        // --- Form Reset Function ---
-        function resetForm() {
-            storyForm.reset();
-            storyIdInput.value = '';
-            storyFormTitle.textContent = 'Create New Story';
-            submitStoryBtn.textContent = 'Publish Story';
-            cancelEditBtn.style.display = 'none';
-        }
-
-        cancelEditBtn.addEventListener('click', resetForm);
-
-        // --- Listener for Creator's Stories ---
-        function listenForCreatorStories(authorUid) {
-            const storiesQuery = query(collection(db, "stories"), where("authorUid", "==", authorUid));
-            onSnapshot(storiesQuery, async (snapshot) => { // Added async here for potential async operations inside
-                storyListDiv.innerHTML = '';
-                creatorStoryCount = snapshot.size; // Update the creator's story count
-
-                if (snapshot.empty) {
-                    storyListDiv.innerHTML = '<p style="text-align: center; color: var(--text-color);">You have not published any stories yet. Start writing now!</p>';
-                    return;
-                }
-
-                for (const docSnapshot of snapshot.docs) { // Use for...of for async operations within loop
-                    const story = { id: docSnapshot.id, ...docSnapshot.data() };
-                    const storyItem = document.createElement('div');
-                    storyItem.className = 'story-item';
-
-                    // Fetch thumbnail URL if available
-                    let thumbnailUrl = '';
-                    if (story.thumbnailPath) {
-                        try {
-                            thumbnailUrl = await getDownloadURL(storageRef(storage, story.thumbnailPath));
-                        } catch (e) {
-                            console.error("Error fetching thumbnail URL for story", story.id, ":", e);
-                            thumbnailUrl = ''; // Fallback if URL cannot be fetched
-                        }
-                    }
-
-                    storyItem.innerHTML = `
-                        ${thumbnailUrl ? `<img src="${thumbnailUrl}" alt="Story Thumbnail" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">` : ''}
-                        <h3>${story.title}</h3>
-                        <p class="story-id">ID: ${story.storyId || 'N/A'}</p>
-                        <p>Genre: ${story.genre}</p>
-                        <p>Status: <span class="status ${story.status}">${story.status.charAt(0).toUpperCase() + story.status.slice(1)}</span></p>
-                        ${story.createdAt ? `<p>Created: ${new Date(story.createdAt.toDate()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>` : ''}
-                        ${story.lastModified ? `<p>Last Modified: ${new Date(story.lastModified.toDate()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>` : ''}
-                        <div class="item-actions">
-                            <button class="btn edit" data-id="${story.id}">Edit</button>
-                            <button class="btn delete" data-id="${story.id}" data-thumbnail="${story.thumbnailPath || ''}">Delete</button>
-                        </div>
-                    `;
-                    storyListDiv.appendChild(storyItem);
-                }
-            }, (error) => {
-                storyListDiv.innerHTML = '<p style="text-align: center; color: var(--text-color);">Error loading your stories.</p>';
-                console.error("Error listening to stories:", error);
-            });
-        }
-
-        // --- Event Listener for Edit/Delete Buttons ---
-        storyListDiv.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('edit')) {
-                const storyFirestoreDocId = e.target.dataset.id;
-                try {
-                    const storyDocRef = doc(db, "stories", storyFirestoreDocId);
-                    const storyDocSnap = await getDoc(storyDocRef);
-                    if (storyDocSnap.exists()) {
-                        const storyData = storyDocSnap.data();
-                        storyIdInput.value = storyFirestoreDocId; // Set the Firestore document ID for editing
-                        storyTitleInput.value = storyData.title;
-                        storyGenreInput.value = storyData.genre;
-                        storyContentInput.value = storyData.content;
-                        storyThumbnailInput.value = ''; // Clear file input for security/privacy reasons (users re-upload if needed)
-                        storyFormTitle.textContent = 'Edit Story';
-                        submitStoryBtn.textContent = 'Update Story';
-                        cancelEditBtn.style.display = 'inline-block';
-                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top to see the form
-                    }
-                } catch (error) {
-                    showMessage("Error loading story for edit: " + error.message, "error");
-                }
-            } else if (e.target.classList.contains('delete')) {
-                const storyFirestoreDocId = e.target.dataset.id;
-                const thumbnailPath = e.target.dataset.thumbnail; // This is the storage path
-
-                if (confirm('Are you sure you want to delete this story? This action cannot be undone.')) {
+            // Tambahkan event listener untuk tombol resend (jika ada)
+            const resendLink = document.getElementById('resendVerificationLink');
+            if (resendLink) {
+                resendLink.addEventListener('click', async (e) => {
+                    e.preventDefault();
                     try {
-                        // 1. Delete thumbnail from Storage
-                        if (thumbnailPath) {
-                            await deleteThumbnail(thumbnailPath);
-                        }
-
-                        // 2. Delete story document from Firestore
-                        await deleteDoc(doc(db, "stories", storyFirestoreDocId));
-                        
-                        // 3. Delete related data from Realtime Database (if they exist)
-                        await rtdbRemove(rtdbRef(rtdb, `storyViews/${storyFirestoreDocId}`));
-                        await rtdbRemove(rtdbRef(rtdb, `storyRatings/${storyFirestoreDocId}`));
-                        // If you have comments in RTDB tied to storyId, delete them too
-                        await rtdbRemove(rtdbRef(rtdb, `storyComments/${storyFirestoreDocId}`));
-
-
-                        showMessage("Story deleted successfully!", "success");
-                        resetForm(); // Reset form after deletion
+                        await sendEmailVerification(user);
+                        showMessage("Verification email sent! Please check your inbox.", "success");
                     } catch (error) {
-                        showMessage("Error deleting story: " + error.message, "error");
+                        showMessage("Error sending verification email: " + error.message, "error");
+                        console.error("Error sending verification email:", error);
                     }
+                });
+            }
+
+            return; // Hentikan eksekusi lebih lanjut jika email belum diverifikasi
+        }
+
+        // Email sudah diverifikasi, lanjutkan seperti biasa
+        const authorDocRef = doc(db, "authors", user.uid);
+        const authorDocSnap = await getDoc(authorDocRef);
+        if (authorDocSnap.exists()) {
+            currentAuthorName = authorDocSnap.data().name;
+            welcomeMessage.textContent = `Welcome, ${currentAuthorName}!`;
+            listenForCreatorStories(user.uid);
+        } else {
+            welcomeMessage.textContent = `Welcome, Creator!`;
+            // Jika data penulis tidak ditemukan, Anda mungkin ingin membuatnya atau meminta pengguna.
+            // Untuk saat ini, lanjutkan dan izinkan pembuatan cerita, tetapi authorName mungkin kosong.
+            listenForCreatorStories(user.uid);
+        }
+
+        // Pastikan elemen-elemen dashboard terlihat jika sebelumnya disembunyikan
+        if (storyManagementSection) storyManagementSection.style.display = 'block';
+        if (myStoriesSection) myStoriesSection.style.display = 'block';
+
+    } else {
+        // Tidak ada pengguna yang login, arahkan ke halaman login
+        window.location.href = 'login_register_creator.html';
+    }
+});
+
+// --- Logout Functionality ---
+logoutButton.addEventListener('click', async () => {
+    try {
+        await signOut(auth);
+        window.location.href = 'login_register_creator.html';
+    } catch (error) {
+        showMessage("Logout failed: " + error.message, "error");
+    }
+});
+
+// --- Message Display Function ---
+function showMessage(text, type) {
+    messageDiv.innerHTML = text; // Use innerHTML to allow for links
+    messageDiv.className = `message ${type}`;
+    messageDiv.style.display = 'block';
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+    }, 5000);
+}
+
+// --- Thumbnail Management Functions ---
+async function uploadThumbnail(file, storyFirestoreDocId) { // Changed storyId to storyFirestoreDocId for clarity
+    if (!file) return null;
+    // Use the Firestore document ID as part of the path to keep thumbnails organized
+    const storagePath = `thumbnails/${storyFirestoreDocId}/${file.name}`;
+    const imageRef = storageRef(storage, storagePath);
+    await uploadBytes(imageRef, file);
+    return storagePath; // Return the path to be saved in Firestore
+}
+
+async function deleteThumbnail(path) {
+    if (!path) return;
+    const imageRef = storageRef(storage, path);
+    try {
+        await deleteObject(imageRef);
+    } catch (error) {
+        if (error.code === 'storage/object-not-found') {
+            // Ignore if the file doesn't exist (already deleted or never uploaded)
+            console.warn("Attempted to delete a thumbnail that doesn't exist:", path);
+        } else {
+            console.error("Error deleting old thumbnail:", error);
+        }
+    }
+}
+
+// --- Function to generate Story ID (for public display, not Firestore Doc ID) ---
+function generateStoryId(creatorUid, storyCount) {
+    const now = new Date();
+    const year = String(now.getFullYear()).slice(2); // Last two digits of the year
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Month (01-12)
+    const day = String(now.getDate()).padStart(2, '0'); // Day (01-31)
+
+    // Simple hash of creator UID for the 4 digits
+    let creatorIdHash = 0;
+    for (let i = 0; i < Math.min(creatorUid.length, 4); i++) {
+        creatorIdHash += creatorUid.charCodeAt(i);
+    }
+    creatorIdHash = String(creatorIdHash % 10000).padStart(4, '0'); // Ensure 4 digits
+
+    // Ensure storyCount is treated as a number
+    const storyNum = String(storyCount || 0).slice(-1); // Last digit of story count (handle 0 if first story)
+
+    return `${year}${month}${day}${creatorIdHash}${storyNum}`;
+}
+
+// --- Story Form Submission Handler ---
+storyForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const storyFirestoreDocId = storyIdInput.value; // This is the Firestore document ID
+    const title = storyTitleInput.value.trim();
+    const genre = storyGenreInput.value.trim();
+    const content = storyContentInput.value.trim();
+    const thumbnailFile = storyThumbnailInput.files[0];
+
+    if (!title || !genre || !content) {
+        showMessage("Please fill in all required fields (Title, Genre, Content).", "error");
+        return;
+    }
+
+    if (!currentUserId || !currentAuthorName) {
+        showMessage("Authentication error. Please log in again.", "error");
+        return;
+    }
+
+    submitStoryBtn.disabled = true; // Disable button to prevent double submission
+    submitStoryBtn.textContent = storyFirestoreDocId ? 'Updating...' : 'Publishing...';
+
+    try {
+        let thumbnailPath = null; // Will store the storage path of the thumbnail
+
+        if (storyFirestoreDocId) {
+            // --- Editing an existing story ---
+            const storyDocRef = doc(db, "stories", storyFirestoreDocId);
+            const storyDocSnap = await getDoc(storyDocRef);
+            const oldThumbnailPath = storyDocSnap.exists() ? storyDocSnap.data().thumbnailPath : null;
+
+            if (thumbnailFile) {
+                // New thumbnail uploaded, delete old one if exists
+                if (oldThumbnailPath) {
+                    await deleteThumbnail(oldThumbnailPath);
+                }
+                thumbnailPath = await uploadThumbnail(thumbnailFile, storyFirestoreDocId);
+            } else {
+                // No new thumbnail, retain old path
+                thumbnailPath = oldThumbnailPath;
+            }
+
+            await updateDoc(storyDocRef, {
+                title: title,
+                genre: genre,
+                content: content,
+                thumbnailPath: thumbnailPath, // Update with new or old path
+                lastModified: serverTimestamp(), // Use serverTimestamp for updates
+                status: 'pending' // Status changes to pending upon edit
+            });
+            showMessage("Story updated successfully! Awaiting staff approval.", "success");
+
+        } else {
+            // --- Creating a new story ---
+            // Firestore generates its own unique ID when using addDoc.
+            // We'll use this ID for the thumbnail storage path.
+            // The custom storyId will be generated and stored as a field within the document.
+            const newStoryData = {
+                authorUid: currentUserId,
+                authorName: currentAuthorName,
+                title: title,
+                genre: genre,
+                content: content,
+                createdAt: serverTimestamp(), // Use serverTimestamp for creation
+                lastModified: serverTimestamp(), // Use serverTimestamp for creation
+                status: 'pending',
+                thumbnailPath: null // Placeholder for thumbnail path
+            };
+
+            const docRef = await addDoc(collection(db, "stories"), newStoryData);
+            const newFirestoreDocId = docRef.id; // Get the Firestore-generated ID
+
+            // Generate custom story ID AFTER knowing the new document count (updated by onSnapshot)
+            // The `creatorStoryCount` is kept updated by the `onSnapshot` listener.
+            const newCustomStoryId = generateStoryId(currentUserId, creatorStoryCount + 1);
+
+            if (thumbnailFile) {
+                thumbnailPath = await uploadThumbnail(thumbnailFile, newFirestoreDocId);
+            }
+
+            // Update the newly created document with the custom storyId and thumbnailPath
+            await updateDoc(doc(db, "stories", newFirestoreDocId), {
+                storyId: newCustomStoryId,
+                thumbnailPath: thumbnailPath // Update the thumbnail path
+            });
+
+            showMessage("Story published successfully! Awaiting staff approval.", "success");
+        }
+        resetForm();
+    } catch (error) {
+        console.error("Error submitting story:", error);
+        showMessage("Error submitting story: " + error.message, "error");
+    } finally {
+        submitStoryBtn.disabled = false;
+        submitStoryBtn.textContent = storyIdInput.value ? 'Update Story' : 'Publish Story';
+    }
+});
+
+// --- Form Reset Function ---
+function resetForm() {
+    storyForm.reset();
+    storyIdInput.value = '';
+    storyFormTitle.textContent = 'Create New Story';
+    submitStoryBtn.textContent = 'Publish Story';
+    cancelEditBtn.style.display = 'none';
+}
+
+cancelEditBtn.addEventListener('click', resetForm);
+
+// --- Listener for Creator's Stories ---
+function listenForCreatorStories(authorUid) {
+    const storiesQuery = query(collection(db, "stories"), where("authorUid", "==", authorUid));
+    onSnapshot(storiesQuery, async (snapshot) => { // Added async here for potential async operations inside
+        storyListDiv.innerHTML = '';
+        creatorStoryCount = snapshot.size; // Update the creator's story count
+
+        if (snapshot.empty) {
+            storyListDiv.innerHTML = '<p style="text-align: center; color: var(--text-color);">You have not published any stories yet. Start writing now!</p>';
+            return;
+        }
+
+        for (const docSnapshot of snapshot.docs) { // Use for...of for async operations within loop
+            const story = { id: docSnapshot.id, ...docSnapshot.data() };
+            const storyItem = document.createElement('div');
+            storyItem.className = 'story-item';
+
+            // Fetch thumbnail URL if available
+            let thumbnailUrl = '';
+            if (story.thumbnailPath) {
+                try {
+                    thumbnailUrl = await getDownloadURL(storageRef(storage, story.thumbnailPath));
+                } catch (e) {
+                    console.error("Error fetching thumbnail URL for story", story.id, ":", e);
+                    thumbnailUrl = ''; // Fallback if URL cannot be fetched
                 }
             }
-        });
+
+            storyItem.innerHTML = `
+                ${thumbnailUrl ? `<img src="${thumbnailUrl}" alt="Story Thumbnail" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">` : ''}
+                <h3>${story.title}</h3>
+                <p class="story-id">ID: ${story.storyId || 'N/A'}</p>
+                <p>Genre: ${story.genre}</p>
+                <p>Status: <span class="status ${story.status}">${story.status.charAt(0).toUpperCase() + story.status.slice(1)}</span></p>
+                ${story.createdAt ? `<p>Created: ${new Date(story.createdAt.toDate()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>` : ''}
+                ${story.lastModified ? `<p>Last Modified: ${new Date(story.lastModified.toDate()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>` : ''}
+                <div class="item-actions">
+                    <button class="btn edit" data-id="${story.id}">Edit</button>
+                    <button class="btn delete" data-id="${story.id}" data-thumbnail="${story.thumbnailPath || ''}">Delete</button>
+                </div>
+            `;
+            storyListDiv.appendChild(storyItem);
+        }
+    }, (error) => {
+        storyListDiv.innerHTML = '<p style="text-align: center; color: var(--text-color);">Error loading your stories.</p>';
+        console.error("Error listening to stories:", error);
+    });
+}
+
+// --- Event Listener for Edit/Delete Buttons ---
+storyListDiv.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('edit')) {
+        const storyFirestoreDocId = e.target.dataset.id;
+        try {
+            const storyDocRef = doc(db, "stories", storyFirestoreDocId);
+            const storyDocSnap = await getDoc(storyDocRef);
+            if (storyDocSnap.exists()) {
+                const storyData = storyDocSnap.data();
+                storyIdInput.value = storyFirestoreDocId; // Set the Firestore document ID for editing
+                storyTitleInput.value = storyData.title;
+                storyGenreInput.value = storyData.genre;
+                storyContentInput.value = storyData.content;
+                storyThumbnailInput.value = ''; // Clear file input for security/privacy reasons (users re-upload if needed)
+                storyFormTitle.textContent = 'Edit Story';
+                submitStoryBtn.textContent = 'Update Story';
+                cancelEditBtn.style.display = 'inline-block';
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top to see the form
+            }
+        } catch (error) {
+            showMessage("Error loading story for edit: " + error.message, "error");
+        }
+    } else if (e.target.classList.contains('delete')) {
+        const storyFirestoreDocId = e.target.dataset.id;
+        const thumbnailPath = e.target.dataset.thumbnail; // This is the storage path
+
+        if (confirm('Are you sure you want to delete this story? This action cannot be undone.')) {
+            try {
+                // 1. Delete thumbnail from Storage
+                if (thumbnailPath) {
+                    await deleteThumbnail(thumbnailPath);
+                }
+
+                // 2. Delete story document from Firestore
+                await deleteDoc(doc(db, "stories", storyFirestoreDocId));
+                
+                // 3. Delete related data from Realtime Database (if they exist)
+                await rtdbRemove(rtdbRef(rtdb, `storyViews/${storyFirestoreDocId}`));
+                await rtdbRemove(rtdbRef(rtdb, `storyRatings/${storyFirestoreDocId}`));
+                // If you have comments in RTDB tied to storyId, delete them too
+                await rtdbRemove(rtdbRef(rtdb, `storyComments/${storyFirestoreDocId}`));
+
+
+                showMessage("Story deleted successfully!", "success");
+                resetForm(); // Reset form after deletion
+            } catch (error) {
+                showMessage("Error deleting story: " + error.message, "error");
+            }
+        }
+    }
+});
     </script>
 </body>
 </html>
