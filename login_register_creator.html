@@ -393,462 +393,247 @@
     </footer>
 
     <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, sendEmailVerification, isSignInWithEmailLink, signInWithEmailLink } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, getDoc, updateDoc, deleteDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
-import { getDatabase, ref as rtdbRef, remove as rtdbRemove } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-// Konfigurasi Firebase Anda
-const firebaseConfig = {
-    apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-    authDomain: "tamplatedoc.firebaseapp.com",
-    databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "tamplatedoc",
-    storageBucket: "tamplatedoc.firebasestorage.app",
-    messagingSenderId: "264966107720",
-    appId: "1:264966107720:web:868abe93cdff209040de7d",
-    measurementId: "G-S5WTZ7S5PG"
-};
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+            authDomain: "tamplatedoc.firebaseapp.com",
+            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tamplatedoc",
+            storageBucket: "tamplatedoc.firebasestorage.app",
+            messagingSenderId: "264966107720",
+            appId: "1:264966107720:web:868abe93cdff209040de7d",
+            measurementId: "G-S5WTZ7S5PG"
+        };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-const rtdb = getDatabase(app);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-// --- Dark Mode / Light Mode Logic ---
-function applyTheme() {
-    if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
-}
-
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    if (document.body.classList.contains('dark-mode')) {
-        localStorage.setItem('theme', 'dark');
-    } else {
-        localStorage.setItem('theme', 'light');
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    applyTheme(); // Apply theme on load
-    const toggleButton = document.querySelector('.mode-toggle');
-    if (toggleButton) {
-        toggleButton.addEventListener('click', toggleDarkMode);
-    }
-
-    // --- Logic for handling Magic Link Sign-in on page load ---
-    if (isSignInWithEmailLink(auth, window.location.href)) {
-        let email = window.localStorage.getItem('emailForSignIn'); // Retrieve the email
-        if (!email) {
-            // If email is not in local storage, prompt the user.
-            email = window.prompt('Please provide your email for confirmation:');
-        }
-
-        if (email) {
-            signInWithEmailLink(auth, email, window.location.href)
-                .then((result) => {
-                    console.log("Email verified and user signed in:", result.user);
-                    window.localStorage.removeItem('emailForSignIn'); // Clean up the email from local storage
-                    // Redirect to dashboard if currently on the login page after successful sign-in
-                    if (window.location.pathname.endsWith('login_register_creator.html')) {
-                        window.location.href = 'creator_dashboard.html';
-                    }
-                    showMessage("Login successful! Welcome to your dashboard.", "success");
-                })
-                .catch((error) => {
-                    console.error("Error signing in with email link:", error);
-                    showMessage("Login failed: " + error.message + ". Please try logging in again.", "error");
-                    // In case of error, ensure they are on the login page or redirected there
-                    if (!window.location.pathname.endsWith('login_register_creator.html')) {
-                        window.location.href = 'login_register_creator.html';
-                    }
-                });
-        } else {
-            showMessage("Email is required to complete verification. Please try again.", "error");
-            if (!window.location.pathname.endsWith('login_register_creator.html')) {
-                window.location.href = 'login_register_creator.html';
-            }
-        }
-    }
-});
-
-// --- DOM Elements ---
-const welcomeMessage = document.getElementById('welcomeMessage');
-const logoutButton = document.getElementById('logoutButton');
-const storyForm = document.getElementById('storyForm');
-const storyIdInput = document.getElementById('storyId');
-const storyTitleInput = document.getElementById('storyTitle');
-const storyGenreInput = document.getElementById('storyGenre');
-const storyContentInput = document.getElementById('storyContent');
-const storyThumbnailInput = document.getElementById('storyThumbnail');
-const submitStoryBtn = document.getElementById('submitStoryBtn');
-const cancelEditBtn = document.getElementById('cancelEditBtn');
-const storyFormTitle = document.getElementById('storyFormTitle');
-const messageDiv = document.getElementById('message');
-const storyListDiv = document.getElementById('storyList');
-
-// Section elements to hide/show based on email verification
-const storyManagementSection = document.getElementById('storyManagementSection');
-const myStoriesSection = document.getElementById('myStoriesSection');
-
-let currentAuthorName = '';
-let currentUserId = '';
-let creatorStoryCount = 0; // To keep track of stories created by the current user
-
-// --- Authentication State Listener ---
-// Flag to prevent multiple redirects or redirect loops
-let initialAuthCheckDone = false;
-
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        // Pengguna sudah login
-        currentUserId = user.uid;
-
-        // **PENTING: Pemeriksaan Verifikasi Email**
-        if (!user.emailVerified) {
-            // Email belum diverifikasi
-            welcomeMessage.textContent = `Welcome, ${user.displayName || user.email}! Please verify your email.`;
-            showMessage("Your email is not verified. Please check your inbox for a verification link. " +
-                        "If you haven't received one, click here to <a href='#' id='resendVerificationLink'>resend</a>.", "error");
-
-            // Sembunyikan bagian dashboard yang memerlukan verifikasi
-            if (storyManagementSection) storyManagementSection.style.display = 'none';
-            if (myStoriesSection) myStoriesSection.style.display = 'none';
-
-            // Tambahkan event listener untuk tombol resend (jika ada)
-            const resendLink = document.getElementById('resendVerificationLink');
-            if (resendLink) {
-                resendLink.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    try {
-                        await sendEmailVerification(user);
-                        showMessage("Verification email sent! Please check your inbox.", "success");
-                    } catch (error) {
-                        showMessage("Error sending verification email: " + error.message, "error");
-                        console.error("Error sending verification email:", error);
-                    }
-                });
-            }
-
-            // Jika ini adalah pengecekan awal dan email belum diverifikasi, jangan redirect.
-            // Biarkan pengguna melihat pesan verifikasi di halaman dashboard.
-            initialAuthCheckDone = true; // Mark as checked to prevent redirection in the else block
-            return; // Hentikan eksekusi lebih lanjut jika email belum diverifikasi
-        }
-
-        // Email sudah diverifikasi, lanjutkan seperti biasa
-        const authorDocRef = doc(db, "authors", user.uid);
-        const authorDocSnap = await getDoc(authorDocRef);
-        if (authorDocSnap.exists()) {
-            currentAuthorName = authorDocSnap.data().name;
-            welcomeMessage.textContent = `Welcome, ${currentAuthorName}!`;
-            listenForCreatorStories(user.uid);
-        } else {
-            currentAuthorName = user.displayName || user.email.split('@')[0]; // Fallback to email prefix if no name
-            welcomeMessage.textContent = `Welcome, Creator!`;
-            listenForCreatorStories(user.uid);
-        }
-
-        // Pastikan elemen-elemen dashboard terlihat jika sebelumnya disembunyikan
-        if (storyManagementSection) storyManagementSection.style.display = 'block';
-        if (myStoriesSection) myStoriesSection.style.display = 'block';
-
-        // Set flag to true as initial check is done and user is logged in and verified
-        initialAuthCheckDone = true;
-
-    } else {
-        // Tidak ada pengguna yang login atau telah logout
-        // Hanya redirect jika ini bukan hasil dari proses login magic link yang baru saja selesai
-        // dan jika pengguna berada di halaman dashboard.
-        if (!initialAuthCheckDone && window.location.pathname.endsWith('creator_dashboard.html')) {
-            window.location.href = 'login_register_creator.html';
-        }
-        initialAuthCheckDone = true; // Mark as checked, even if no user
-    }
-});
-
-
-// --- Logout Functionality ---
-logoutButton.addEventListener('click', async () => {
-    try {
-        await signOut(auth);
-        window.location.href = 'login_register_creator.html';
-    } catch (error) {
-        showMessage("Logout failed: " + error.message, "error");
-    }
-});
-
-// --- Message Display Function ---
-function showMessage(text, type) {
-    messageDiv.innerHTML = text; // Use innerHTML to allow for links
-    messageDiv.className = `message ${type}`;
-    messageDiv.style.display = 'block';
-    setTimeout(() => {
-        messageDiv.style.display = 'none';
-    }, 5000);
-}
-
-// --- Thumbnail Management Functions ---
-async function uploadThumbnail(file, storyFirestoreDocId) { // Changed storyId to storyFirestoreDocId for clarity
-    if (!file) return null;
-    // Use the Firestore document ID as part of the path to keep thumbnails organized
-    const storagePath = `thumbnails/${storyFirestoreDocId}/${file.name}`;
-    const imageRef = storageRef(storage, storagePath);
-    await uploadBytes(imageRef, file);
-    return storagePath; // Return the path to be saved in Firestore
-}
-
-async function deleteThumbnail(path) {
-    if (!path) return;
-    const imageRef = storageRef(storage, path);
-    try {
-        await deleteObject(imageRef);
-    } catch (error) {
-        if (error.code === 'storage/object-not-found') {
-            // Ignore if the file doesn't exist (already deleted or never uploaded)
-            console.warn("Attempted to delete a thumbnail that doesn't exist:", path);
-        } else {
-            console.error("Error deleting old thumbnail:", error);
-        }
-    }
-}
-
-// --- Function to generate Story ID (for public display, not Firestore Doc ID) ---
-function generateStoryId(creatorUid, storyCount) {
-    const now = new Date();
-    const year = String(now.getFullYear()).slice(2); // Last two digits of the year
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // Month (01-12)
-    const day = String(now.getDate()).padStart(2, '0'); // Day (01-31)
-
-    // Simple hash of creator UID for the 4 digits
-    let creatorIdHash = 0;
-    for (let i = 0; i < Math.min(creatorUid.length, 4); i++) {
-        creatorIdHash += creatorUid.charCodeAt(i);
-    }
-    creatorIdHash = String(creatorIdHash % 10000).padStart(4, '0'); // Ensure 4 digits
-
-    // Ensure storyCount is treated as a number
-    const storyNum = String(storyCount || 0).slice(-1); // Last digit of story count (handle 0 if first story)
-
-    return `${year}${month}${day}${creatorIdHash}${storyNum}`;
-}
-
-// --- Story Form Submission Handler ---
-storyForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const storyFirestoreDocId = storyIdInput.value; // This is the Firestore document ID
-    const title = storyTitleInput.value.trim();
-    const genre = storyGenreInput.value.trim();
-    const content = storyContentInput.value.trim();
-    const thumbnailFile = storyThumbnailInput.files[0];
-
-    if (!title || !genre || !content) {
-        showMessage("Please fill in all required fields (Title, Genre, Content).", "error");
-        return;
-    }
-
-    if (!currentUserId || !currentAuthorName) {
-        showMessage("Authentication error. Please log in again.", "error");
-        return;
-    }
-
-    submitStoryBtn.disabled = true; // Disable button to prevent double submission
-    submitStoryBtn.textContent = storyFirestoreDocId ? 'Updating...' : 'Publishing...';
-
-    try {
-        let thumbnailPath = null; // Will store the storage path of the thumbnail
-
-        if (storyFirestoreDocId) {
-            // --- Editing an existing story ---
-            const storyDocRef = doc(db, "stories", storyFirestoreDocId);
-            const storyDocSnap = await getDoc(storyDocRef);
-            const oldThumbnailPath = storyDocSnap.exists() ? storyDocSnap.data().thumbnailPath : null;
-
-            if (thumbnailFile) {
-                // New thumbnail uploaded, delete old one if exists
-                if (oldThumbnailPath) {
-                    await deleteThumbnail(oldThumbnailPath);
-                }
-                thumbnailPath = await uploadThumbnail(thumbnailFile, storyFirestoreDocId);
+        // --- Dark Mode / Light Mode Logic ---
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
             } else {
-                // No new thumbnail, retain old path
-                thumbnailPath = oldThumbnailPath;
+                document.body.classList.remove('dark-mode');
             }
-
-            await updateDoc(storyDocRef, {
-                title: title,
-                genre: genre,
-                content: content,
-                thumbnailPath: thumbnailPath, // Update with new or old path
-                lastModified: serverTimestamp(), // Use serverTimestamp for updates
-                status: 'pending' // Status changes to pending upon edit
-            });
-            showMessage("Story updated successfully! Awaiting staff approval.", "success");
-
-        } else {
-            // --- Creating a new story ---
-            // Firestore generates its own unique ID when using addDoc.
-            // We'll use this ID for the thumbnail storage path.
-            // The custom storyId will be generated and stored as a field within the document.
-            const newStoryData = {
-                authorUid: currentUserId,
-                authorName: currentAuthorName,
-                title: title,
-                genre: genre,
-                content: content,
-                createdAt: serverTimestamp(), // Use serverTimestamp for creation
-                lastModified: serverTimestamp(), // Use serverTimestamp for creation
-                status: 'pending',
-                thumbnailPath: null // Placeholder for thumbnail path
-            };
-
-            const docRef = await addDoc(collection(db, "stories"), newStoryData);
-            const newFirestoreDocId = docRef.id; // Get the Firestore-generated ID
-
-            // Generate custom story ID AFTER knowing the new document count (updated by onSnapshot)
-            // The `creatorStoryCount` is kept updated by the `onSnapshot` listener.
-            const newCustomStoryId = generateStoryId(currentUserId, creatorStoryCount + 1);
-
-            if (thumbnailFile) {
-                thumbnailPath = await uploadThumbnail(thumbnailFile, newFirestoreDocId);
-            }
-
-            // Update the newly created document with the custom storyId and thumbnailPath
-            await updateDoc(doc(db, "stories", newFirestoreDocId), {
-                storyId: newCustomStoryId,
-                thumbnailPath: thumbnailPath // Update the thumbnail path
-            });
-
-            showMessage("Story published successfully! Awaiting staff approval.", "success");
-        }
-        resetForm();
-    } catch (error) {
-        console.error("Error submitting story:", error);
-        showMessage("Error submitting story: " + error.message, "error");
-    } finally {
-        submitStoryBtn.disabled = false;
-        submitStoryBtn.textContent = storyIdInput.value ? 'Update Story' : 'Publish Story';
-    }
-});
-
-// --- Form Reset Function ---
-function resetForm() {
-    storyForm.reset();
-    storyIdInput.value = '';
-    storyFormTitle.textContent = 'Create New Story';
-    submitStoryBtn.textContent = 'Publish Story';
-    cancelEditBtn.style.display = 'none';
-}
-
-cancelEditBtn.addEventListener('click', resetForm);
-
-// --- Listener for Creator's Stories ---
-function listenForCreatorStories(authorUid) {
-    const storiesQuery = query(collection(db, "stories"), where("authorUid", "==", authorUid));
-    onSnapshot(storiesQuery, async (snapshot) => { // Added async here for potential async operations inside
-        storyListDiv.innerHTML = '';
-        creatorStoryCount = snapshot.size; // Update the creator's story count
-
-        if (snapshot.empty) {
-            storyListDiv.innerHTML = '<p style="text-align: center; color: var(--text-color);">You have not published any stories yet. Start writing now!</p>';
-            return;
         }
 
-        for (const docSnapshot of snapshot.docs) { // Use for...of for async operations within loop
-            const story = { id: docSnapshot.id, ...docSnapshot.data() };
-            const storyItem = document.createElement('div');
-            storyItem.className = 'story-item';
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
 
-            // Fetch thumbnail URL if available
-            let thumbnailUrl = '';
-            if (story.thumbnailPath) {
-                try {
-                    thumbnailUrl = await getDownloadURL(storageRef(storage, story.thumbnailPath));
-                } catch (e) {
-                    console.error("Error fetching thumbnail URL for story", story.id, ":", e);
-                    thumbnailUrl = ''; // Fallback if URL cannot be fetched
-                }
+        // --- DOM Elements ---
+        const authTitle = document.getElementById('authTitle');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const toggleAuth = document.getElementById('toggleAuth');
+        const toggleText = document.getElementById('toggleText');
+        const messageDiv = document.getElementById('message');
+
+        // Login Form Elements
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPinInput = document.getElementById('loginPin');
+
+        // Register Form Elements
+        const registerEmailInput = document.getElementById('registerEmail');
+        const registerPinInput = document.getElementById('registerPin');
+        const registerConfirmPinInput = document.getElementById('registerConfirmPin');
+        const registerAuthorNameInput = document.getElementById('registerAuthorName');
+        const registerWhatsappInput = document.getElementById('registerWhatsapp');
+
+        let isLoginMode = true; // State to track if currently in login or register mode
+
+        // --- Message Display Function ---
+        function showMessage(text, type) {
+            messageDiv.innerHTML = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // --- Toggle between Login and Register Forms ---
+        toggleAuth.addEventListener('click', (e) => {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                authTitle.textContent = 'Login as Creator';
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                toggleText.textContent = "Don't have an account?";
+                toggleAuth.textContent = "Register here";
+            } else {
+                authTitle.textContent = 'Register as Creator';
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                toggleText.textContent = "Already have an account?";
+                toggleAuth.textContent = "Login here";
+            }
+            messageDiv.style.display = 'none'; // Hide message when switching forms
+        });
+
+        // --- Firebase Action Code Settings (for Email Link Sign-in) ---
+        const actionCodeSettings = {
+            url: 'https://amdf.web.id/web_creator.html', // URL to redirect to after successful login
+            handleCodeInApp: true,
+        };
+
+        // --- Register Functionality ---
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = registerEmailInput.value.trim();
+            const pin = registerPinInput.value.trim();
+            const confirmPin = registerConfirmPinInput.value.trim();
+            const authorName = registerAuthorNameInput.value.trim();
+            const whatsapp = registerWhatsappInput.value.trim();
+
+            if (pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+                showMessage("PIN must be exactly 6 digits.", "error");
+                return;
             }
 
-            storyItem.innerHTML = `
-                ${thumbnailUrl ? `<img src="${thumbnailUrl}" alt="Story Thumbnail" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">` : ''}
-                <h3>${story.title}</h3>
-                <p class="story-id">ID: ${story.storyId || 'N/A'}</p>
-                <p>Genre: ${story.genre}</p>
-                <p>Status: <span class="status ${story.status}">${story.status.charAt(0).toUpperCase() + story.status.slice(1)}</span></p>
-                ${story.createdAt ? `<p>Created: ${new Date(story.createdAt.toDate()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>` : ''}
-                ${story.lastModified ? `<p>Last Modified: ${new Date(story.lastModified.toDate()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>` : ''}
-                <div class="item-actions">
-                    <button class="btn edit" data-id="${story.id}">Edit</button>
-                    <button class="btn delete" data-id="${story.id}" data-thumbnail="${story.thumbnailPath || ''}">Delete</button>
-                </div>
-            `;
-            storyListDiv.appendChild(storyItem);
-        }
-    }, (error) => {
-        storyListDiv.innerHTML = '<p style="text-align: center; color: var(--text-color);">Error loading your stories.</p>';
-        console.error("Error listening to stories:", error);
-    });
-}
-
-// --- Event Listener for Edit/Delete Buttons ---
-storyListDiv.addEventListener('click', async (e) => {
-    if (e.target.classList.contains('edit')) {
-        const storyFirestoreDocId = e.target.dataset.id;
-        try {
-            const storyDocRef = doc(db, "stories", storyFirestoreDocId);
-            const storyDocSnap = await getDoc(storyDocRef);
-            if (storyDocSnap.exists()) {
-                const storyData = storyDocSnap.data();
-                storyIdInput.value = storyFirestoreDocId; // Set the Firestore document ID for editing
-                storyTitleInput.value = storyData.title;
-                storyGenreInput.value = storyData.genre;
-                storyContentInput.value = storyData.content;
-                storyThumbnailInput.value = ''; // Clear file input for security/privacy reasons (users re-upload if needed)
-                storyFormTitle.textContent = 'Edit Story';
-                submitStoryBtn.textContent = 'Update Story';
-                cancelEditBtn.style.display = 'inline-block';
-                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top to see the form
+            if (pin !== confirmPin) {
+                showMessage("PINs do not match.", "error");
+                return;
             }
-        } catch (error) {
-            showMessage("Error loading story for edit: " + error.message, "error");
-        }
-    } else if (e.target.classList.contains('delete')) {
-        const storyFirestoreDocId = e.target.dataset.id;
-        const thumbnailPath = e.target.dataset.thumbnail; // This is the storage path
 
-        if (confirm('Are you sure you want to delete this story? This action cannot be undone.')) {
             try {
-                // 1. Delete thumbnail from Storage
-                if (thumbnailPath) {
-                    await deleteThumbnail(thumbnailPath);
+                // Create user with email and PIN (password)
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pin);
+                const user = userCredential.user;
+
+                // Save author details to Firestore
+                await setDoc(doc(db, "authors", user.uid), {
+                    name: authorName,
+                    email: email,
+                    whatsapp: whatsapp,
+                    uid: user.uid,
+                    createdAt: new Date()
+                });
+
+                // Send email verification
+                await sendEmailVerification(user);
+
+                // Store email in local storage for magic link sign-in (if using)
+                localStorage.setItem('emailForSignIn', email);
+
+                showMessage(`Registration successful! A verification email has been sent to ${email}. Please check your inbox and click the link to verify your account.`, "success");
+                registerForm.reset();
+                
+                // Optionally, switch to login form after successful registration
+                isLoginMode = true;
+                authTitle.textContent = 'Login as Creator';
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                toggleText.textContent = "Don't have an account?";
+                toggleAuth.textContent = "Register here";
+
+            } catch (error) {
+                console.error("Registration error:", error);
+                let errorMessage = "Registration failed. Please try again.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "This email is already registered. Please try logging in.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Invalid email address.";
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = "PIN is too weak. Please use a stronger PIN (e.g., combination of numbers, minimum 6 digits).";
+                }
+                showMessage(errorMessage, "error");
+            }
+        });
+
+        // --- Login Functionality (with PIN as password) ---
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = loginEmailInput.value.trim();
+            const pin = loginPinInput.value.trim();
+
+            if (pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+                showMessage("PIN must be exactly 6 digits.", "error");
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, pin);
+                const user = userCredential.user;
+
+                if (!user.emailVerified) {
+                    showMessage("Your email is not verified. Please check your inbox for a verification link.", "error");
+                    // Optionally, resend verification email if needed
+                    await sendEmailVerification(user);
+                    showMessage("Verification email resent. Please check your inbox.", "success");
+                    return; // Do not redirect to dashboard if email not verified
+                }
+                
+                // Redirect to dashboard upon successful login and verification
+                window.location.href = 'creator_dashboard.html'; // Or 'web_creator.html'
+                
+            } catch (error) {
+                console.error("Login error:", error);
+                let errorMessage = "Login failed. Please check your email and PIN.";
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMessage = "Invalid email or PIN.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Invalid email address format.";
+                }
+                showMessage(errorMessage, "error");
+            }
+        });
+        
+        // --- Dark Mode Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme();
+            const toggleButton = document.querySelector('.mode-toggle');
+            if (toggleButton) {
+                toggleButton.addEventListener('click', toggleDarkMode);
+            }
+        });
+
+        // This script runs on the login_register_creator.html page.
+        // It's not the dashboard script, so the onAuthStateChanged listener
+        // that handles dashboard redirection upon successful login or magic link
+        // needs to be in the dashboard's script (creator_dashboard.html).
+
+        // However, we still need to handle magic link sign-in if a user
+        // lands on THIS page after clicking a magic link.
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (isSignInWithEmailLink(auth, window.location.href)) {
+                console.log("Detected email sign-in link on login/register page.");
+                let email = window.localStorage.getItem('emailForSignIn');
+                if (!email) {
+                    email = window.prompt('Please provide your email for confirmation:');
                 }
 
-                // 2. Delete story document from Firestore
-                await deleteDoc(doc(db, "stories", storyFirestoreDocId));
-                
-                // 3. Delete related data from Realtime Database (if they exist)
-                await rtdbRemove(rtdbRef(rtdb, `storyViews/${storyFirestoreDocId}`));
-                await rtdbRemove(rtdbRef(rtdb, `storyRatings/${storyFirestoreDocId}`));
-                // If you have comments in RTDB tied to storyId, delete them too
-                await rtdbRemove(rtdbRef(rtdb, `storyComments/${storyFirestoreDocId}`));
-
-
-                showMessage("Story deleted successfully!", "success");
-                resetForm(); // Reset form after deletion
-            } catch (error) {
-                showMessage("Error deleting story: " + error.message, "error");
+                if (email) {
+                    try {
+                        const result = await signInWithEmailLink(auth, email, window.location.href);
+                        console.log("Magic link sign-in successful:", result.user);
+                        window.localStorage.removeItem('emailForSignIn');
+                        showMessage("Login successful via magic link. Redirecting...", "success");
+                        // Redirect to the dashboard after successful magic link sign-in
+                        window.location.href = 'creator_dashboard.html'; // Or 'web_creator.html'
+                    } catch (error) {
+                        console.error("Error signing in with email link:", error);
+                        showMessage("Magic link login failed: " + error.message + ". Please try again.", "error");
+                        // Stay on login/register page if magic link failed
+                    }
+                } else {
+                    showMessage("Email is required to complete verification via magic link.", "error");
+                }
             }
-        }
-    }
-});
+        });
     </script>
 </body>
 </html>
