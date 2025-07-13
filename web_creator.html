@@ -536,7 +536,7 @@
     </footer>
 
     <script type="module">
-       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, getDoc, updateDoc, deleteDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
@@ -611,6 +611,9 @@ let currentUserId = '';
 let creatorStoryCount = 0; // To keep track of stories created by the current user
 
 // --- Authentication State Listener ---
+// Flag to prevent multiple redirects
+let initialAuthCheckDone = false;
+
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         // Pengguna sudah login
@@ -642,6 +645,9 @@ onAuthStateChanged(auth, async (user) => {
                 });
             }
 
+            // Jika ini adalah pengecekan awal dan email belum diverifikasi, jangan redirect.
+            // Biarkan pengguna melihat pesan verifikasi di halaman dashboard.
+            initialAuthCheckDone = true;
             return; // Hentikan eksekusi lebih lanjut jika email belum diverifikasi
         }
 
@@ -654,8 +660,6 @@ onAuthStateChanged(auth, async (user) => {
             listenForCreatorStories(user.uid);
         } else {
             welcomeMessage.textContent = `Welcome, Creator!`;
-            // Jika data penulis tidak ditemukan, Anda mungkin ingin membuatnya atau meminta pengguna.
-            // Untuk saat ini, lanjutkan dan izinkan pembuatan cerita, tetapi authorName mungkin kosong.
             listenForCreatorStories(user.uid);
         }
 
@@ -663,11 +667,69 @@ onAuthStateChanged(auth, async (user) => {
         if (storyManagementSection) storyManagementSection.style.display = 'block';
         if (myStoriesSection) myStoriesSection.style.display = 'block';
 
+        // Set flag to true as initial check is done and user is logged in and verified
+        initialAuthCheckDone = true;
+
     } else {
-        // Tidak ada pengguna yang login, arahkan ke halaman login
-        window.location.href = 'login_register_creator.html';
+        // Tidak ada pengguna yang login atau telah logout
+        // Hanya redirect jika ini bukan hasil dari proses login magic link
+        // atau jika tidak ada pengguna sama sekali
+        if (!initialAuthCheckDone && window.location.pathname.endsWith('creator_dashboard.html')) {
+            window.location.href = 'login_register_creator.html';
+        }
+        initialAuthCheckDone = true; // Mark as checked, even if no user
     }
 });
+
+// Tambahkan logika di luar onAuthStateChanged untuk menangani magic link
+// saat halaman dimuat
+import { isSignInWithEmailLink, signInWithEmailLink } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+document.addEventListener('DOMContentLoaded', async () => {
+    applyTheme(); // Apply theme on load
+    const toggleButton = document.querySelector('.mode-toggle');
+    if (toggleButton) {
+        toggleButton.addEventListener('click', toggleDarkMode);
+    }
+
+    // Check if the current URL is a sign-in with email link
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+        let email = window.localStorage.getItem('emailForSignIn'); // Retrieve the email
+        if (!email) {
+            // If email is not in local storage, prompt the user.
+            // This can happen if they opened the link in a different browser/device
+            email = window.prompt('Please provide your email for confirmation:');
+        }
+
+        if (email) {
+            try {
+                const result = await signInWithEmailLink(auth, email, window.location.href);
+                // Email verified and user signed in
+                console.log("Email verified and user signed in:", result.user);
+                window.localStorage.removeItem('emailForSignIn'); // Clean up the email from local storage
+                // Redirect to dashboard (or keep them here if it's already the dashboard)
+                if (window.location.pathname.endsWith('login_register_creator.html')) {
+                    window.location.href = 'creator_dashboard.html';
+                }
+                showMessage("Login successful! Welcome to your dashboard.", "success");
+            } catch (error) {
+                console.error("Error signing in with email link:", error);
+                showMessage("Login failed: " + error.message + ". Please try logging in again.", "error");
+                // In case of error, ensure they are on the login page or redirected there
+                if (!window.location.pathname.endsWith('login_register_creator.html')) {
+                    window.location.href = 'login_register_creator.html';
+                }
+            }
+        } else {
+            // No email provided, redirect to login
+            showMessage("Email is required to complete verification. Please try again.", "error");
+            if (!window.location.pathname.endsWith('login_register_creator.html')) {
+                window.location.href = 'login_register_creator.html';
+            }
+        }
+    }
+});
+
 
 // --- Logout Functionality ---
 logoutButton.addEventListener('click', async () => {
