@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - AMDF.GROUP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --background-start: #f0f2f5;
+            --background-end: #e0e2e5;
+            --text-color: #333;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --header-border: #eee;
+            --container-bg: #ffffff;
+            --container-border: #ddd;
+            --container-shadow: rgba(0, 0, 0, 0.08);
+            --button-bg-gradient-start: #6a11cb;
+            --button-bg-gradient-end: #2575fc;
+            --button-text-color: #fff;
+            --link-color: #007bff;
+            --input-bg: #f9f9f9;
+            --input-border: #ccc;
+            --input-text: #333;
+            --toggle-bg: #ddd;
+            --toggle-circle-bg: #fff;
+            --toggle-shadow: rgba(0, 0, 0, 0.2);
+            --status-pending: #ffc107;
+            --status-approved: #28a745;
+            --status-rejected: #dc3545;
+            --status-info: #17a2b8;
+            --footer-bg: #333;
+            --footer-text: #eee;
+        }
+
+        body.dark-mode {
+            --background-start: #1a1a2e;
+            --background-end: #16213e;
+            --text-color: #e0e0e0;
+            --header-bg: rgba(26, 26, 46, 0.9);
+            --header-border: #333;
+            --container-bg: #22253b;
+            --container-border: #444;
+            --container-shadow: rgba(0, 0, 0, 0.4);
+            --button-bg-gradient-start: #8e2de2;
+            --button-bg-gradient-end: #4a00e0;
+            --button-text-color: #fff;
+            --link-color: #8e2de2;
+            --input-bg: #33364f;
+            --input-border: #555;
+            --input-text: #e0e0e0;
+            --toggle-bg: #555;
+            --toggle-circle-bg: #bbb;
+            --toggle-shadow: rgba(0, 0, 0, 0.4);
+            --status-pending: #d39e00;
+            --status-approved: #218838;
+            --status-rejected: #c82333;
+            --status-info: #138496;
+            --footer-bg: #111;
+            --footer-text: #bbb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--header-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--container-shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start), var(--button-bg-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: var(--button-bg-gradient-start);
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        .mode-toggle {
+            width: 50px;
+            height: 25px;
+            background-color: var(--toggle-bg);
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .mode-toggle .circle {
+            width: 20px;
+            height: 20px;
+            background-color: var(--toggle-circle-bg);
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 2.5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 2px 5px var(--toggle-shadow);
+        }
+
+        body.dark-mode .mode-toggle .circle {
+            transform: translateX(25px);
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-color);
+        }
+
+        .dashboard-header p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background-color: var(--container-bg);
+            border: 1px solid var(--container-border);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--container-shadow);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--button-bg-gradient-end);
+        }
+
+        .stories-section, .management-section {
+            background-color: var(--container-bg);
+            border: 1px solid var(--container-border);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--container-shadow);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stories-section h2, .management-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-buttons button {
+            background-color: #6c757d;
+            color: #fff;
+            padding: 0.7rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .filter-buttons button.active {
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+        }
+
+        .filter-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .filter-buttons button {
+            background-color: #5a6268;
+        }
+
+        .story-table-container {
+            overflow-x: auto;
+        }
+
+        .story-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .story-table th, .story-table td {
+            padding: 12px 15px;
+            border: 1px solid var(--container-border);
+            text-align: left;
+            vertical-align: middle;
+            color: var(--text-color);
+        }
+
+        .story-table th {
+            background-color: var(--input-bg);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .story-table td {
+            background-color: var(--container-bg);
+        }
+        body.dark-mode .story-table td {
+            background-color: var(--input-bg);
+        }
+
+
+        .story-table .status {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .story-table .status.pending {
+            background-color: var(--status-pending);
+            color: #493100;
+        }
+        body.dark-mode .story-table .status.pending {
+            color: #fff;
+        }
+
+        .story-table .status.approved {
+            background-color: var(--status-approved);
+            color: #fff;
+        }
+
+        .story-table .status.rejected {
+            background-color: var(--status-rejected);
+            color: #fff;
+        }
+
+        .story-table .status.approved {
+            background-color: var(--status-approved);
+            color: #fff;
+        }
+        
+        .story-table .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .story-table .btn-group .btn {
+            padding: 0.6rem 0.9rem;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            flex-grow: 1;
+        }
+
+        .story-table .btn-group .btn.approve {
+            background: linear-gradient(45deg, #28a745 0%, #218838 100%);
+        }
+        .story-table .btn-group .btn.reject {
+            background: linear-gradient(45deg, #dc3545 0%, #c82333 100%);
+        }
+        .story-table .btn-group .btn.view {
+            background: linear-gradient(45deg, #17a2b8 0%, #138496 100%);
+        }
+        .story-table .btn-group .btn.edit { /* New style for edit button */
+            background: linear-gradient(45deg, #ffc107 0%, #e0a800 100%);
+        }
+        .story-table .btn-group .btn.delete { /* New style for delete button */
+            background: linear-gradient(45deg, #dc3545 0%, #c82333 100%);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            font-size: 1rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--button-bg-gradient-end);
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .search-container, .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-container input {
+            flex-grow: 1;
+            min-width: 200px;
+        }
+
+        .action-buttons button {
+            flex-grow: 1;
+            min-width: 120px;
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            text-align: center;
+            padding: 1.5rem 5%;
+            margin-top: 3rem;
+            border-top: 1px solid var(--header-border);
+        }
+
+        footer nav a {
+            color: var(--footer-text);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer nav a:hover {
+            color: var(--link-color);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem 4%;
+            }
+            .logo {
+                margin-bottom: 1rem;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+            .header-actions .btn {
+                flex-grow: 1;
+                text-align: center;
+            }
+            .mode-toggle {
+                position: static;
+                margin-left: 0;
+            }
+            main {
+                padding: 1.5rem 4%;
+            }
+            .dashboard-header h1, .stories-section h2, .management-section h2 {
+                font-size: 2rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .stories-section, .management-section {
+                padding: 1.5rem;
+            }
+            .filter-buttons, .search-container, .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .search-container input, .action-buttons button {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-header h1, .stories-section h2, .management-section h2 {
+                font-size: 1.6rem;
+            }
+            .stat-card p {
+                font-size: 1.8rem;
+            }
+            .stories-section, .management-section {
+                padding: 1rem;
+            }
+            .story-table th, .story-table td {
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+            .story-table .btn-group .btn {
+                padding: 0.5rem 0.7rem;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="catalog.html" class="logo">AMDF.GROUP</a>
+        <div class="header-actions">
+            <span id="welcomeMessage" style="font-weight: 600;"></span>
+            <button id="logoutButton" class="btn">Logout</button>
+            <div class="mode-toggle" onclick="toggleDarkMode()">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="dashboard-header">
+            <h1>Staff Dashboard</h1>
+            <p>Review and manage content submitted by creators. Ensure quality and approve stories for publication.</p>
+        </section>
+
+        <section class="analytics-overview">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Stories</h3>
+                    <p id="totalStoriesCount">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Stories</h3>
+                    <p id="pendingStoriesCount">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Approved Stories</h3>
+                    <p id="approvedStoriesCount">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Rejected Stories</h3>
+                    <p id="rejectedStoriesCount">0</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stories-section">
+            <h2>Story Review</h2>
+            <div class="filter-buttons">
+                <button class="btn active" data-filter="all">All Stories</button>
+                <button class="btn" data-filter="pending">Pending</button>
+                <button class="btn" data-filter="approved">Approved</button>
+                <button class="btn" data-filter="rejected">Rejected</button>
+            </div>
+
+            <div class="story-table-container">
+                <table class="story-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Genre</th>
+                            <th>Status</th>
+                            <th>Submitted Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="storyTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="management-section">
+            <h2>Story Management (Search, Edit, Delete)</h2>
+            <div class="form-group">
+                <label for="storyIdSearch">Search Story by ID:</label>
+                <div class="search-container">
+                    <input type="text" id="storyIdSearch" placeholder="Enter Story ID">
+                    <button class="btn" id="searchStoryBtn">Search Story</button>
+                </div>
+            </div>
+
+            <div id="storyEditForm" style="display: none;">
+                <h3>Edit Story</h3>
+                <div class="form-group">
+                    <label for="editStoryTitle">Title:</label>
+                    <input type="text" id="editStoryTitle">
+                </div>
+                <div class="form-group">
+                    <label for="editStoryAuthor">Author:</label>
+                    <input type="text" id="editStoryAuthor" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="editStoryGenre">Genre:</label>
+                    <input type="text" id="editStoryGenre">
+                </div>
+                <div class="form-group">
+                    <label for="editStoryContent">Content:</label>
+                    <textarea id="editStoryContent"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editStoryStatus">Status:</label>
+                    <select id="editStoryStatus">
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn approve" id="saveStoryEditBtn">Save Changes</button>
+                    <button class="btn reject" id="deleteStoryBtn">Delete Story</button>
+                    <button class="btn view" id="cancelStoryEditBtn">Cancel</button>
+                </div>
+            </div>
+            <p id="storySearchResult" style="text-align: center; margin-top: 1rem; font-style: italic;"></p>
+        </section>
+
+        <section class="management-section">
+            <h2>Creator Permission Management</h2>
+            <div class="form-group">
+                <label for="creatorIdSearch">Search Creator by ID:</label>
+                <div class="search-container">
+                    <input type="text" id="creatorIdSearch" placeholder="Enter Creator ID">
+                    <button class="btn" id="searchCreatorBtn">Search Creator</button>
+                </div>
+            </div>
+
+            <div id="creatorPermissionForm" style="display: none;">
+                <h3>Manage Creator Permission</h3>
+                <div class="form-group">
+                    <label for="creatorNameDisplay">Creator Name:</label>
+                    <input type="text" id="creatorNameDisplay" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="creatorStatus">Permission Status:</label>
+                    <select id="creatorStatus">
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn approve" id="updateCreatorPermissionBtn">Update Permission</button>
+                    <button class="btn reject" id="deleteCreatorPermissionBtn">Remove Permission</button>
+                    <button class="btn view" id="cancelCreatorPermissionBtn">Cancel</button>
+                </div>
+            </div>
+            <p id="creatorSearchResult" style="text-align: center; margin-top: 1rem; font-style: italic;"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
+        <nav>
+            <a href="#about">About Us</a> |
+            <a href="#privacy">Privacy Policy</a> |
+            <a href="#terms">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getFirestore, collection, query, where, onSnapshot, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+            authDomain: "tamplatedoc.firebaseapp.com",
+            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tamplatedoc",
+            storageBucket: "tamplatedoc.firebasestorage.app",
+            messagingSenderId: "264966107720",
+            appId: "1:264966107720:web:868abe93cdff209040de7d",
+            measurementId: "G-S5WTZ7S5PG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', applyTheme);
+
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const logoutButton = document.getElementById('logoutButton');
+        const totalStoriesCount = document.getElementById('totalStoriesCount');
+        const pendingStoriesCount = document.getElementById('pendingStoriesCount');
+        const approvedStoriesCount = document.getElementById('approvedStoriesCount');
+        const rejectedStoriesCount = document.getElementById('rejectedStoriesCount');
+        const storyTableBody = document.getElementById('storyTableBody');
+        const filterButtons = document.querySelector('.filter-buttons');
+
+        // New elements for story management
+        const storyIdSearchInput = document.getElementById('storyIdSearch');
+        const searchStoryBtn = document.getElementById('searchStoryBtn');
+        const storyEditForm = document.getElementById('storyEditForm');
+        const editStoryTitle = document.getElementById('editStoryTitle');
+        const editStoryAuthor = document.getElementById('editStoryAuthor');
+        const editStoryGenre = document.getElementById('editStoryGenre');
+        const editStoryContent = document.getElementById('editStoryContent');
+        const editStoryStatus = document.getElementById('editStoryStatus');
+        const saveStoryEditBtn = document.getElementById('saveStoryEditBtn');
+        const deleteStoryBtn = document.getElementById('deleteStoryBtn');
+        const cancelStoryEditBtn = document.getElementById('cancelStoryEditBtn');
+        const storySearchResult = document.getElementById('storySearchResult');
+
+        // New elements for creator management
+        const creatorIdSearchInput = document.getElementById('creatorIdSearch');
+        const searchCreatorBtn = document.getElementById('searchCreatorBtn');
+        const creatorPermissionForm = document.getElementById('creatorPermissionForm');
+        const creatorNameDisplay = document.getElementById('creatorNameDisplay');
+        const creatorStatus = document.getElementById('creatorStatus');
+        const updateCreatorPermissionBtn = document.getElementById('updateCreatorPermissionBtn');
+        const deleteCreatorPermissionBtn = document.getElementById('deleteCreatorPermissionBtn');
+        const cancelCreatorPermissionBtn = document.getElementById('cancelCreatorPermissionBtn');
+        const creatorSearchResult = document.getElementById('creatorSearchResult');
+
+
+        let currentFilter = 'all';
+        let currentStoryId = null; // To store the ID of the story being edited/deleted
+        let currentCreatorId = null; // To store the ID of the creator being managed
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const staffDocRef = doc(db, "staffs", user.uid);
+                const staffDocSnap = await getDoc(staffDocRef);
+
+                if (staffDocSnap.exists() && staffDocSnap.data().role === 'approved') {
+                    welcomeMessage.textContent = `Welcome, Staff ${staffDocSnap.data().staffId || ''}!`;
+                    listenForStories();
+                    listenForStoryCounts();
+                } else {
+                    alert("Access denied. Your staff account is not approved.");
+                    await signOut(auth);
+                    window.location.href = 'login_register_staff.html';
+                }
+            } else {
+                window.location.href = 'login_register_staff.html';
+            }
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'login_register_staff.html';
+            } catch (error) {
+                console.error("Logout failed:", error);
+            }
+        });
+
+        function listenForStoryCounts() {
+            onSnapshot(collection(db, "stories"), (snapshot) => {
+                let total = snapshot.size;
+                let pending = 0;
+                let approved = 0;
+                let rejected = 0;
+
+                snapshot.forEach(doc => {
+                    const status = doc.data().status;
+                    if (status === 'pending') pending++;
+                    else if (status === 'approved') approved++;
+                    else if (status === 'rejected') rejected++;
+                });
+
+                totalStoriesCount.textContent = total;
+                pendingStoriesCount.textContent = pending;
+                approvedStoriesCount.textContent = approved;
+                rejectedStoriesCount.textContent = rejected;
+            }, (error) => {
+                console.error("Error listening to story counts:", error);
+            });
+        }
+
+        function listenForStories() {
+            let storiesQuery = collection(db, "stories");
+            if (currentFilter !== 'all') {
+                storiesQuery = query(storiesQuery, where("status", "==", currentFilter));
+            }
+
+            onSnapshot(storiesQuery, async (snapshot) => {
+                storyTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    storyTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">No ${currentFilter === 'all' ? '' : currentFilter} stories found.</td></tr>`;
+                    return;
+                }
+
+                for (const docSnapshot of snapshot.docs) {
+                    const story = { id: docSnapshot.id, ...docSnapshot.data() };
+                    
+                    const authorName = story.authorName || 'Unknown Author';
+
+                    const row = storyTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${story.title}</td>
+                        <td>${authorName}</td>
+                        <td>${story.genre}</td>
+                        <td><span class="status ${story.status}">${story.status.charAt(0).toUpperCase() + story.status.slice(1)}</span></td>
+                        <td>${story.createdAt ? new Date(story.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn view" data-id="${story.id}">View</button>
+                                <button class="btn approve" data-id="${story.id}" ${story.status === 'approved' ? 'disabled' : ''}>Approve</button>
+                                <button class="btn reject" data-id="${story.id}" ${story.status === 'rejected' ? 'disabled' : ''}>Reject</button>
+                                <button class="btn edit" data-id="${story.id}">Edit</button>
+                                <button class="btn delete" data-id="${story.id}">Delete</button>
+                            </div>
+                        </td>
+                    `;
+                }
+            }, (error) => {
+                storyTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-color);">Error loading stories.</td></tr>`;
+                console.error("Error listening to stories:", error);
+            });
+        }
+
+        filterButtons.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelectorAll('.filter-buttons .btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.filter;
+                listenForStories();
+            }
+        });
+
+        storyTableBody.addEventListener('click', async (e) => {
+            const storyId = e.target.dataset.id;
+            if (!storyId) return;
+
+            if (e.target.classList.contains('approve')) {
+                try {
+                    await updateDoc(doc(db, "stories", storyId), {
+                        status: 'approved',
+                        lastModified: new Date()
+                    });
+                    alert('Story approved!');
+                } catch (error) {
+                    alert('Error approving story: ' + error.message);
+                }
+            } else if (e.target.classList.contains('reject')) {
+                try {
+                    await updateDoc(doc(db, "stories", storyId), {
+                        status: 'rejected',
+                        lastModified: new Date()
+                    });
+                    alert('Story rejected!');
+                } catch (error) {
+                    alert('Error rejecting story: ' + error.message);
+                }
+            } else if (e.target.classList.contains('view')) {
+                window.open(`web_story.html?id=${storyId}`, '_blank');
+            } else if (e.target.classList.contains('edit')) {
+                await searchStoryById(storyId);
+            } else if (e.target.classList.contains('delete')) {
+                if (confirm('Are you sure you want to delete this story?')) {
+                    await deleteStory(storyId);
+                }
+            }
+        });
+
+        // --- Story Management Functions ---
+
+        async function searchStoryById(storyId = null) {
+            const idToSearch = storyId || storyIdSearchInput.value.trim();
+            if (!idToSearch) {
+                storySearchResult.textContent = 'Please enter a Story ID.';
+                storySearchResult.style.color = 'orange';
+                storyEditForm.style.display = 'none';
+                return;
+            }
+
+            try {
+                const storyDocRef = doc(db, "stories", idToSearch);
+                const storyDocSnap = await getDoc(storyDocRef);
+
+                if (storyDocSnap.exists()) {
+                    const storyData = storyDocSnap.data();
+                    currentStoryId = idToSearch;
+                    editStoryTitle.value = storyData.title || '';
+                    editStoryAuthor.value = storyData.authorName || 'Unknown Author'; // Author name is read-only
+                    editStoryGenre.value = storyData.genre || '';
+                    editStoryContent.value = storyData.content || '';
+                    editStoryStatus.value = storyData.status || 'pending';
+
+                    storyEditForm.style.display = 'block';
+                    storySearchResult.textContent = `Story found: "${storyData.title}"`;
+                    storySearchResult.style.color = 'green';
+                } else {
+                    storyEditForm.style.display = 'none';
+                    storySearchResult.textContent = 'Story not found with this ID.';
+                    storySearchResult.style.color = 'red';
+                }
+            } catch (error) {
+                console.error("Error searching story:", error);
+                storyEditForm.style.display = 'none';
+                storySearchResult.textContent = 'Error searching story: ' + error.message;
+                storySearchResult.style.color = 'red';
+            }
+        }
+
+        async function saveStoryChanges() {
+            if (!currentStoryId) {
+                alert('No story selected for editing.');
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "stories", currentStoryId), {
+                    title: editStoryTitle.value,
+                    genre: editStoryGenre.value,
+                    content: editStoryContent.value,
+                    status: editStoryStatus.value,
+                    lastModified: new Date()
+                });
+                alert('Story updated successfully!');
+                resetStoryForm();
+            } catch (error) {
+                alert('Error updating story: ' + error.message);
+                console.error("Error updating story:", error);
+            }
+        }
+
+        async function deleteStory(storyIdToDelete = null) {
+            const idToDelete = storyIdToDelete || currentStoryId;
+            if (!idToDelete) {
+                alert('No story selected for deletion.');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to permanently delete the story with ID: ${idToDelete}?`)) {
+                try {
+                    await deleteDoc(doc(db, "stories", idToDelete));
+                    alert('Story deleted successfully!');
+                    resetStoryForm();
+                } catch (error) {
+                    alert('Error deleting story: ' + error.message);
+                    console.error("Error deleting story:", error);
+                }
+            }
+        }
+
+        function resetStoryForm() {
+            currentStoryId = null;
+            storyIdSearchInput.value = '';
+            editStoryTitle.value = '';
+            editStoryAuthor.value = '';
+            editStoryGenre.value = '';
+            editStoryContent.value = '';
+            editStoryStatus.value = 'pending';
+            storyEditForm.style.display = 'none';
+            storySearchResult.textContent = '';
+        }
+
+        searchStoryBtn.addEventListener('click', () => searchStoryById());
+        saveStoryEditBtn.addEventListener('click', saveStoryChanges);
+        deleteStoryBtn.addEventListener('click', () => deleteStory());
+        cancelStoryEditBtn.addEventListener('click', resetStoryForm);
+
+
+        // --- Creator Permission Management Functions ---
+
+        async function searchCreatorById() {
+            const idToSearch = creatorIdSearchInput.value.trim();
+            if (!idToSearch) {
+                creatorSearchResult.textContent = 'Please enter a Creator ID.';
+                creatorSearchResult.style.color = 'orange';
+                creatorPermissionForm.style.display = 'none';
+                return;
+            }
+
+            try {
+                const creatorDocRef = doc(db, "users", idToSearch); // Assuming creators are in 'users' collection
+                const creatorDocSnap = await getDoc(creatorDocRef);
+
+                if (creatorDocSnap.exists()) {
+                    const creatorData = creatorDocSnap.data();
+                    currentCreatorId = idToSearch;
+                    creatorNameDisplay.value = creatorData.displayName || creatorData.email || 'Unknown Creator';
+                    creatorStatus.value = creatorData.role || 'pending'; // Assuming 'role' defines permission status
+
+                    creatorPermissionForm.style.display = 'block';
+                    creatorSearchResult.textContent = `Creator found: "${creatorNameDisplay.value}"`;
+                    creatorSearchResult.style.color = 'green';
+                } else {
+                    creatorPermissionForm.style.display = 'none';
+                    creatorSearchResult.textContent = 'Creator not found with this ID.';
+                    creatorSearchResult.style.color = 'red';
+                }
+            } catch (error) {
+                console.error("Error searching creator:", error);
+                creatorPermissionForm.style.display = 'none';
+                creatorSearchResult.textContent = 'Error searching creator: ' + error.message;
+                creatorSearchResult.style.color = 'red';
+            }
+        }
+
+        async function updateCreatorPermission() {
+            if (!currentCreatorId) {
+                alert('No creator selected for updating permission.');
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "users", currentCreatorId), {
+                    role: creatorStatus.value,
+                    lastModified: new Date()
+                });
+                alert('Creator permission updated successfully!');
+                resetCreatorForm();
+            } catch (error) {
+                alert('Error updating creator permission: ' + error.message);
+                console.error("Error updating creator permission:", error);
+            }
+        }
+
+        async function deleteCreatorPermission() {
+            if (!currentCreatorId) {
+                alert('No creator selected for removing permission.');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to remove the permission for creator with ID: ${currentCreatorId}? This will set their role to 'rejected'.`)) {
+                try {
+                    await updateDoc(doc(db, "users", currentCreatorId), {
+                        role: 'rejected', // Setting role to 'rejected' to remove permission
+                        lastModified: new Date()
+                    });
+                    alert('Creator permission removed successfully (status set to rejected)!');
+                    resetCreatorForm();
+                } catch (error) {
+                    alert('Error removing creator permission: ' + error.message);
+                    console.error("Error removing creator permission:", error);
+                }
+            }
+        }
+
+        function resetCreatorForm() {
+            currentCreatorId = null;
+            creatorIdSearchInput.value = '';
+            creatorNameDisplay.value = '';
+            creatorStatus.value = 'pending';
+            creatorPermissionForm.style.display = 'none';
+            creatorSearchResult.textContent = '';
+        }
+
+        searchCreatorBtn.addEventListener('click', searchCreatorById);
+        updateCreatorPermissionBtn.addEventListener('click', updateCreatorPermission);
+        deleteCreatorPermissionBtn.addEventListener('click', deleteCreatorPermission);
+        cancelCreatorPermissionBtn.addEventListener('click', resetCreatorForm);
+    </script>
+</body>
+</html>
