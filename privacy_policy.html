@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - AMDF.GROUP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* (Sertakan CSS yang sama dari about.html di sini) */
+        :root {
+            --background-start: #f0f2f5;
+            --background-end: #e0e2e5;
+            --text-color: #333;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --header-border: #eee;
+            --container-bg: #ffffff;
+            --container-border: #ddd;
+            --container-shadow: rgba(0, 0, 0, 0.08);
+            --button-bg-gradient-start: #6a11cb;
+            --button-bg-gradient-end: #2575fc;
+            --button-text-color: #fff;
+            --link-color: #007bff;
+            --input-bg: #f9f9f9;
+            --input-border: #ccc;
+            --input-text: #333;
+            --toggle-bg: #ddd;
+            --toggle-circle-bg: #fff;
+            --toggle-shadow: rgba(0, 0, 0, 0.2);
+            --footer-bg: #333;
+            --footer-text: #eee;
+        }
+
+        body.dark-mode {
+            --background-start: #1a1a2e;
+            --background-end: #16213e;
+            --text-color: #e0e0e0;
+            --header-bg: rgba(26, 26, 46, 0.9);
+            --header-border: #333;
+            --container-bg: #22253b;
+            --container-border: #444;
+            --container-shadow: rgba(0, 0, 0, 0.4);
+            --button-bg-gradient-start: #8e2de2;
+            --button-bg-gradient-end: #4a00e0;
+            --button-text-color: #fff;
+            --link-color: #8e2de2;
+            --input-bg: #33364f;
+            --input-border: #555;
+            --input-text: #e0e0e0;
+            --toggle-bg: #555;
+            --toggle-circle-bg: #bbb;
+            --toggle-shadow: rgba(0, 0, 0, 0.4);
+            --footer-bg: #111;
+            --footer-text: #bbb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--header-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--container-shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start), var(--button-bg-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-back {
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        .mode-toggle {
+            width: 50px;
+            height: 25px;
+            background-color: var(--toggle-bg);
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .mode-toggle .circle {
+            width: 20px;
+            height: 20px;
+            background-color: var(--toggle-circle-bg);
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 2.5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 2px 5px var(--toggle-shadow);
+        }
+
+        body.dark-mode .mode-toggle .circle {
+            transform: translateX(25px);
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem 5%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            background-color: var(--container-bg);
+            border: 1px solid var(--container-border);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--container-shadow);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-section h1, .info-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            text-align: center;
+        }
+        .info-section h2 {
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .info-section p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            color: var(--text-color);
+        }
+        .info-section ol, .info-section ul {
+            margin-bottom: 1rem;
+            padding-left: 20px;
+        }
+        .info-section ol li, .info-section ul li {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            text-align: center;
+            padding: 1.5rem 5%;
+            margin-top: auto;
+            border-top: 1px solid var(--header-border);
+        }
+
+        footer nav a {
+            color: var(--footer-text);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer nav a:hover {
+            color: var(--link-color);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem 4%;
+            }
+            .logo {
+                margin-bottom: 1rem;
+            }
+            .btn-back {
+                width: calc(100% - 60px);
+                text-align: center;
+            }
+            .mode-toggle {
+                position: absolute;
+                right: 15px;
+                top: 25px;
+            }
+            main {
+                padding: 1.5rem 4%;
+            }
+            .info-section {
+                padding: 1.5rem;
+            }
+            .info-section h1, .info-section h2 {
+                font-size: 2rem;
+            }
+            .info-section p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-section h1, .info-section h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="catalog.html" class="logo">AMDF.GROUP</a>
+        <div style="display: flex; align-items: center;">
+            <a href="catalog.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
+            <div class="mode-toggle" onclick="toggleDarkMode()">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="info-section">
+            <h1>Privacy Policy</h1>
+            <p>Last updated: July 13, 2025</p>
+
+            <p>AMDF.GROUP operates the website (the "Service").</p>
+            <p>This page informs you of our policies regarding the collection, use, and disclosure of Personal Information when you use our Service.</p>
+            <p>We will not use or share your information with anyone except as described in this Privacy Policy.</p>
+            <p>We use your Personal Information for providing and improving the Service. By using the Service, you agree to the collection and use of information in accordance with this policy.</p>
+
+            <h2>Information Collection and Use</h2>
+            <p>While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you. Personally identifiable information ("Personal Information") may include, but is not limited to:</p>
+            <ul>
+                <li>Email address</li>
+                <li>Author Name (for Creators)</li>
+                <li>WhatsApp Number (for Creators)</li>
+                <li>Usage Data (e.g., story views, ratings)</li>
+            </ul>
+
+            <h2>Log Data</h2>
+            <p>We collect information that your browser sends whenever you visit our Service ("Log Data"). This Log Data may include information such as your computer's Internet Protocol ("IP") address, browser type, browser version, the pages of our Service that you visit, the time and date of your visit, the time spent on those pages, and other statistics.</p>
+
+            <h2>Cookies</h2>
+            <p>Cookies are files with small amount of data, which may include an anonymous unique identifier. Cookies are sent to your browser from a web site and stored on your computer's hard drive.</p>
+            <p>We use cookies to collect information and to improve our Service. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Service.</p>
+
+            <h2>Service Providers</h2>
+            <p>We may employ third party companies and individuals to facilitate our Service, to provide the Service on our behalf, to perform Service-related services or to assist us in analyzing how our Service is used.</p>
+            <p>These third parties have access to your Personal Information only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.</p>
+            <p>Specifically, we use **Google Firebase** for:</p>
+            <ul>
+                <li>**Authentication:** To manage user accounts securely.</li>
+                <li>**Firestore Database:** For structured data storage (e.g., story details, author names).</li>
+                <li>**Realtime Database:** For real-time data and potentially more sensitive creator information (PIN, WhatsApp).</li>
+                <li>**Cloud Storage:** For storing story thumbnails.</li>
+            </ul>
+
+            <h2>Security</h2>
+            <p>The security of your Personal Information is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Information, we cannot guarantee its absolute security.</p>
+
+            <h2>Links to Other Sites</h2>
+            <p>Our Service may contain links to other sites that are not operated by us. If you click on a third-party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit.</p>
+            <p>We have no control over, and assume no responsibility for the content, privacy policies or practices of any third party sites or services.</p>
+
+            <h2>Children's Privacy</h2>
+            <p>Our Service does not address anyone under the age of 13 ("Children").</p>
+            <p>We do not knowingly collect personally identifiable information from children under 13. If you are a parent or guardian and you are aware that your child has provided us with Personal Information, please contact us. If we discover that a child under 13 has provided us with Personal Information, we will delete such information from our servers immediately.</p>
+
+            <h2>Changes to This Privacy Policy</h2>
+            <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+            <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+
+            <h2>Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy, please contact us:</p>
+            <ul>
+                <li>By email: support@amdf.group</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
+        <nav>
+            <a href="about.html">About Us</a> |
+            <a href="privacy_policy.html">Privacy Policy</a> |
+            <a href="terms_of_service.html">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script>
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    </script>
+</body>
+</html>
