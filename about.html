@@ -1,28 +1,327 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tentang Kami - AMDF.Group</title>
-    <link rel="icon" href="images/FAVVV.png" type="image/png">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - AMDF.GROUP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --background-start: #f0f2f5;
+            --background-end: #e0e2e5;
+            --text-color: #333;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --header-border: #eee;
+            --container-bg: #ffffff;
+            --container-border: #ddd;
+            --container-shadow: rgba(0, 0, 0, 0.08);
+            --button-bg-gradient-start: #6a11cb;
+            --button-bg-gradient-end: #2575fc;
+            --button-text-color: #fff;
+            --link-color: #007bff;
+            --input-bg: #f9f9f9;
+            --input-border: #ccc;
+            --input-text: #333;
+            --toggle-bg: #ddd;
+            --toggle-circle-bg: #fff;
+            --toggle-shadow: rgba(0, 0, 0, 0.2);
+            --footer-bg: #333;
+            --footer-text: #eee;
+        }
+
+        body.dark-mode {
+            --background-start: #1a1a2e;
+            --background-end: #16213e;
+            --text-color: #e0e0e0;
+            --header-bg: rgba(26, 26, 46, 0.9);
+            --header-border: #333;
+            --container-bg: #22253b;
+            --container-border: #444;
+            --container-shadow: rgba(0, 0, 0, 0.4);
+            --button-bg-gradient-start: #8e2de2;
+            --button-bg-gradient-end: #4a00e0;
+            --button-text-color: #fff;
+            --link-color: #8e2de2;
+            --input-bg: #33364f;
+            --input-border: #555;
+            --input-text: #e0e0e0;
+            --toggle-bg: #555;
+            --toggle-circle-bg: #bbb;
+            --toggle-shadow: rgba(0, 0, 0, 0.4);
+            --footer-bg: #111;
+            --footer-text: #bbb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--header-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--container-shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start), var(--button-bg-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-back {
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        .mode-toggle {
+            width: 50px;
+            height: 25px;
+            background-color: var(--toggle-bg);
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .mode-toggle .circle {
+            width: 20px;
+            height: 20px;
+            background-color: var(--toggle-circle-bg);
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 2.5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 2px 5px var(--toggle-shadow);
+        }
+
+        body.dark-mode .mode-toggle .circle {
+            transform: translateX(25px);
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem 5%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            background-color: var(--container-bg);
+            border: 1px solid var(--container-border);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--container-shadow);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-section h1, .info-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            text-align: center;
+        }
+        .info-section h2 {
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .info-section p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            color: var(--text-color);
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 1rem;
+        }
+
+        .info-section ul li {
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            color: var(--text-color);
+        }
+
+        .info-section ul li i {
+            color: var(--button-bg-gradient-start);
+            font-size: 1.5rem;
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            text-align: center;
+            padding: 1.5rem 5%;
+            margin-top: auto;
+            border-top: 1px solid var(--header-border);
+        }
+
+        footer nav a {
+            color: var(--footer-text);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer nav a:hover {
+            color: var(--link-color);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem 4%;
+            }
+            .logo {
+                margin-bottom: 1rem;
+            }
+            .btn-back {
+                width: calc(100% - 60px);
+                text-align: center;
+            }
+            .mode-toggle {
+                position: absolute;
+                right: 15px;
+                top: 25px;
+            }
+            main {
+                padding: 1.5rem 4%;
+            }
+            .info-section {
+                padding: 1.5rem;
+            }
+            .info-section h1, .info-section h2 {
+                font-size: 2rem;
+            }
+            .info-section p {
+                font-size: 1rem;
+            }
+            .info-section ul li {
+                padding: 0.8rem 1rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-section h1, .info-section h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>AMDF.Group</header>
-  <script type='text/javascript' src='//pl27093314.profitableratecpm.com/fa/77/8c/fa778c656545a5105858d9d11511d106.js'></script>
-  <main>
-    <h2>Tentang Kami</h2>
-    <p>
-      <strong>AMDF.Group</strong> adalah sebuah platform yang didirikan pada tahun 2023 oleh para siswa SMK teknik elektronika.
-      Website ini bertujuan untuk memamerkan cerita-cerita fantasi karya anak bangsa. Dengan semangat kreativitas, kami berusaha
-      menyalurkan bakat menulis dan menggandeng teman-teman yang memiliki potensi dalam dunia literasi, khususnya dalam genre fantasi.
-      AMDF.Group menjadi tempat berkumpulnya para kreator muda untuk berbagi ide, cerita, dan inspirasi agar dapat dinikmati masyarakat luas.
-    </p>
-<p>Selamat datang di <strong>ebook.amdf.web.id</strong>, situs yang menyediakan kumpulan informasi dan ulasan ebook legal dari berbagai genre. Kami berkomitmen memberikan referensi bacaan yang bermanfaat, menarik, dan tentunya mendukung distribusi konten yang sah dan resmi.</p>
-<p>Tujuan kami adalah membantu pembaca menemukan ebook berkualitas dan memberikan insight seputar literasi digital. Semua konten kami dibuat untuk tujuan edukasi dan informasi.</p>
-    <a class="btn-kembali" href="index.html">⬅ Kembali</a>
-  </main>
-  <script async="async" data-cfasync="false" src="//pl27093350.profitableratecpm.com/830ae6ee7b7572376212c48dff0eeeb8/invoke.js"></script>
-<div id="container-830ae6ee7b7572376212c48dff0eeeb8"></div>
+    <header>
+        <a href="catalog.html" class="logo">AMDF.GROUP</a>
+        <div style="display: flex; align-items: center;">
+            <a href="catalog.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
+            <div class="mode-toggle" onclick="toggleDarkMode()">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="info-section">
+            <h1>About AMDF.GROUP</h1>
+            <p>Welcome to **AMDF.GROUP**, your premier destination for captivating digital stories and a vibrant community for creative minds. We are dedicated to providing a seamless platform where talented **authors (creators)** can publish their unique narratives, and **readers** can immerse themselves in an endless array of genres and tales.</p>
+            <p>Our mission is to foster a dynamic ecosystem that empowers creativity and enriches reading experiences. We believe in the power of storytelling to connect, inspire, and entertain across the globe.</p>
+
+            <h2>Why Choose AMDF.GROUP? Our Advantages:</h2>
+            <ul>
+                <li><i class="fas fa-magic"></i> <strong>Effortless Publishing for Creators:</strong> With our intuitive creator dashboard, publishing your stories is a breeze. Focus on your creativity, and we'll handle the rest.</li>
+                <li><i class="fas fa-shield-alt"></i> <strong>Robust Authentication with Firebase:</strong> We leverage Google Firebase for secure and reliable user authentication, ensuring your data and accounts are protected.</li>
+                <li><i class="fas fa-envelope-open-text"></i> <strong>Email Verification for Enhanced Security:</strong> Our creator registration includes email verification via a unique "magic link," adding an extra layer of security and trust to our community.</li>
+                <li><i class="fas fa-id-card"></i> <strong>Unique Creator IDs for Easy Identification:</strong> Each creator receives a unique 4-character ID, simplifying discovery and interaction within the platform, and aiding staff in management.</li>
+                <li><i class="fas fa-chart-line"></i> <strong>Staff Oversight for Quality Content:</strong> Our dedicated staff dashboard ensures that every story goes through a review process, maintaining high content quality and a safe reading environment.</li>
+                <li><i class="fas fa-eye"></i> <strong>Real-time Content Updates:</strong> Experience dynamic content with real-time updates for story views and ratings, giving both creators and readers fresh insights.</li>
+                <li><i class="fas fa-book-reader"></i> <strong>Diverse Catalog & Engaging Reader Experience:</strong> Explore a vast and growing library of stories across various genres, complete with an easy-to-navigate catalog and dark/light mode for comfortable reading.</li>
+                <li><i class="fas fa-mobile-alt"></i> <strong>Fully Responsive Design:</strong> Enjoy AMDF.GROUP seamlessly on any device, from desktops to smartphones, with a design that adapts to your screen.</li>
+            </ul>
+
+            <p>Join AMDF.GROUP today and become a part of a community where stories come alive!</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
+        <nav>
+            <a href="about.html">About Us</a> |
+            <a href="privacy_policy.html">Privacy Policy</a> |
+            <a href="terms_of_service.html">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script>
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    </script>
 </body>
 </html>
