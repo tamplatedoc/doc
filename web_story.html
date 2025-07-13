@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --background-start: #f0f2f5;
+            --background-end: #e0e2e5;
+            --text-color: #333;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --header-border: #eee;
+            --container-bg: #ffffff;
+            --container-border: #ddd;
+            --container-shadow: rgba(0, 0, 0, 0.08);
+            --button-bg-gradient-start: #6a11cb;
+            --button-bg-gradient-end: #2575fc;
+            --button-text-color: #fff;
+            --link-color: #007bff;
+            --icon-color: #777;
+            --rating-star-color: gold;
+            --comment-bg: #f9f9f9;
+            --comment-border: #eee;
+            --comment-text: #555;
+            --footer-bg: #333;
+            --footer-text: #eee;
+        }
+
+        body.dark-mode {
+            --background-start: #1a1a2e;
+            --background-end: #16213e;
+            --text-color: #e0e0e0;
+            --header-bg: rgba(26, 26, 46, 0.9);
+            --header-border: #333;
+            --container-bg: #22253b;
+            --container-border: #444;
+            --container-shadow: rgba(0, 0, 0, 0.4);
+            --button-bg-gradient-start: #8e2de2;
+            --button-bg-gradient-end: #4a00e0;
+            --button-text-color: #fff;
+            --link-color: #8e2de2;
+            --icon-color: #aaa;
+            --rating-star-color: #FFD700;
+            --comment-bg: #2d3042;
+            --comment-border: #555;
+            --comment-text: #ccc;
+            --footer-bg: #111;
+            --footer-text: #bbb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--header-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--container-shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start), var(--button-bg-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-back {
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem 5%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .story-container {
+            background-color: var(--container-bg);
+            border: 1px solid var(--container-border);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--container-shadow);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .story-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .story-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .story-header p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .story-header .genre {
+            font-size: 0.95rem;
+            color: var(--icon-color);
+            margin-top: 0.5rem;
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: rgba(0, 123, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .story-thumbnail {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 2rem auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--container-border);
+        }
+
+        .story-content {
+            font-size: 1.05rem;
+            color: var(--text-color);
+            white-space: pre-wrap;
+            margin-top: 2rem;
+            text-align: justify;
+        }
+
+        .story-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--container-border);
+        }
+
+        .speaker-button .btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #11998e 0%, #38ef7d 100%); /* Warna asli */
+            color: white;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease; /* Tambahkan transisi untuk background */
+        }
+
+        .speaker-button .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 128, 0, 0.2);
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rating-section .stars i {
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--icon-color);
+            transition: color 0.2s ease, transform 0.1s ease;
+        }
+
+        .rating-section .stars i.active,
+        .rating-section .stars i:hover {
+            color: var(--rating-star-color);
+            transform: scale(1.1);
+        }
+        .rating-message {
+            margin-left: 10px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .comments-section {
+            background-color: var(--container-bg);
+            border: 1px solid var(--container-border);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--container-shadow);
+            padding: 2.5rem;
+        }
+
+        .comments-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 1rem;
+            border: 1px solid var(--container-border);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background-color: var(--comment-bg);
+            color: var(--text-color);
+            resize: vertical;
+            transition: border-color 0.2s ease;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--link-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        .comment-form button {
+            align-self: flex-end;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .comment-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .comment-item {
+            background-color: var(--comment-bg);
+            border: 1px solid var(--comment-border);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-id {
+            font-weight: 600;
+            color: var(--link-color);
+            font-size: 0.9rem;
+        }
+
+        .comment-text {
+            font-size: 1rem;
+            color: var(--comment-text);
+            word-wrap: break-word;
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            text-align: center;
+            padding: 1.5rem 5%;
+            margin-top: 3rem;
+            border-top: 1px solid var(--header-border);
+        }
+
+        footer nav a {
+            color: var(--footer-text);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer nav a:hover {
+            color: var(--link-color);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 4%;
+            }
+            .logo {
+                font-size: 1.5rem;
+            }
+            .btn-back {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            main {
+                padding: 1.5rem 4%;
+            }
+            .story-container, .comments-section {
+                padding: 1.5rem;
+            }
+            .story-header h1 {
+                font-size: 2rem;
+            }
+            .story-header p {
+                font-size: 1rem;
+            }
+            .story-thumbnail {
+                margin: 1.5rem auto;
+            }
+            .story-content {
+                font-size: 0.95rem;
+            }
+            .story-actions {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: flex-start;
+            }
+            .speaker-button .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .rating-section {
+                width: 100%;
+                justify-content: center;
+            }
+            .comments-section h2 {
+                font-size: 1.6rem;
+            }
+            .comment-form button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .story-container, .comments-section {
+                padding: 1rem;
+            }
+            .story-header h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">AMDF.GROUP E-Books</a>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
+    </header>
+
+    <main>
+        <section class="story-container">
+            <div class="story-header">
+                <h1 id="storyTitle"></h1>
+                <p>Author: <span id="storyAuthor"></span></p>
+                <span class="genre" id="storyGenre"></span>
+            </div>
+
+            <img src="" alt="Story Thumbnail" class="story-thumbnail" id="storyThumbnail">
+
+            <div class="story-content" id="storyContent">
+
+            </div>
+
+            <div class="story-actions">
+                <div class="speaker-button">
+                    <button class="btn" id="speakerButton"><i class="fas fa-volume-up"></i> Listen to Story</button>
+                </div>
+                <div class="rating-section">
+                    <span style="white-space: nowrap;">Rate this story:</span>
+                    <div class="stars" id="ratingStars">
+                        <i class="far fa-star" data-rating="1"></i>
+                        <i class="far fa-star" data-rating="2"></i>
+                        <i class="far fa-star" data-rating="3"></i>
+                        <i class="far fa-star" data-rating="4"></i>
+                        <i class="far fa-star" data-rating="5"></i>
+                    </div>
+                    <span class="rating-message" id="ratingMessage"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="comments-section">
+            <h2>Comments</h2>
+            <form class="comment-form" id="commentForm">
+                <textarea id="commentInput" placeholder="Write your comment (max 100 characters)..." maxlength="100" required></textarea>
+                <button type="submit">Post Comment</button>
+            </form>
+            <div class="comments-list" id="commentsList">
+                
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
+        <nav>
+            <a href="#about">About Us</a> |
+            <a href="#privacy">Privacy Policy</a> |
+            <a href="#terms">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { getDatabase, ref as rtdbRef, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+            authDomain: "tamplatedoc.firebaseapp.com",
+            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tamplatedoc",
+            storageBucket: "tamplatedoc.firebasestorage.app",
+            messagingSenderId: "264966107720",
+            appId: "1:264966107720:web:868abe93cdff209040de7d",
+            measurementId: "G-S5WTZ7S5PG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+        const storage = getStorage(app);
+
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', applyTheme);
+
+        const storyTitleElem = document.getElementById('storyTitle');
+        const storyAuthorElem = document.getElementById('storyAuthor');
+        const storyGenreElem = document.getElementById('storyGenre');
+        const storyThumbnailElem = document.getElementById('storyThumbnail');
+        const storyContentElem = document.getElementById('storyContent');
+        const speakerButton = document.getElementById('speakerButton');
+        const ratingStars = document.getElementById('ratingStars');
+        const ratingMessage = document.getElementById('ratingMessage');
+        const commentForm = document.getElementById('commentForm');
+        const commentInput = document.getElementById('commentInput');
+        const commentsList = document.getElementById('commentsList');
+
+        let currentStoryId = '';
+
+        function getStoryIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        async function loadStory(storyId) {
+            if (!storyId) {
+                storyTitleElem.textContent = "Error: Story Not Found";
+                storyContentElem.innerHTML = "Please return to the <a href='catalog.html'>catalog</a> and select a valid story.";
+                return;
+            }
+
+            currentStoryId = storyId;
+
+            try {
+                const storyDocRef = doc(db, "stories", storyId);
+                const storyDocSnap = await getDoc(storyDocRef);
+
+                if (storyDocSnap.exists()) {
+                    const storyData = storyDocSnap.data();
+                    storyTitleElem.textContent = storyData.title;
+                    storyAuthorElem.textContent = storyData.authorName;
+                    storyGenreElem.textContent = storyData.genre;
+                    storyContentElem.textContent = storyData.content;
+                    document.title = `${storyData.title} - AMDF.GROUP`;
+
+                    if (storyData.thumbnailPath) {
+                        try {
+                            const imageRef = storageRef(storage, storyData.thumbnailPath);
+                            const imageUrl = await getDownloadURL(imageRef);
+                            storyThumbnailElem.src = imageUrl;
+                        } catch (error) {
+                            storyThumbnailElem.src = 'https://via.placeholder.com/600x400/eee/333?text=Image+Load+Error';
+                        }
+                    } else {
+                        storyThumbnailElem.src = 'https://via.placeholder.com/600x400/eee/333?text=No+Thumbnail';
+                    }
+                    
+                    const viewsRef = rtdbRef(rtdb, `storyViews/${storyId}/views`);
+                    runTransaction(viewsRef, (currentViews) => {
+                        return (currentViews || 0) + 1;
+                    });
+
+                    listenForAverageRating(storyId);
+                } else {
+                    storyTitleElem.textContent = "Story Not Found";
+                    storyContentElem.innerHTML = "The story you are looking for does not exist. Please return to the <a href='catalog.html'>catalog</a>.";
+                }
+            } catch (error) {
+                storyTitleElem.textContent = "Error Loading Story";
+                storyContentElem.innerHTML = "An error occurred while loading the story. Please try again later.";
+            }
+        }
+
+        let currentUtterance = null; // Variabel untuk menyimpan instance SpeechSynthesisUtterance
+
+        speakerButton.addEventListener('click', () => {
+            const storyText = storyContentElem.textContent;
+
+            if ('speechSynthesis' in window) {
+                if (speechSynthesis.speaking) {
+                    // Jika sedang berbicara, hentikan
+                    speechSynthesis.cancel();
+                    speakerButton.innerHTML = '<i class="fas fa-volume-up"></i> Listen to Story';
+                    speakerButton.style.background = 'linear-gradient(45deg, #11998e 0%, #38ef7d 100%)'; // Kembalikan warna awal
+                } else {
+                    // Jika tidak berbicara, mulai TTS
+                    currentUtterance = new SpeechSynthesisUtterance(storyText);
+                    currentUtterance.lang = 'id-ID';
+
+                    currentUtterance.onend = () => {
+                        // Ketika TTS selesai, kembalikan teks tombol ke "Listen to Story"
+                        speakerButton.innerHTML = '<i class="fas fa-volume-up"></i> Listen to Story';
+                        speakerButton.style.background = 'linear-gradient(45deg, #11998e 0%, #38ef7d 100%)'; // Kembalikan warna awal
+                    };
+
+                    currentUtterance.onerror = (event) => {
+                        console.error('SpeechSynthesisUtterance error:', event);
+                        alert("Terjadi kesalahan saat memutar suara.");
+                        speakerButton.innerHTML = '<i class="fas fa-volume-up"></i> Listen to Story';
+                        speakerButton.style.background = 'linear-gradient(45deg, #11998e 0%, #38ef7d 100%)'; // Kembalikan warna awal
+                    };
+
+                    speechSynthesis.speak(currentUtterance);
+                    speakerButton.innerHTML = '<i class="fas fa-volume-mute"></i> Stop Speaking';
+                    speakerButton.style.background = 'linear-gradient(45deg, #ff6b6b 0%, #ee4d2d 100%)'; // Ubah warna tombol menjadi merah saat berbicara
+                }
+            } else {
+                alert("Browser Anda tidak mendukung text-to-speech. Silakan coba browser lain.");
+            }
+        });
+
+        // Tambahkan event listener untuk mengembalikan tombol ke keadaan awal jika pengguna menghentikan secara manual (misal dengan menutup tab)
+        window.addEventListener('beforeunload', () => {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+        });
+
+
+        let userRating = 0;
+
+        ratingStars.addEventListener('mouseover', (e) => {
+            if (e.target.tagName === 'I') {
+                const hoveredRating = parseInt(e.target.dataset.rating);
+                Array.from(ratingStars.children).forEach(star => {
+                    const starRating = parseInt(star.dataset.rating);
+                    if (starRating <= hoveredRating) {
+                        star.classList.add('active', 'fas');
+                        star.classList.remove('far');
+                    } else {
+                        star.classList.remove('active', 'fas');
+                        star.classList.add('far');
+                    }
+                });
+            }
+        });
+
+        ratingStars.addEventListener('mouseout', () => {
+            Array.from(ratingStars.children).forEach(star => {
+                const starRating = parseInt(star.dataset.rating);
+                if (starRating <= userRating) {
+                    star.classList.add('active', 'fas');
+                    star.classList.remove('far');
+                } else {
+                    star.classList.remove('active', 'fas');
+                    star.classList.add('far');
+                }
+            });
+        });
+
+        ratingStars.addEventListener('click', async (e) => {
+            if (e.target.tagName === 'I') {
+                const clickedRating = parseInt(e.target.dataset.rating);
+                userRating = clickedRating;
+                ratingMessage.textContent = `You rated ${userRating} stars!`;
+
+                try {
+                    const ratingRef = rtdbRef(rtdb, `storyRatings/${currentStoryId}/ratings`);
+                    await runTransaction(ratingRef, (currentRatings) => {
+                        if (!currentRatings) {
+                            return { total: clickedRating, count: 1 };
+                        }
+                        currentRatings.total = (currentRatings.total || 0) + clickedRating;
+                        currentRatings.count = (currentRatings.count || 0) + 1;
+                        return currentRatings;
+                    });
+                } catch (error) {
+                    ratingMessage.textContent = "Failed to submit rating. Please try again.";
+                }
+            }
+        });
+
+        function listenForAverageRating(storyId) {
+            const ratingsRef = rtdbRef(rtdb, `storyRatings/${storyId}/ratings`);
+            onValue(ratingsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.count > 0) {
+                    const average = (data.total / data.count).toFixed(1);
+                } else {
+                }
+            });
+        }
+
+        function generateRandomCommentId() {
+            const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+            let result = '';
+            for (let i = 0; i < 3; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        commentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const commentText = commentInput.value.trim();
+
+            if (commentText.length > 100) {
+                alert("Comment cannot exceed 100 characters.");
+                return;
+            }
+            if (!commentText) {
+                alert("Comment cannot be empty.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "stories", currentStoryId, "comments"), {
+                    comment_id: generateRandomCommentId(),
+                    text: commentText,
+                    timestamp: new Date()
+                });
+                commentInput.value = '';
+            } catch (error) {
+                alert("Failed to post comment. Please try again.");
+            }
+        });
+
+        function listenForComments(storyId) {
+            const commentsCollectionRef = collection(db, "stories", storyId, "comments");
+            const q = query(commentsCollectionRef, orderBy("timestamp", "asc"));
+
+            onSnapshot(q, (snapshot) => {
+                commentsList.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const commentData = doc.data();
+                    const commentItem = document.createElement('div');
+                    commentItem.className = 'comment-item';
+                    commentItem.innerHTML = `
+                        <div class="comment-header">
+                            <span class="comment-id">ID: ${commentData.comment_id}</span>
+                        </div>
+                        <p class="comment-text">${commentData.text}</p>
+                    `;
+                    commentsList.appendChild(commentItem);
+                });
+            }, (error) => {
+                commentsList.innerHTML = '<p style="color: var(--text-color);">Failed to load comments.</p>';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const storyId = getStoryIdFromUrl();
+            if (storyId) {
+                loadStory(storyId);
+                listenForComments(storyId);
+            } else {
+                storyTitleElem.textContent = "No Story Selected";
+                storyContentElem.innerHTML = "Please go back to the <a href='catalog.html'>catalog</a> to select a story.";
+            }
+        });
+    </script>
+</body>
+</html>
