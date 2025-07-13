@@ -543,9 +543,9 @@
                 <table class="story-table">
                     <thead>
                         <tr>
-                            <th>Title</th>
+                            <th>Story ID</th> <th>Title</th>
                             <th>Author</th>
-                            <th>Genre</th>
+                            <th>Author ID</th> <th>Genre</th>
                             <th>Status</th>
                             <th>Submitted Date</th>
                             <th>Actions</th>
@@ -560,9 +560,9 @@
         <section class="management-section">
             <h2>Story Management (Search, Edit, Delete)</h2>
             <div class="form-group">
-                <label for="storyIdSearch">Search Story by ID:</label>
+                <label for="storyFirebaseIdSearch">Search Story by Firebase Doc ID:</label>
                 <div class="search-container">
-                    <input type="text" id="storyIdSearch" placeholder="Enter Story ID">
+                    <input type="text" id="storyFirebaseIdSearch" placeholder="Enter Story Firebase Doc ID">
                     <button class="btn" id="searchStoryBtn">Search Story</button>
                 </div>
             </div>
@@ -576,6 +576,9 @@
                 <div class="form-group">
                     <label for="editStoryAuthor">Author:</label>
                     <input type="text" id="editStoryAuthor" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="editStoryAuthorUid">Author UID:</label> <input type="text" id="editStoryAuthorUid" disabled>
                 </div>
                 <div class="form-group">
                     <label for="editStoryGenre">Genre:</label>
@@ -605,9 +608,9 @@
         <section class="management-section">
             <h2>Creator Permission Management</h2>
             <div class="form-group">
-                <label for="creatorIdSearch">Search Creator by ID:</label>
+                <label for="creatorUidSearch">Search Creator by UID:</label>
                 <div class="search-container">
-                    <input type="text" id="creatorIdSearch" placeholder="Enter Creator ID">
+                    <input type="text" id="creatorUidSearch" placeholder="Enter Creator UID">
                     <button class="btn" id="searchCreatorBtn">Search Creator</button>
                 </div>
             </div>
@@ -617,6 +620,9 @@
                 <div class="form-group">
                     <label for="creatorNameDisplay">Creator Name:</label>
                     <input type="text" id="creatorNameDisplay" disabled>
+                </div>
+                 <div class="form-group">
+                    <label for="creatorEmailDisplay">Creator Email:</label> <input type="email" id="creatorEmailDisplay" disabled>
                 </div>
                 <div class="form-group">
                     <label for="creatorStatus">Permission Status:</label>
@@ -691,12 +697,13 @@
         const storyTableBody = document.getElementById('storyTableBody');
         const filterButtons = document.querySelector('.filter-buttons');
 
-        // New elements for story management
-        const storyIdSearchInput = document.getElementById('storyIdSearch');
+        // Elements for story management
+        const storyFirebaseIdSearchInput = document.getElementById('storyFirebaseIdSearch'); // Renamed ID
         const searchStoryBtn = document.getElementById('searchStoryBtn');
         const storyEditForm = document.getElementById('storyEditForm');
         const editStoryTitle = document.getElementById('editStoryTitle');
         const editStoryAuthor = document.getElementById('editStoryAuthor');
+        const editStoryAuthorUid = document.getElementById('editStoryAuthorUid'); // New
         const editStoryGenre = document.getElementById('editStoryGenre');
         const editStoryContent = document.getElementById('editStoryContent');
         const editStoryStatus = document.getElementById('editStoryStatus');
@@ -705,11 +712,12 @@
         const cancelStoryEditBtn = document.getElementById('cancelStoryEditBtn');
         const storySearchResult = document.getElementById('storySearchResult');
 
-        // New elements for creator management
-        const creatorIdSearchInput = document.getElementById('creatorIdSearch');
+        // Elements for creator management
+        const creatorUidSearchInput = document.getElementById('creatorUidSearch'); // Renamed ID
         const searchCreatorBtn = document.getElementById('searchCreatorBtn');
         const creatorPermissionForm = document.getElementById('creatorPermissionForm');
         const creatorNameDisplay = document.getElementById('creatorNameDisplay');
+        const creatorEmailDisplay = document.getElementById('creatorEmailDisplay'); // New
         const creatorStatus = document.getElementById('creatorStatus');
         const updateCreatorPermissionBtn = document.getElementById('updateCreatorPermissionBtn');
         const deleteCreatorPermissionBtn = document.getElementById('deleteCreatorPermissionBtn');
@@ -718,8 +726,8 @@
 
 
         let currentFilter = 'all';
-        let currentStoryId = null; // To store the ID of the story being edited/deleted
-        let currentCreatorId = null; // To store the ID of the creator being managed
+        let currentStoryFirebaseId = null; // Changed from currentStoryId to clearly indicate Firebase Doc ID
+        let currentCreatorUid = null; // Changed from currentCreatorId to clearly indicate User ID
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -781,7 +789,7 @@
             onSnapshot(storiesQuery, async (snapshot) => {
                 storyTableBody.innerHTML = '';
                 if (snapshot.empty) {
-                    storyTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">No ${currentFilter === 'all' ? '' : currentFilter} stories found.</td></tr>`;
+                    storyTableBody.innerHTML = `<tr><td colspan="8" style="text-align: center;">No ${currentFilter === 'all' ? '' : currentFilter} stories found.</td></tr>`; // Changed colspan to 8
                     return;
                 }
 
@@ -789,12 +797,13 @@
                     const story = { id: docSnapshot.id, ...docSnapshot.data() };
                     
                     const authorName = story.authorName || 'Unknown Author';
+                    const authorUid = story.authorUid || 'N/A'; // Get Author UID
 
                     const row = storyTableBody.insertRow();
                     row.innerHTML = `
-                        <td>${story.title}</td>
+                        <td>${story.storyId || 'N/A'}</td> <td>${story.title}</td>
                         <td>${authorName}</td>
-                        <td>${story.genre}</td>
+                        <td>${authorUid}</td> <td>${story.genre}</td>
                         <td><span class="status ${story.status}">${story.status.charAt(0).toUpperCase() + story.status.slice(1)}</span></td>
                         <td>${story.createdAt ? new Date(story.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
                         <td>
@@ -809,7 +818,7 @@
                     `;
                 }
             }, (error) => {
-                storyTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-color);">Error loading stories.</td></tr>`;
+                storyTableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-color);">Error loading stories.</td></tr>`; // Changed colspan to 8
                 console.error("Error listening to stories:", error);
             });
         }
@@ -824,7 +833,7 @@
         });
 
         storyTableBody.addEventListener('click', async (e) => {
-            const storyId = e.target.dataset.id;
+            const storyId = e.target.dataset.id; // This is the Firebase Doc ID
             if (!storyId) return;
 
             if (e.target.classList.contains('approve')) {
@@ -850,7 +859,7 @@
             } else if (e.target.classList.contains('view')) {
                 window.open(`web_story.html?id=${storyId}`, '_blank');
             } else if (e.target.classList.contains('edit')) {
-                await searchStoryById(storyId);
+                await searchStoryByFirebaseDocId(storyId); // Use search function with Firebase Doc ID
             } else if (e.target.classList.contains('delete')) {
                 if (confirm('Are you sure you want to delete this story?')) {
                     await deleteStory(storyId);
@@ -860,10 +869,10 @@
 
         // --- Story Management Functions ---
 
-        async function searchStoryById(storyId = null) {
-            const idToSearch = storyId || storyIdSearchInput.value.trim();
+        async function searchStoryByFirebaseDocId(firebaseDocId = null) { // Renamed function
+            const idToSearch = firebaseDocId || storyFirebaseIdSearchInput.value.trim();
             if (!idToSearch) {
-                storySearchResult.textContent = 'Please enter a Story ID.';
+                storySearchResult.textContent = 'Please enter a Story Firebase Doc ID.';
                 storySearchResult.style.color = 'orange';
                 storyEditForm.style.display = 'none';
                 return;
@@ -875,19 +884,20 @@
 
                 if (storyDocSnap.exists()) {
                     const storyData = storyDocSnap.data();
-                    currentStoryId = idToSearch;
+                    currentStoryFirebaseId = idToSearch; // Store Firebase Doc ID
                     editStoryTitle.value = storyData.title || '';
-                    editStoryAuthor.value = storyData.authorName || 'Unknown Author'; // Author name is read-only
+                    editStoryAuthor.value = storyData.authorName || 'Unknown Author';
+                    editStoryAuthorUid.value = storyData.authorUid || 'N/A'; // Populate Author UID
                     editStoryGenre.value = storyData.genre || '';
                     editStoryContent.value = storyData.content || '';
                     editStoryStatus.value = storyData.status || 'pending';
 
                     storyEditForm.style.display = 'block';
-                    storySearchResult.textContent = `Story found: "${storyData.title}"`;
+                    storySearchResult.textContent = `Story found: "${storyData.title}" (Firebase ID: ${currentStoryFirebaseId})`;
                     storySearchResult.style.color = 'green';
                 } else {
                     storyEditForm.style.display = 'none';
-                    storySearchResult.textContent = 'Story not found with this ID.';
+                    storySearchResult.textContent = 'Story not found with this Firebase Doc ID.';
                     storySearchResult.style.color = 'red';
                 }
             } catch (error) {
@@ -899,13 +909,13 @@
         }
 
         async function saveStoryChanges() {
-            if (!currentStoryId) {
+            if (!currentStoryFirebaseId) { // Use Firebase Doc ID
                 alert('No story selected for editing.');
                 return;
             }
 
             try {
-                await updateDoc(doc(db, "stories", currentStoryId), {
+                await updateDoc(doc(db, "stories", currentStoryFirebaseId), {
                     title: editStoryTitle.value,
                     genre: editStoryGenre.value,
                     content: editStoryContent.value,
@@ -920,14 +930,14 @@
             }
         }
 
-        async function deleteStory(storyIdToDelete = null) {
-            const idToDelete = storyIdToDelete || currentStoryId;
+        async function deleteStory(storyIdToDelete = null) { // This is Firebase Doc ID
+            const idToDelete = storyIdToDelete || currentStoryFirebaseId;
             if (!idToDelete) {
                 alert('No story selected for deletion.');
                 return;
             }
 
-            if (confirm(`Are you sure you want to permanently delete the story with ID: ${idToDelete}?`)) {
+            if (confirm(`Are you sure you want to permanently delete the story with Firebase Doc ID: ${idToDelete}?`)) {
                 try {
                     await deleteDoc(doc(db, "stories", idToDelete));
                     alert('Story deleted successfully!');
@@ -940,10 +950,11 @@
         }
 
         function resetStoryForm() {
-            currentStoryId = null;
-            storyIdSearchInput.value = '';
+            currentStoryFirebaseId = null;
+            storyFirebaseIdSearchInput.value = '';
             editStoryTitle.value = '';
             editStoryAuthor.value = '';
+            editStoryAuthorUid.value = ''; // Reset Author UID
             editStoryGenre.value = '';
             editStoryContent.value = '';
             editStoryStatus.value = 'pending';
@@ -951,7 +962,7 @@
             storySearchResult.textContent = '';
         }
 
-        searchStoryBtn.addEventListener('click', () => searchStoryById());
+        searchStoryBtn.addEventListener('click', () => searchStoryByFirebaseDocId());
         saveStoryEditBtn.addEventListener('click', saveStoryChanges);
         deleteStoryBtn.addEventListener('click', () => deleteStory());
         cancelStoryEditBtn.addEventListener('click', resetStoryForm);
@@ -959,31 +970,32 @@
 
         // --- Creator Permission Management Functions ---
 
-        async function searchCreatorById() {
-            const idToSearch = creatorIdSearchInput.value.trim();
+        async function searchCreatorByUid() { // Renamed function
+            const idToSearch = creatorUidSearchInput.value.trim();
             if (!idToSearch) {
-                creatorSearchResult.textContent = 'Please enter a Creator ID.';
+                creatorSearchResult.textContent = 'Please enter a Creator UID.';
                 creatorSearchResult.style.color = 'orange';
                 creatorPermissionForm.style.display = 'none';
                 return;
             }
 
             try {
-                const creatorDocRef = doc(db, "users", idToSearch); // Assuming creators are in 'users' collection
+                const creatorDocRef = doc(db, "authors", idToSearch); // Assuming creators are in 'authors' collection
                 const creatorDocSnap = await getDoc(creatorDocRef);
 
                 if (creatorDocSnap.exists()) {
                     const creatorData = creatorDocSnap.data();
-                    currentCreatorId = idToSearch;
-                    creatorNameDisplay.value = creatorData.displayName || creatorData.email || 'Unknown Creator';
-                    creatorStatus.value = creatorData.role || 'pending'; // Assuming 'role' defines permission status
+                    currentCreatorUid = idToSearch; // Store Creator UID
+                    creatorNameDisplay.value = creatorData.name || 'Unknown Creator';
+                    creatorEmailDisplay.value = creatorData.email || 'N/A'; // Populate Creator Email
+                    creatorStatus.value = creatorData.role || 'pending'; // Assuming 'role' defines permission status (or default 'pending')
 
                     creatorPermissionForm.style.display = 'block';
-                    creatorSearchResult.textContent = `Creator found: "${creatorNameDisplay.value}"`;
+                    creatorSearchResult.textContent = `Creator found: "${creatorNameDisplay.value}" (UID: ${currentCreatorUid})`;
                     creatorSearchResult.style.color = 'green';
                 } else {
                     creatorPermissionForm.style.display = 'none';
-                    creatorSearchResult.textContent = 'Creator not found with this ID.';
+                    creatorSearchResult.textContent = 'Creator not found with this UID.';
                     creatorSearchResult.style.color = 'red';
                 }
             } catch (error) {
@@ -995,13 +1007,14 @@
         }
 
         async function updateCreatorPermission() {
-            if (!currentCreatorId) {
+            if (!currentCreatorUid) {
                 alert('No creator selected for updating permission.');
                 return;
             }
 
             try {
-                await updateDoc(doc(db, "users", currentCreatorId), {
+                // Ensure the 'authors' collection exists and has appropriate security rules
+                await updateDoc(doc(db, "authors", currentCreatorUid), {
                     role: creatorStatus.value,
                     lastModified: new Date()
                 });
@@ -1014,14 +1027,15 @@
         }
 
         async function deleteCreatorPermission() {
-            if (!currentCreatorId) {
+            if (!currentCreatorUid) {
                 alert('No creator selected for removing permission.');
                 return;
             }
 
-            if (confirm(`Are you sure you want to remove the permission for creator with ID: ${currentCreatorId}? This will set their role to 'rejected'.`)) {
+            if (confirm(`Are you sure you want to remove the permission for creator with UID: ${currentCreatorUid}? This will set their role to 'rejected'.`)) {
                 try {
-                    await updateDoc(doc(db, "users", currentCreatorId), {
+                    // Update the role to 'rejected' in the 'authors' collection
+                    await updateDoc(doc(db, "authors", currentCreatorUid), {
                         role: 'rejected', // Setting role to 'rejected' to remove permission
                         lastModified: new Date()
                     });
@@ -1035,15 +1049,16 @@
         }
 
         function resetCreatorForm() {
-            currentCreatorId = null;
-            creatorIdSearchInput.value = '';
+            currentCreatorUid = null;
+            creatorUidSearchInput.value = '';
             creatorNameDisplay.value = '';
+            creatorEmailDisplay.value = ''; // Reset Creator Email
             creatorStatus.value = 'pending';
             creatorPermissionForm.style.display = 'none';
             creatorSearchResult.textContent = '';
         }
 
-        searchCreatorBtn.addEventListener('click', searchCreatorById);
+        searchCreatorBtn.addEventListener('click', searchCreatorByUid);
         updateCreatorPermissionBtn.addEventListener('click', updateCreatorPermission);
         deleteCreatorPermissionBtn.addEventListener('click', deleteCreatorPermission);
         cancelCreatorPermissionBtn.addEventListener('click', resetCreatorForm);
