@@ -1,0 +1,710 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Login / Register - AMDF.GROUP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --background-start: #f0f2f5;
+            --background-end: #e0e2e5;
+            --text-color: #333;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --header-border: #eee;
+            --container-bg: #ffffff;
+            --container-border: #ddd;
+            --container-shadow: rgba(0, 0, 0, 0.08);
+            --button-bg-gradient-start: #6a11cb;
+            --button-bg-gradient-end: #2575fc;
+            --button-text-color: #fff;
+            --link-color: #007bff;
+            --input-bg: #f9f9f9;
+            --input-border: #ccc;
+            --input-text: #333;
+            --toggle-bg: #ddd;
+            --toggle-circle-bg: #fff;
+            --toggle-shadow: rgba(0, 0, 0, 0.2);
+            --footer-bg: #333;
+            --footer-text: #eee;
+        }
+
+        body.dark-mode {
+            --background-start: #1a1a2e;
+            --background-end: #16213e;
+            --text-color: #e0e0e0;
+            --header-bg: rgba(26, 26, 46, 0.9);
+            --header-border: #333;
+            --container-bg: #22253b;
+            --container-border: #444;
+            --container-shadow: rgba(0, 0, 0, 0.4);
+            --button-bg-gradient-start: #8e2de2;
+            --button-bg-gradient-end: #4a00e0;
+            --button-text-color: #fff;
+            --link-color: #8e2de2;
+            --input-bg: #33364f;
+            --input-border: #555;
+            --input-text: #e0e0e0;
+            --toggle-bg: #555;
+            --toggle-circle-bg: #bbb;
+            --toggle-shadow: rgba(0, 0, 0, 0.4);
+            --footer-bg: #111;
+            --footer-text: #bbb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--header-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--container-shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start), var(--button-bg-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-back {
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        .mode-toggle {
+            width: 50px;
+            height: 25px;
+            background-color: var(--toggle-bg);
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .mode-toggle .circle {
+            width: 20px;
+            height: 20px;
+            background-color: var(--toggle-circle-bg);
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 2.5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 2px 5px var(--toggle-shadow);
+        }
+
+        body.dark-mode .mode-toggle .circle {
+            transform: translateX(25px);
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 5%;
+        }
+
+        .auth-container {
+            background-color: var(--container-bg);
+            border: 1px solid var(--container-border);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--container-shadow);
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .auth-container h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .auth-container .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .auth-container .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        body.dark-mode .auth-container .message.success {
+            background-color: #214b2d;
+            color: #d4edda;
+            border: 1px solid #3c763d;
+        }
+
+        .auth-container .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        body.dark-mode .auth-container .message.error {
+            background-color: #6d1e24;
+            color: #f8d7da;
+            border: 1px solid #a83d47;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--link-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        .auth-toggle {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .auth-toggle a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: text-decoration 0.2s ease;
+        }
+
+        .auth-toggle a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-container button {
+            width: 100%;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.9rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .auth-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            text-align: center;
+            padding: 1.5rem 5%;
+            margin-top: auto;
+            border-top: 1px solid var(--header-border);
+        }
+
+        footer nav a {
+            color: var(--footer-text);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer nav a:hover {
+            color: var(--link-color);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem 4%;
+            }
+            .logo {
+                margin-bottom: 1rem;
+            }
+            .btn-back {
+                width: calc(100% - 60px);
+                text-align: center;
+            }
+            .mode-toggle {
+                position: absolute;
+                right: 15px;
+                top: 25px;
+            }
+            main {
+                padding: 1.5rem 4%;
+            }
+            .auth-container {
+                padding: 1.5rem;
+            }
+            .auth-container h2 {
+                font-size: 1.8rem;
+            }
+            .form-group input, .auth-container button {
+                padding: 0.7rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 1rem;
+            }
+            .auth-container h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="catalog.html" class="logo">AMDF.GROUP</a>
+        <div style="display: flex; align-items: center;">
+            <a href="catalog.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
+            <div class="mode-toggle" onclick="toggleDarkMode()">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="auth-container">
+            <h2 id="authTitle">Login as Creator</h2>
+            <div id="message" class="message" style="display:none;"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="your.email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPin">PIN (6 digits)</label>
+                    <input type="password" id="loginPin" placeholder="******" maxlength="6" pattern="[0-9]{6}" title="PIN must be 6 digits" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+
+            <form id="registerForm" style="display:none;">
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" placeholder="your.email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPin">Create PIN (6 digits)</label>
+                    <input type="password" id="registerPin" placeholder="******" maxlength="6" pattern="[0-9]{6}" title="PIN must be 6 digits" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPin">Confirm PIN</label>
+                    <input type="password" id="registerConfirmPin" placeholder="******" maxlength="6" pattern="[0-9]{6}" title="PIN must be 6 digits" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerAuthorName">Author Name</label>
+                    <input type="text" id="registerAuthorName" placeholder="Your Pen Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerWhatsapp">WhatsApp Number</label>
+                    <input type="tel" id="registerWhatsapp" placeholder="e.g., +628123456789" required>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+
+            <div class="auth-toggle">
+                <span id="toggleText">Don't have an account?</span>
+                <a href="#" id="toggleAuth">Register here</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
+        <nav>
+            <a href="#about">About Us</a> |
+            <a href="#privacy">Privacy Policy</a> |
+            <a href="#terms">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { getDatabase, ref as rtdbRef, set as rtdbSet, get as rtdbGet } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+            authDomain: "tamplatedoc.firebaseapp.com",
+            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tamplatedoc",
+            storageBucket: "tamplatedoc.firebasestorage.app",
+            messagingSenderId: "264966107720",
+            appId: "1:264966107720:web:868abe93cdff209040de7d",
+            measurementId: "G-S5WTZ7S5PG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        // --- Dark Mode Toggle ---
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', applyTheme);
+
+        // --- DOM Elements ---
+        const authTitle = document.getElementById('authTitle');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const toggleAuth = document.getElementById('toggleAuth');
+        const toggleText = document.getElementById('toggleText');
+        const messageDiv = document.getElementById('message');
+
+        // --- Firebase Action Code Settings for Magic Link ---
+        const actionCodeSettings = {
+            url: window.location.origin + '/web_creator.html', // URL to redirect after verification
+            handleCodeInApp: true,
+        };
+
+        // --- Toggle between Login and Register Forms ---
+        toggleAuth.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                authTitle.textContent = 'Login as Creator';
+                toggleText.textContent = "Don't have an account?";
+                toggleAuth.textContent = 'Register here';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                authTitle.textContent = 'Register as Creator';
+                toggleText.textContent = "Already have an account?";
+                toggleAuth.textContent = 'Login here';
+            }
+            messageDiv.style.display = 'none';
+        });
+
+        // --- Show Message Function ---
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+        }
+
+        // --- Generate Unique Creator ID ---
+        async function generateUniqueCreatorId() {
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let id = '';
+            let isUnique = false;
+            let attempts = 0;
+
+            while (!isUnique && attempts < 10) { // Limit attempts to prevent infinite loops
+                id = '';
+                for (let i = 0; i < 4; i++) {
+                    id += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                // Check if this ID already exists in Firestore's authors collection
+                const q = query(collection(db, "authors"), where("creatorId", "==", id));
+                const querySnapshot = await getDocs(q); // Use getDocs for a one-time read
+                if (querySnapshot.empty) {
+                    isUnique = true;
+                }
+                attempts++;
+            }
+            if (!isUnique) {
+                throw new Error("Could not generate a unique Creator ID after several attempts.");
+            }
+            return id;
+        }
+
+        // --- Register Form Submission ---
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const pin = document.getElementById('registerPin').value;
+            const confirmPin = document.getElementById('registerConfirmPin').value;
+            const authorName = document.getElementById('registerAuthorName').value;
+            const whatsapp = document.getElementById('registerWhatsapp').value;
+
+            if (pin !== confirmPin) {
+                showMessage("PINs do not match!", "error");
+                return;
+            }
+            if (pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+                showMessage("PIN must be exactly 6 digits.", "error");
+                return;
+            }
+
+            try {
+                // 1. Create user with email and PIN (Firebase Auth)
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pin);
+                const user = userCredential.user;
+
+                // 2. Generate unique Creator ID
+                const creatorId = await generateUniqueCreatorId();
+
+                // 3. Store data in Realtime Database (for sensitive info like PIN and WhatsApp)
+                await rtdbSet(rtdbRef(rtdb, `creators/${user.uid}`), {
+                    email: email,
+                    pin: pin,
+                    whatsapp: whatsapp,
+                    creatorId: creatorId,
+                    emailVerified: false // Set to false initially
+                });
+
+                // 4. Store public data in Firestore (for author name and creator ID)
+                await setDoc(doc(db, "authors", user.uid), {
+                    name: authorName,
+                    creatorId: creatorId,
+                    uid: user.uid
+                });
+
+                // 5. Send magic link for email verification
+                await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+
+                // Save email to local storage to retrieve it on the verification page
+                localStorage.setItem('emailForSignIn', email);
+
+                showMessage("Registration successful! Please check your email for a verification link to complete your registration.", "success");
+                // After successful registration, redirect to login page
+                setTimeout(() => {
+                    loginForm.style.display = 'block';
+                    registerForm.style.display = 'none';
+                    authTitle.textContent = 'Login as Creator';
+                    toggleText.textContent = "Don't have an account?";
+                    toggleAuth.textContent = 'Register here';
+                    messageDiv.style.display = 'none'; // Clear message after redirect
+                    e.target.reset(); // Clear the form
+                }, 3000); // Redirect after 3 seconds
+
+            } catch (error) {
+                let errorMessage = "Registration failed. Please try again.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "This email is already registered. Please log in or use 'Forgot Password'.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Invalid email address.";
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = "PIN is too weak. Please use a stronger combination (Firebase Auth sees PIN as password).";
+                }
+                showMessage(errorMessage, "error");
+                console.error("Registration error:", error);
+            }
+        });
+
+        // --- Login Form Submission ---
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pin = document.getElementById('loginPin').value;
+
+            if (pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+                showMessage("PIN must be exactly 6 digits.", "error");
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, pin);
+                const user = userCredential.user;
+
+                // Fetch user data from Realtime Database to check emailVerified status
+                const creatorRtdbRef = rtdbRef(rtdb, `creators/${user.uid}`);
+                const snapshot = await rtdbGet(creatorRtdbRef);
+
+                let isEmailVerifiedInRTDB = false;
+                if (snapshot.exists()) {
+                    isEmailVerifiedInRTDB = snapshot.val().emailVerified;
+                }
+
+                if (!user.emailVerified || !isEmailVerifiedInRTDB) {
+                    // If Firebase Auth says not verified OR our RTDB says not verified
+                    // This covers cases where email is verified via magic link but RTDB not updated yet
+                    showMessage("Your email is not verified. A verification link has been sent to your email. Please click the link to continue.", "error");
+                    await sendSignInLinkToEmail(auth, email, actionCodeSettings); // Resend magic link
+                    await signOut(auth); // Log out the user to force verification via link
+                    return;
+                }
+
+                // If email is verified in Auth and RTDB, proceed to web_creator.html
+                showMessage("Login successful! Redirecting to creator page...", "success");
+                setTimeout(() => {
+                    window.location.href = 'web_creator.html';
+                }, 2000);
+
+            } catch (error) {
+                let errorMessage = "Login failed. Invalid email or PIN.";
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    errorMessage = "Invalid email or PIN. Please check your credentials.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Invalid email address format.";
+                }
+                showMessage(errorMessage, "error");
+                console.error("Login error:", error);
+            }
+        });
+
+        // --- Handle Magic Link Sign-In on Page Load ---
+        // This runs when the page is loaded after clicking a magic link
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = localStorage.getItem('emailForSignIn');
+            if (!email) {
+                email = prompt('Please provide your email for confirmation:');
+            }
+            if (email) {
+                localStorage.setItem('processingMagicLink', 'true'); // Flag to prevent immediate redirect by onAuthStateChanged
+                showMessage("Verifying your email. Please wait...", "success");
+                signInWithEmailLink(auth, email, window.location.href)
+                    .then(async (result) => {
+                        const user = result.user;
+                        // Update emailVerified status in Realtime Database after successful magic link sign-in
+                        const creatorRtdbRef = rtdbRef(rtdb, `creators/${user.uid}`);
+                        const snapshot = await rtdbGet(creatorRtdbRef);
+                        if (snapshot.exists()) {
+                            await rtdbSet(creatorRtdbRef, { ...snapshot.val(), emailVerified: true });
+                        } else {
+                            // Fallback: If for some reason RTDB entry is missing, create a basic one
+                            const authorDocSnap = await getDoc(doc(db, "authors", user.uid));
+                            let creatorId = '';
+                            if (authorDocSnap.exists()) {
+                                creatorId = authorDocSnap.data().creatorId;
+                            } else {
+                                // This scenario should ideally not happen if registration worked
+                                creatorId = await generateUniqueCreatorId();
+                                await setDoc(doc(db, "authors", user.uid), { name: "Creator", creatorId: creatorId, uid: user.uid });
+                            }
+                            await rtdbSet(creatorRtdbRef, {
+                                email: user.email,
+                                pin: 'N/A', // PIN not available from magic link sign-in
+                                whatsapp: 'N/A',
+                                creatorId: creatorId,
+                                emailVerified: true
+                            });
+                        }
+
+                        localStorage.removeItem('emailForSignIn');
+                        localStorage.removeItem('processingMagicLink');
+                        showMessage("Email successfully verified! Redirecting to creator page...", "success");
+                        setTimeout(() => {
+                            window.location.href = 'web_creator.html';
+                        }, 1500);
+                    })
+                    .catch((error) => {
+                        localStorage.removeItem('emailForSignIn');
+                        localStorage.removeItem('processingMagicLink');
+                        let errorMessage = "Error verifying email. Please try again or log in directly.";
+                        if (error.code === 'auth/invalid-action-code') {
+                            errorMessage = "Invalid or expired verification link. Please register again.";
+                        } else if (error.code === 'auth/invalid-email') {
+                            errorMessage = "The email address associated with this link is invalid.";
+                        }
+                        showMessage(errorMessage, "error");
+                        console.error("Error signing in with email link:", error);
+                    });
+            } else {
+                showMessage("Email not provided for verification.", "error");
+            }
+        }
+
+        // --- On Auth State Changed Listener ---
+        // This listener checks the user's authentication status globally
+        onAuthStateChanged(auth, async (user) => {
+            // Only proceed if a user is logged in, email is verified, and we are not currently processing a magic link
+            if (user && user.emailVerified && !localStorage.getItem('processingMagicLink')) {
+                const creatorRtdbRef = rtdbRef(rtdb, `creators/${user.uid}`);
+                const snapshot = await rtdbGet(creatorRtdbRef);
+                
+                // Ensure RTDB emailVerified status is updated if user is verified via Auth state
+                if (snapshot.exists() && !snapshot.val().emailVerified) {
+                    await rtdbSet(creatorRtdbRef, { ...snapshot.val(), emailVerified: true });
+                }
+                
+                // Redirect only if not already on web_creator.html to avoid unnecessary redirects
+                if (window.location.pathname !== '/web_creator.html') {
+                    window.location.href = 'web_creator.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
