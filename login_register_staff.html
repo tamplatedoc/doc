@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login / Register - AMDF.GROUP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --background-start: #f0f2f5;
+            --background-end: #e0e2e5;
+            --text-color: #333;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --header-border: #eee;
+            --container-bg: #ffffff;
+            --container-border: #ddd;
+            --container-shadow: rgba(0, 0, 0, 0.08);
+            --button-bg-gradient-start: #6a11cb;
+            --button-bg-gradient-end: #2575fc;
+            --button-text-color: #fff;
+            --link-color: #007bff;
+            --input-bg: #f9f9f9;
+            --input-border: #ccc;
+            --input-text: #333;
+            --toggle-bg: #ddd;
+            --toggle-circle-bg: #fff;
+            --toggle-shadow: rgba(0, 0, 0, 0.2);
+            --footer-bg: #333;
+            --footer-text: #eee;
+        }
+
+        body.dark-mode {
+            --background-start: #1a1a2e;
+            --background-end: #16213e;
+            --text-color: #e0e0e0;
+            --header-bg: rgba(26, 26, 46, 0.9);
+            --header-border: #333;
+            --container-bg: #22253b;
+            --container-border: #444;
+            --container-shadow: rgba(0, 0, 0, 0.4);
+            --button-bg-gradient-start: #8e2de2;
+            --button-bg-gradient-end: #4a00e0;
+            --button-text-color: #fff;
+            --link-color: #8e2de2;
+            --input-bg: #33364f;
+            --input-border: #555;
+            --input-text: #e0e0e0;
+            --toggle-bg: #555;
+            --toggle-circle-bg: #bbb;
+            --toggle-shadow: rgba(0, 0, 0, 0.4);
+            --footer-bg: #111;
+            --footer-text: #bbb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--header-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--container-shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start), var(--button-bg-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-back {
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        .mode-toggle {
+            width: 50px;
+            height: 25px;
+            background-color: var(--toggle-bg);
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .mode-toggle .circle {
+            width: 20px;
+            height: 20px;
+            background-color: var(--toggle-circle-bg);
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 2.5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 2px 5px var(--toggle-shadow);
+        }
+
+        body.dark-mode .mode-toggle .circle {
+            transform: translateX(25px);
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 5%;
+        }
+
+        .auth-container {
+            background-color: var(--container-bg);
+            border: 1px solid var(--container-border);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--container-shadow);
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .auth-container h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .auth-container .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .auth-container .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        body.dark-mode .auth-container .message.success {
+            background-color: #214b2d;
+            color: #d4edda;
+            border: 1px solid #3c763d;
+        }
+
+        .auth-container .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        body.dark-mode .auth-container .message.error {
+            background-color: #6d1e24;
+            color: #f8d7da;
+            border: 1px solid #a83d47;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--link-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        .auth-toggle {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .auth-toggle a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: text-decoration 0.2s ease;
+        }
+
+        .auth-toggle a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-container button {
+            width: 100%;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.9rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .auth-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            text-align: center;
+            padding: 1.5rem 5%;
+            margin-top: auto;
+            border-top: 1px solid var(--header-border);
+        }
+
+        footer nav a {
+            color: var(--footer-text);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer nav a:hover {
+            color: var(--link-color);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem 4%;
+            }
+            .logo {
+                margin-bottom: 1rem;
+            }
+            .btn-back {
+                width: calc(100% - 60px);
+                text-align: center;
+            }
+            .mode-toggle {
+                position: absolute;
+                right: 15px;
+                top: 25px;
+            }
+            main {
+                padding: 1.5rem 4%;
+            }
+            .auth-container {
+                padding: 1.5rem;
+            }
+            .auth-container h2 {
+                font-size: 1.8rem;
+            }
+            .form-group input, .auth-container button {
+                padding: 0.7rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 1rem;
+            }
+            .auth-container h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="catalog.html" class="logo">AMDF.GROUP</a>
+        <div style="display: flex; align-items: center;">
+            <a href="catalog.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
+            <div class="mode-toggle" onclick="toggleDarkMode()">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="auth-container">
+            <h2 id="authTitle">Staff Login</h2>
+            <div id="message" class="message" style="display:none;"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="staff.email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="********" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+
+            <form id="registerForm" style="display:none;">
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" placeholder="staff.email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Create Password</label>
+                    <input type="password" id="registerPassword" placeholder="********" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirm Password</label>
+                    <input type="password" id="registerConfirmPassword" placeholder="********" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerStaffId">Staff ID (4 digits)</label>
+                    <input type="text" id="registerStaffId" placeholder="e.g., S123" maxlength="4" required>
+                </div>
+                <button type="submit">Register Staff</button>
+            </form>
+
+            <div class="auth-toggle">
+                <span id="toggleText">New Staff?</span>
+                <a href="#" id="toggleAuth">Register here</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
+        <nav>
+            <a href="#about">About Us</a> |
+            <a href="#privacy">Privacy Policy</a> |
+            <a href="#terms">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { getDatabase, ref as rtdbRef, set as rtdbSet, get as rtdbGet, child as rtdbChild } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+            authDomain: "tamplatedoc.firebaseapp.com",
+            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tamplatedoc",
+            storageBucket: "tamplatedoc.firebasestorage.app",
+            messagingSenderId: "264966107720",
+            appId: "1:264966107720:web:868abe93cdff209040de7d",
+            measurementId: "G-S5WTZ7S5PG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', applyTheme);
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme();
+
+    const toggleButton = document.getElementById('darkModeToggle');
+    if (toggleButton) {
+        toggleButton.addEventListener('click', toggleDarkMode);
+    }
+});
+
+        const authTitle = document.getElementById('authTitle');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const toggleAuth = document.getElementById('toggleAuth');
+        const toggleText = document.getElementById('toggleText');
+        const messageDiv = document.getElementById('message');
+
+        toggleAuth.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                authTitle.textContent = 'Staff Login';
+                toggleText.textContent = "New Staff?";
+                toggleAuth.textContent = 'Register here';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                authTitle.textContent = 'Register Staff';
+                toggleText.textContent = "Already Staff?";
+                toggleAuth.textContent = 'Login here';
+            }
+            messageDiv.style.display = 'none';
+        });
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+        }
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const staffId = document.getElementById('registerStaffId').value;
+
+            if (password !== confirmPassword) {
+                showMessage("Passwords do not match!", "error");
+                return;
+            }
+            if (password.length < 6) {
+                showMessage("Password should be at least 6 characters.", "error");
+                return;
+            }
+            if (staffId.length !== 4) {
+                showMessage("Staff ID must be exactly 4 characters.", "error");
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                await setDoc(doc(db, "staffs", user.uid), {
+                    email: email,
+                    staffId: staffId,
+                    role: "pending",
+                    uid: user.uid
+                });
+
+                showMessage("Registration successful! Waiting for admin approval...", "success");
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
+
+            } catch (error) {
+                let errorMessage = "Registration failed. Please try again.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "This email is already registered.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Invalid email address.";
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = "Password is too weak.";
+                }
+                showMessage(errorMessage, "error");
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                const staffDocRef = doc(db, "staffs", user.uid);
+                const staffDocSnap = await getDoc(staffDocRef);
+
+                if (staffDocSnap.exists() && staffDocSnap.data().role === 'approved') {
+                    showMessage("Login successful! Redirecting to staff dashboard...", "success");
+                    setTimeout(() => {
+                        window.location.href = 'web_staff_dashboard.html';
+                    }, 2000);
+                } else {
+                    await auth.signOut();
+                    showMessage("Access denied. Your staff account is not approved or does not exist.", "error");
+                }
+
+            } catch (error) {
+                let errorMessage = "Login failed. Invalid email or password.";
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    errorMessage = "Invalid email or password. Please check your credentials.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Invalid email address format.";
+                }
+                showMessage(errorMessage, "error");
+            }
+        });
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+            }
+        });
+    </script>
+</body>
+</html>
