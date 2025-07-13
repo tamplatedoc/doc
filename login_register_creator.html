@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -445,7 +444,22 @@
         const actionCodeSettings = {
             url: window.location.origin + '/web_creator.html', // URL to redirect after verification
             handleCodeInApp: true,
+            // 🚨 PENTING: Set expiration duration here (dalam milidetik)
+            // Firebase Link Expiration Options:
+            // https://firebase.google.com/docs/auth/web/email-link-auth#additional_options
+            // Untuk 5 menit: 5 * 60 * 1000 = 300000 milidetik
+            android: {
+                packageName: 'com.your.android.package', // Ganti dengan package Android Anda jika ada
+                installApp: true,
+                minimumVersion: '12'
+            },
+            ios: {
+                bundleId: 'com.your.ios.bundleid', // Ganti dengan bundle iOS Anda jika ada
+                installApp: true
+            },
+            dynamicLinkDomain: 'amdfgroup.page.link' // Ganti dengan custom domain Dynamic Links Anda
         };
+
 
         // --- Toggle between Login and Register Forms ---
         toggleAuth.addEventListener('click', (e) => {
@@ -531,7 +545,7 @@
                     pin: pin,
                     whatsapp: whatsapp,
                     creatorId: creatorId,
-                    emailVerified: false // Set to false initially
+                    emailVerified: false // Set to false initially, verification is done AFTER login
                 });
 
                 // 4. Store public data in Firestore (for author name and creator ID)
@@ -541,13 +555,10 @@
                     uid: user.uid
                 });
 
-                // 5. Send magic link for email verification
-                await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+                // 🚨 Perubahan: Tidak lagi mengirim magic link setelah registrasi.
+                // Pengguna akan diminta login setelah register.
 
-                // Save email to local storage to retrieve it on the verification page
-                localStorage.setItem('emailForSignIn', email);
-
-                showMessage("Registration successful! Please check your email for a verification link to complete your registration.", "success");
+                showMessage("Registration successful! Please proceed to login.", "success");
                 // After successful registration, redirect to login page
                 setTimeout(() => {
                     loginForm.style.display = 'block';
@@ -597,27 +608,35 @@
                     isEmailVerifiedInRTDB = snapshot.val().emailVerified;
                 }
 
+                // Jika email belum diverifikasi (baik di Auth maupun di RTDB)
                 if (!user.emailVerified || !isEmailVerifiedInRTDB) {
-                    // If Firebase Auth says not verified OR our RTDB says not verified
-                    // This covers cases where email is verified via magic link but RTDB not updated yet
-                    showMessage("Your email is not verified. A verification link has been sent to your email. Please click the link to continue.", "error");
-                    await sendSignInLinkToEmail(auth, email, actionCodeSettings); // Resend magic link
-                    await signOut(auth); // Log out the user to force verification via link
-                    return;
+                    showMessage("Email Anda belum terverifikasi. Kami telah mengirimkan tautan verifikasi ke email Anda. Silakan klik tautan tersebut untuk melanjutkan.", "info");
+                    
+                    // 🚨 Perubahan: Kirim magic link DI SINI, setelah login berhasil
+                    await sendSignInLinkToEmail(auth, email, actionCodeSettings); 
+                    
+                    // Simpan email ke local storage untuk digunakan saat verifikasi link
+                    localStorage.setItem('emailForSignIn', email);
+                    
+                    // Log out user agar mereka harus sign-in ulang melalui magic link
+                    await signOut(auth); 
+                    return; // Hentikan proses login
                 }
 
-                // If email is verified in Auth and RTDB, proceed to web_creator.html
-                showMessage("Login successful! Redirecting to creator page...", "success");
+                // Jika email sudah diverifikasi, lanjutkan ke halaman creator
+                showMessage("Login berhasil! Mengarahkan ke halaman kreator...", "success");
                 setTimeout(() => {
                     window.location.href = 'https://amdf.web.id/web_creator.html';
                 }, 2000);
 
             } catch (error) {
-                let errorMessage = "Login failed. Invalid email or PIN.";
+                let errorMessage = "Login gagal. Email atau PIN salah.";
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-                    errorMessage = "Invalid email or PIN. Please check your credentials.";
+                    errorMessage = "Email atau PIN salah. Silakan periksa kredensial Anda.";
                 } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = "Invalid email address format.";
+                    errorMessage = "Format alamat email tidak valid.";
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = "Terlalu banyak percobaan login. Silakan coba lagi nanti.";
                 }
                 showMessage(errorMessage, "error");
                 console.error("Login error:", error);
@@ -625,37 +644,38 @@
         });
 
         // --- Handle Magic Link Sign-In on Page Load ---
-        // This runs when the page is loaded after clicking a magic link
+        // Ini dijalankan ketika halaman dimuat setelah mengklik tautan magic link
         if (isSignInWithEmailLink(auth, window.location.href)) {
             let email = localStorage.getItem('emailForSignIn');
             if (!email) {
-                email = prompt('Please provide your email for confirmation:');
+                email = prompt('Silakan berikan email Anda untuk konfirmasi:');
             }
             if (email) {
-                localStorage.setItem('processingMagicLink', 'true'); // Flag to prevent immediate redirect by onAuthStateChanged
-                showMessage("Verifying your email. Please wait...", "success");
+                // Set flag untuk mencegah onAuthStateChanged mengarahkan secara langsung
+                localStorage.setItem('processingMagicLink', 'true'); 
+                showMessage("Memverifikasi email Anda. Mohon tunggu...", "success");
                 signInWithEmailLink(auth, email, window.location.href)
                     .then(async (result) => {
                         const user = result.user;
-                        // Update emailVerified status in Realtime Database after successful magic link sign-in
+                        // Update emailVerified status di Realtime Database setelah berhasil sign-in magic link
                         const creatorRtdbRef = rtdbRef(rtdb, `creators/${user.uid}`);
                         const snapshot = await rtdbGet(creatorRtdbRef);
                         if (snapshot.exists()) {
                             await rtdbSet(creatorRtdbRef, { ...snapshot.val(), emailVerified: true });
                         } else {
-                            // Fallback: If for some reason RTDB entry is missing, create a basic one
+                            // Fallback: Jika entri RTDB tidak ada, buat yang dasar.
+                            // Skenario ini seharusnya tidak terjadi jika registrasi berhasil.
                             const authorDocSnap = await getDoc(doc(db, "authors", user.uid));
                             let creatorId = '';
                             if (authorDocSnap.exists()) {
                                 creatorId = authorDocSnap.data().creatorId;
                             } else {
-                                // This scenario should ideally not happen if registration worked
-                                creatorId = await generateUniqueCreatorId();
+                                creatorId = await generateUniqueCreatorId(); // Buat ID baru jika tidak ada
                                 await setDoc(doc(db, "authors", user.uid), { name: "Creator", creatorId: creatorId, uid: user.uid });
                             }
                             await rtdbSet(creatorRtdbRef, {
                                 email: user.email,
-                                pin: 'N/A', // PIN not available from magic link sign-in
+                                pin: 'N/A', // PIN tidak tersedia dari sign-in magic link
                                 whatsapp: 'N/A',
                                 creatorId: creatorId,
                                 emailVerified: true
@@ -663,46 +683,65 @@
                         }
 
                         localStorage.removeItem('emailForSignIn');
-                        localStorage.removeItem('processingMagicLink');
-                        showMessage("Email successfully verified! Redirecting to creator page...", "success");
+                        localStorage.removeItem('processingMagicLink'); // Hapus flag
+                        showMessage("Email berhasil diverifikasi! Mengarahkan ke halaman kreator...", "success");
                         setTimeout(() => {
-                            window.location.href = 'web_creator.html';
+                            window.location.href = 'web_creator.html'; // Arahkan ke halaman creator
                         }, 1500);
                     })
                     .catch((error) => {
                         localStorage.removeItem('emailForSignIn');
-                        localStorage.removeItem('processingMagicLink');
-                        let errorMessage = "Error verifying email. Please try again or log in directly.";
+                        localStorage.removeItem('processingMagicLink'); // Hapus flag
+                        let errorMessage = "Kesalahan saat memverifikasi email. Silakan coba lagi atau login langsung.";
                         if (error.code === 'auth/invalid-action-code') {
-                            errorMessage = "Invalid or expired verification link. Please register again.";
+                            errorMessage = "Tautan verifikasi tidak valid atau sudah kadaluarsa. Silakan login kembali dan minta tautan baru.";
                         } else if (error.code === 'auth/invalid-email') {
-                            errorMessage = "The email address associated with this link is invalid.";
+                            errorMessage = "Alamat email yang terkait dengan tautan ini tidak valid.";
                         }
                         showMessage(errorMessage, "error");
                         console.error("Error signing in with email link:", error);
                     });
             } else {
-                showMessage("Email not provided for verification.", "error");
+                showMessage("Email tidak disediakan untuk verifikasi.", "error");
             }
         }
 
         // --- On Auth State Changed Listener ---
-        // This listener checks the user's authentication status globally
+        // Ini adalah listener global yang memeriksa status autentikasi pengguna
+        // Ini akan memicu redirect jika user sudah login dan emailnya verified.
         onAuthStateChanged(auth, async (user) => {
-            // Only proceed if a user is logged in, email is verified, and we are not currently processing a magic link
+            // Cek jika user login, email terverifikasi, dan bukan sedang proses magic link
             if (user && user.emailVerified && !localStorage.getItem('processingMagicLink')) {
                 const creatorRtdbRef = rtdbRef(rtdb, `creators/${user.uid}`);
                 const snapshot = await rtdbGet(creatorRtdbRef);
                 
-                // Ensure RTDB emailVerified status is updated if user is verified via Auth state
-                if (snapshot.exists() && !snapshot.val().emailVerified) {
+                let isEmailVerifiedInRTDB = false;
+                if (snapshot.exists()) {
+                    isEmailVerifiedInRTDB = snapshot.val().emailVerified;
+                }
+
+                // Jika email terverifikasi di Auth tapi belum di RTDB, update RTDB
+                if (user.emailVerified && snapshot.exists() && !isEmailVerifiedInRTDB) {
                     await rtdbSet(creatorRtdbRef, { ...snapshot.val(), emailVerified: true });
                 }
-                
-                // Redirect only if not already on web_creator.html to avoid unnecessary redirects
-                if (window.location.pathname !== '/web_creator.html') {
-                    window.location.href = 'web_creator.html';
+
+                // Cek lagi status verifikasi setelah memastikan RTDB terupdate
+                if (user.emailVerified && (snapshot.exists() ? snapshot.val().emailVerified : true)) {
+                    // Hanya redirect jika belum ada di halaman web_creator.html
+                    if (window.location.pathname !== '/web_creator.html' && window.location.pathname !== '/web_creator.html/') {
+                        window.location.href = 'https://amdf.web.id/web_creator.html';
+                    }
+                } else if (user && !user.emailVerified) {
+                    // Jika user login tapi email belum terverifikasi (ini hanya akan terjadi jika user login dengan PIN tanpa verifikasi email)
+                    // Kita tidak perlu send link lagi di sini, karena sudah ditangani di loginForm submit.
+                    // Cukup pastikan mereka tetap di halaman login/register sampai diverifikasi.
+                    showMessage("Email Anda belum terverifikasi. Silakan cek email Anda untuk tautan verifikasi.", "info");
+                    await signOut(auth); // Log out user untuk memaksa verifikasi via link
                 }
+            } else if (!user && window.location.pathname === '/web_creator.html') {
+                // Jika tidak ada user dan kita berada di web_creator.html, kembalikan ke login
+                // Ini menangani kasus magic link kadaluarsa atau user log out
+                window.location.href = 'https://amdf.web.id/login_register_creator.html';
             }
         });
     </script>
