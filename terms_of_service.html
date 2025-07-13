@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - AMDF.GROUP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* (Sertakan CSS yang sama dari about.html di sini) */
+        :root {
+            --background-start: #f0f2f5;
+            --background-end: #e0e2e5;
+            --text-color: #333;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --header-border: #eee;
+            --container-bg: #ffffff;
+            --container-border: #ddd;
+            --container-shadow: rgba(0, 0, 0, 0.08);
+            --button-bg-gradient-start: #6a11cb;
+            --button-bg-gradient-end: #2575fc;
+            --button-text-color: #fff;
+            --link-color: #007bff;
+            --input-bg: #f9f9f9;
+            --input-border: #ccc;
+            --input-text: #333;
+            --toggle-bg: #ddd;
+            --toggle-circle-bg: #fff;
+            --toggle-shadow: rgba(0, 0, 0, 0.2);
+            --footer-bg: #333;
+            --footer-text: #eee;
+        }
+
+        body.dark-mode {
+            --background-start: #1a1a2e;
+            --background-end: #16213e;
+            --text-color: #e0e0e0;
+            --header-bg: rgba(26, 26, 46, 0.9);
+            --header-border: #333;
+            --container-bg: #22253b;
+            --container-border: #444;
+            --container-shadow: rgba(0, 0, 0, 0.4);
+            --button-bg-gradient-start: #8e2de2;
+            --button-bg-gradient-end: #4a00e0;
+            --button-text-color: #fff;
+            --link-color: #8e2de2;
+            --input-bg: #33364f;
+            --input-border: #555;
+            --input-text: #e0e0e0;
+            --toggle-bg: #555;
+            --toggle-circle-bg: #bbb;
+            --toggle-shadow: rgba(0, 0, 0, 0.4);
+            --footer-bg: #111;
+            --footer-text: #bbb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--header-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px var(--container-shadow);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            background: linear-gradient(45deg, var(--button-bg-gradient-start), var(--button-bg-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-back {
+            background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+            color: var(--button-text-color);
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        .mode-toggle {
+            width: 50px;
+            height: 25px;
+            background-color: var(--toggle-bg);
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .mode-toggle .circle {
+            width: 20px;
+            height: 20px;
+            background-color: var(--toggle-circle-bg);
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 2.5px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 2px 5px var(--toggle-shadow);
+        }
+
+        body.dark-mode .mode-toggle .circle {
+            transform: translateX(25px);
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 2rem 5%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            background-color: var(--container-bg);
+            border: 1px solid var(--container-border);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px var(--container-shadow);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-section h1, .info-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            text-align: center;
+        }
+        .info-section h2 {
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .info-section p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            color: var(--text-color);
+        }
+        .info-section ol, .info-section ul {
+            margin-bottom: 1rem;
+            padding-left: 20px;
+        }
+        .info-section ol li, .info-section ul li {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            text-align: center;
+            padding: 1.5rem 5%;
+            margin-top: auto;
+            border-top: 1px solid var(--header-border);
+        }
+
+        footer nav a {
+            color: var(--footer-text);
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer nav a:hover {
+            color: var(--link-color);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem 4%;
+            }
+            .logo {
+                margin-bottom: 1rem;
+            }
+            .btn-back {
+                width: calc(100% - 60px);
+                text-align: center;
+            }
+            .mode-toggle {
+                position: absolute;
+                right: 15px;
+                top: 25px;
+            }
+            main {
+                padding: 1.5rem 4%;
+            }
+            .info-section {
+                padding: 1.5rem;
+            }
+            .info-section h1, .info-section h2 {
+                font-size: 2rem;
+            }
+            .info-section p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-section h1, .info-section h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="catalog.html" class="logo">AMDF.GROUP</a>
+        <div style="display: flex; align-items: center;">
+            <a href="catalog.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Catalog</a>
+            <div class="mode-toggle" onclick="toggleDarkMode()">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="info-section">
+            <h1>Terms of Service</h1>
+            <p>Last updated: July 13, 2025</p>
+
+            <p>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the AMDF.GROUP website (the "Service") operated by AMDF.GROUP ("us", "we", or "our").</p>
+            <p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users, and others who access or use the Service.</p>
+            <p>By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service.</p>
+
+            <h2>Accounts</h2>
+            <p>When you create an account with us, you must provide us information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.</p>
+            <p>You are responsible for safeguarding the password (PIN for Creators) that you use to access the Service and for any activities or actions under your password, whether your password is with our Service or a third-party service.</p>
+            <p>You agree not to disclose your password (PIN) to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.</p>
+
+            <h2>Intellectual Property</h2>
+            <p>The Service and its original content (excluding content provided by users), features, and functionality are and will remain the exclusive property of AMDF.GROUP and its licensors.</p>
+            <p>As a Creator, you retain the copyright to your original stories and content submitted to AMDF.GROUP. By submitting content, you grant AMDF.GROUP a worldwide, non-exclusive, royalty-free license to host, display, reproduce, and distribute your content solely for the purpose of operating and promoting the Service.</p>
+
+            <h2>Links To Other Web Sites</h2>
+            <p>Our Service may contain links to third-party web sites or services that are not owned or controlled by AMDF.GROUP.</p>
+            <p>AMDF.GROUP has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that AMDF.GROUP shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such web sites or services.</p>
+            <p>We strongly advise you to read the terms and conditions and privacy policies of any third-party web sites or services that you visit.</p>
+
+            <h2>Termination</h2>
+            <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
+            <p>Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account, you may simply discontinue using the Service or contact us for account deletion.</p>
+
+            <h2>Content Restrictions and Moderation</h2>
+            <ul>
+                <li>Users (especially Creators) must not upload, post, or transmit any content that is illegal, harmful, threatening, abusive, defamatory, obscene, or racially or ethnically objectionable.</li>
+                <li>Content must not infringe on any intellectual property rights of others.</li>
+                <li>All submitted stories are subject to review by AMDF.GROUP staff and may be approved, rejected, or require revisions at our sole discretion.</li>
+            </ul>
+
+            <h2>Governing Law</h2>
+            <p>These Terms shall be governed and construed in accordance with the laws of [Your Country/Region], without regard to its conflict of law provisions.</p>
+            <p>Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our Service, and supersede and replace any prior agreements we might have between us regarding the Service.</p>
+
+            <h2>Changes</h2>
+            <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will try to provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
+            <p>By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.</p>
+
+            <h2>Contact Us</h2>
+            <p>If you have any questions about these Terms, please contact us:</p>
+            <ul>
+                <li>By email: support@amdf.group</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
+        <nav>
+            <a href="about.html">About Us</a> |
+            <a href="privacy_policy.html">Privacy Policy</a> |
+            <a href="terms_of_service.html">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script>
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    </script>
+</body>
+</html>
