@@ -623,7 +623,7 @@
                         window.localStorage.removeItem('emailForSignIn');
                         showMessage("Login successful via magic link. Redirecting...", "success");
                         // Redirect to the dashboard after successful magic link sign-in
-                        window.location.href = 'creator_dashboard.html'; // Or 'web_creator.html'
+                        window.location.href = 'web_creator.html'; // Or 'web_creator.html'
                     } catch (error) {
                         console.error("Error signing in with email link:", error);
                         showMessage("Magic link login failed: " + error.message + ". Please try again.", "error");
