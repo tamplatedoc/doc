@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>e book AMDF.GROUP  Catalog</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e book AMDF.GROUP  Catalog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="shortcut icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
-  <meta name="description" content="Koleksi e-book gratis, cerita fantasi, cerita roman, dan hiburan cerita menarik di Perpustakaan Digital. Baca gratis dan nikmati pengalaman membaca online." />
-  <meta name="keywords" content="ebook, cerita fantasi, cerita roman, hiburan cerita, koleksi cerita, perpustakaan digital, cerita online, buku gratis, bacaan online, cerita anak, cerita petualangan, novel digital" />
-  <meta name="author" content="Perpustakaan Digital" />
-  <meta name="robots" content="index, follow" />
-  <script type="application/ld+json">
+  <meta name="description" content="Koleksi e-book gratis, cerita fantasi, cerita roman, dan hiburan cerita menarik di Perpustakaan Digital. Baca gratis dan nikmati pengalaman membaca online." />
+  <meta name="keywords" content="ebook, cerita fantasi, cerita roman, hiburan cerita, koleksi cerita, perpustakaan digital, cerita online, buku gratis, bacaan online, cerita anak, cerita petualangan, novel digital" />
+  <meta name="author" content="Perpustakaan Digital" />
+  <meta name="robots" content="index, follow" />
+  <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Koleksi Cerita",
-  "alternateName": "AMDF.GROUP",
-  "url": "https://amdf.web.id",
-  "logo": "https://amdf.web.id/logo.png",
-  "description": "Website ini dibuat oleh siswa SMK Teknik Elektronika, berisi ebook dan kumpulan cerita fantasi dari berbagai creator pelajar.",
-  "email": "info@amdf.web.id",
-  "sameAs": [
-    "https://www.instagram.com/willtorya_?igsh=MWNlc2lqb2RycDFrNA=="
-  ]
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Koleksi Cerita",
+  "alternateName": "AMDF.GROUP",
+  "url": "https://amdf.web.id",
+  "logo": "https://amdf.web.id/logo.png",
+  "description": "Website ini dibuat oleh siswa SMK Teknik Elektronika, berisi ebook dan kumpulan cerita fantasi dari berbagai creator pelajar.",
+  "email": "info@amdf.web.id",
+  "sameAs": [
+    "https://www.instagram.com/willtorya_?igsh=MWNlc2lqb2RycDFrNA=="
+  ]
 }
 </script>
 <style>
@@ -506,318 +506,148 @@
 </style>
 </head>
 <body>
-    <header>
-        <a href="catalog.html" class="logo">AMDF.GROUP E-Books</a>
-        <div class="nav-links">
-            <a href="#" onclick="showSavedStories()">Cerita Tersimpan</a>
-            <a href="contact.html">Contact Us</a>
-            <a href="about.html">About</a>
-            <a href="privacy_policy.html">Privacy Policy</a>
-            <div class="mode-toggle" onclick="toggleDarkMode()">
-                <div class="circle"></div>
-            </div>
-        </div>
-        <div class="auth-buttons">
-            <a href="login_register_creator.html" class="btn">Login / Register</a>
-        </div>
-    </header>
+    <header>
+        <a href="catalog.html" class="logo">AMDF.GROUP E-Books</a>
+        <div class="nav-links">
+            <a href="contact.html">Contact Us</a>
+            <a href="about.html">About</a>
+            <a href="privacy_policy.html">Privacy Policy</a>
+            <div class="mode-toggle" onclick="toggleDarkMode()">
+                <div class="circle"></div>
+            </div>
+        </div>
+        <div class="auth-buttons">
+            <a href="login_register_creator.html" class="btn">Login / Register</a>
+        </div>
+    </header>
 
-    <main>
-        <section id="catalog-section" class="catalog-header active">             <h1>Discover Amazing Stories</h1>
-            <p>Dive into a world of captivating tales, from thrilling adventures to heartwarming romances. Enjoy free e-books and explore new narratives every day.</p>
-            <div class="creator-info">
-                If you wish to become a story creator and share your own narratives, please <a href="login_register_creator.html">Login or Register here</a>. Reading stories is always free and doesn't require an account.
-            </div>
+    <main>
+        <section id="catalog" class="catalog-header">
+            <h1>Discover Amazing Stories</h1>
+            <p>Dive into a world of captivating tales, from thrilling adventures to heartwarming romances. Enjoy free e-books and explore new narratives every day.</p>
+            <div class="creator-info">
+                If you wish to become a story creator and share your own narratives, please <a href="login_register_creator.html">Login or Register here</a>. Reading stories is always free and doesn't require an account.
+            </div>
 
-            <section class="search-filter-controls">
-                <input type="text" id="searchBar" placeholder="Search by title or author..." onkeyup="filterBooks()">
-                <select id="genreFilter" onchange="filterBooks()">
-                    <option value="">All Genres</option>
-                    <option value="Action">Action</option>
-                    <option value="Adventure">Adventure</option>
-                    <option value="Comedy">Comedy</option>
-                    <option value="Drama">Drama</option>
-                    <option value="Fantasy">Fantasy</option>
-                    <option value="Horror">Horror</option>
-                    <option value="Mystery">Mystery</option>
-                    <option value="Romance">Romance</option>
-                    <option value="Sci-Fi">Science Fiction</option>
-                    <option value="Thriller">Thriller</option>
-                    <option value="Historical">Historical</option>
-                    <option value="Slice of Life">Slice of Life</option>
-                    <option value="Supernatural">Supernatural</option>
-                    <option value="Biography">Biography</option>
-                    <option value="Young Adult">Young Adult</option>
-                    <option value="Children">Children</option>
-                    <option value="Poetry">Poetry</option>
-                    </select>
-            </section>
-        </section>
-
-        <section class="book-grid" id="bookGrid"></section>
-
-        <section id="saved-stories-section" class="saved-stories-section">
-            <h2>Cerita Tersimpan Anda 📚</h2>
-            <div class="book-grid saved-stories-grid" id="savedStoriesGrid">
-                </div>
+            <section class="search-filter-controls">
+                <input type="text" id="searchBar" placeholder="Search by title or author..." onkeyup="filterBooks()">
+                <select id="genreFilter" onchange="filterBooks()">
+                    <option value="">All Genres</option>
+                    <option value="Action">Action</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Sci-Fi">Science Fiction</option>
+                    <option value="Thriller">Thriller</option>
+                    <option value="Historical">Historical</option>
+                    <option value="Slice of Life">Slice of Life</option>
+                    <option value="Supernatural">Supernatural</option>
+                    <option value="Biography">Biography</option>
+                    <option value="Young Adult">Young Adult</option>
+                    <option value="Children">Children</option>
+                    <option value="Poetry">Poetry</option>
+                    </select>
+            </section>
         </section>
-    </main>
 
-    <footer>
-        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
-        <nav>
-            <a href="about.html">About Us</a> |
-            <a href="privacy_policy.html">Privacy Policy</a> |
-            <a href="terms_of_service.html">Terms of Service</a>
-        </nav>
-    </footer>
+        <section class="book-grid" id="bookGrid">
+            </section>
+    </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-        import { getDatabase, ref as rtdbRef, get as rtdbGet, child as rtdbChild } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
-        import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+    <footer>
+        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
+        <nav>
+            <a href="about.html">About Us</a> |
+            <a href="privacy_policy.html">Privacy Policy</a> |
+            <a href="terms_of_service.html">Terms of Service</a>
+        </nav>
+    </footer>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-            authDomain: "tamplatedoc.firebaseapp.com",
-            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "tamplatedoc",
-            storageBucket: "tamplatedoc.firebasestorage.app",
-            appId: "1:264966107720:web:868abe93cdff209040de7d",
-            measurementId: "G-S5WTZ7S5PG"
-        };
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getFirestore, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { getDatabase, ref as rtdbRef, get as rtdbGet, child as rtdbChild } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const rtdb = getDatabase(app);
-        const storage = getStorage(app);
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+            authDomain: "tamplatedoc.firebaseapp.com",
+            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tamplatedoc",
+            storageBucket: "tamplatedoc.firebasestorage.app",
+            appId: "1:264966107720:web:868abe93cdff209040de7d",
+            measurementId: "G-S5WTZ7S5PG"
+        };
 
-        let allStories = []; // Array to hold all fetched stories
-        const SAVED_STORIES_KEY = 'savedStories'; // Kunci untuk local storage
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+        const storage = getStorage(app);
 
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-            } else {
-                localStorage.setItem('theme', 'light');
-            }
-        }
-        window.toggleDarkMode = toggleDarkMode;
+        let allStories = []; // Array to hold all fetched stories
 
-        function applyTheme() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-        }
-
-        function generateStarRatingHtml(rating) {
-            let starsHtml = '';
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 !== 0;
-
-            for (let i = 0; i < fullStars; i++) {
-                starsHtml += '<i class="fas fa-star stars"></i>';
-            }
-            if (hasHalfStar) {
-                starsHtml += '<i class="fas fa-star-half-alt stars"></i>';
-            }
-            for (let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++) {
-                starsHtml += '<i class="far fa-star"></i>';
-            }
-            return starsHtml;
-        }
-
-        // Fungsi untuk mendapatkan cerita yang disimpan dari local storage
-        function getSavedStories() {
-            const savedStoriesJson = localStorage.getItem(SAVED_STORIES_KEY);
-            return savedStoriesJson ? JSON.parse(savedStoriesJson) : [];
-        }
-
-        // Fungsi untuk menyimpan cerita ke local storage
-        function saveStory(story) {
-            let savedStories = getSavedStories();
-            // Cek apakah cerita sudah ada di daftar
-            if (!savedStories.some(s => s.id === story.id)) {
-                savedStories.push(story);
-                localStorage.setItem(SAVED_STORIES_KEY, JSON.stringify(savedStories));
-                alert(`"${story.title}" telah disimpan!`);
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
             } else {
-                alert(`"${story.title}" sudah ada di daftar tersimpan.`);
-            }
-            // Perbarui tampilan jika sedang melihat cerita tersimpan
-            if (document.getElementById('saved-stories-section').classList.contains('active')) {
-                displaySavedStories();
+                localStorage.setItem('theme', 'light');
             }
         }
-        window.saveStory = saveStory; // Membuat fungsi dapat diakses secara global
+        window.toggleDarkMode = toggleDarkMode;
 
-        // Fungsi untuk menghapus cerita dari local storage
-        function removeSavedStory(storyId) {
-            let savedStories = getSavedStories();
-            const initialLength = savedStories.length;
-            savedStories = savedStories.filter(story => story.id !== storyId);
-            if (savedStories.length < initialLength) {
-                localStorage.setItem(SAVED_STORIES_KEY, JSON.stringify(savedStories));
-                alert("Cerita berhasil dihapus dari daftar tersimpan.");
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
             } else {
-                alert("Cerita tidak ditemukan di daftar tersimpan.");
+                document.body.classList.remove('dark-mode');
             }
-            // Perbarui tampilan jika sedang melihat cerita tersimpan
-            if (document.getElementById('saved-stories-section').classList.contains('active')) {
-                displaySavedStories();
-            }
-            // Juga perbarui tampilan di grid utama untuk tombol "Simpan"
-            displayBooks(allStories);
         }
-        window.removeSavedStory = removeSavedStory; // Membuat fungsi dapat diakses secara global
 
-        // Function to display books based on a given array of stories
-        async function displayBooks(storiesToDisplay, targetElementId = 'bookGrid', isSavedList = false) {
-            const bookGrid = document.getElementById(targetElementId);
-            bookGrid.innerHTML = ''; // Clear existing books
+        function generateStarRatingHtml(rating) {
+            let starsHtml = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
 
-            const savedStoryIds = getSavedStories().map(s => s.id);
+            for (let i = 0; i < fullStars; i++) {
+                starsHtml += '<i class="fas fa-star stars"></i>';
+            }
+            if (hasHalfStar) {
+                starsHtml += '<i class="fas fa-star-half-alt stars"></i>';
+            }
+            for (let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++) {
+                starsHtml += '<i class="far fa-star"></i>';
+            }
+            return starsHtml;
+        }
 
+        // Function to display books based on a given array of stories
+        async function displayBooks(storiesToDisplay) {
+            const bookGrid = document.getElementById('bookGrid');
+            bookGrid.innerHTML = ''; // Clear existing books
 
-            if (storiesToDisplay.length === 0) {
-                bookGrid.innerHTML = '<p style="text-align: center; color: var(--text-color);">No stories found matching your criteria.</p>';
-                return;
-            }
-
-            for (const story of storiesToDisplay) {
-                let views = 0;
-                let averageRating = 0;
-                let ratingsCount = 0;
-                let thumbnailUrl = 'https://via.placeholder.com/300x200/eee/333?text=No+Thumbnail';
-
-                try {
-                    const viewsSnapshot = await rtdbGet(rtdbChild(rtdbRef(rtdb), `storyViews/${story.id}/views`));
-                    if (viewsSnapshot.exists()) {
-                        views = viewsSnapshot.val();
-                    }
-                } catch (error) {
-                    console.error("Error fetching views for story", story.id, error);
-                }
-
-                try {
-                    const ratingsSnapshot = await rtdbGet(rtdbChild(rtdbRef(rtdb), `storyRatings/${story.id}/ratings`));
-                    if (ratingsSnapshot.exists()) {
-                        const ratingData = ratingsSnapshot.val();
-                        ratingsCount = ratingData.count || 0;
-                        if (ratingsCount > 0) {
-                            averageRating = (ratingData.total / ratingsCount).toFixed(1);
-                        }
-                    }
-                } catch (error) {
-                    console.error("Error fetching ratings for story", story.id, error);
-                }
-
-                if (story.thumbnailPath) {
-                    try {
-                        const imageRef = storageRef(storage, story.thumbnailPath);
-                        thumbnailUrl = await getDownloadURL(imageRef);
-                    } catch (error) {
-                        console.error("Error fetching thumbnail URL for story", story.id, error);
-                        thumbnailUrl = 'https://via.placeholder.com/300x200/eee/333?text=Image+Error';
-                    }
-                }
-
-                const card = document.createElement('div');
-                card.className = 'book-card';
-                card.setAttribute('data-story-id', story.id); // Set data-story-id
-                
-                const isStorySaved = savedStoryIds.includes(story.id);
-
-                card.innerHTML = `
-                    <div class="card-click-area" onclick="location.href = 'web_story.html?id=${story.id}'">
-                        <img src="${thumbnailUrl}" alt="Story Thumbnail" class="book-card-thumbnail">
-                        <div class="book-card-content">
-                            <h3>${story.title}</h3>
-                            <p>Author: ${story.authorName}</p>
-                            <p>Genre: ${story.genre || 'N/A'}</p>
-                            <div class="book-card-meta vertical-meta">
-                                <div class="rating">${generateStarRatingHtml(averageRating)} ${averageRating} (${ratingsCount} Ratings)</div>
-                                <div><i class="fas fa-eye"></i> ${views} Views</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-actions">
-                        ${isStorySaved ?
-                            `<button class="btn remove-btn" onclick="event.stopPropagation(); removeSavedStory('${story.id}')">Hapus Simpan</button>` :
-                            `<button class="btn save-btn" onclick="event.stopPropagation(); saveStory(${JSON.stringify(story).replace(/'/g, "&apos;")})">Simpan</button>`
-                        }
-                    </div>
-                `;
-                bookGrid.appendChild(card);
-            }
-        }
-
-
-        // Fetch all books once and store them
-        async function fetchAllStories() {
-            const storiesCollectionRef = collection(db, "stories");
-            const q = query(storiesCollectionRef);
-
-            try {
-                const querySnapshot = await getDocs(q);
-                allStories = querySnapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .filter(story => story.status === 'approved'); // Filter approved stories initially
-                
-                displayBooks(allStories); // Display all approved books on initial load
-            } catch (error) {
-                console.error("Error fetching all stories:", error);
-                document.getElementById('bookGrid').innerHTML = '<p style="text-align: center; color: var(--text-color);">Failed to load stories. Please try again later.</p>';
-            }
-        }
-
-        // Function to filter books based on search input and genre selection
-        function filterBooks() {
-            const searchInput = document.getElementById('searchBar').value.toLowerCase();
-            const selectedGenre = document.getElementById('genreFilter').value;
-
-            const filteredStories = allStories.filter(story => {
-                const matchesSearch = story.title.toLowerCase().includes(searchInput) ||
-                                      story.authorName.toLowerCase().includes(searchInput);
-                const matchesGenre = selectedGenre === "" || (story.genre && story.genre === selectedGenre); // Ensure story.genre exists
-
-                return matchesSearch && matchesGenre;
-            });
-
-            displayBooks(filteredStories);
-        }
-        window.filterBooks = filterBooks; // Make it globally accessible for onkeyup/onchange
-
-        // Fungsi untuk menampilkan cerita yang disimpan
-        async function displaySavedStories() {
-            const savedStories = getSavedStories();
-            const savedStoriesGrid = document.getElementById('savedStoriesGrid');
-            savedStoriesGrid.innerHTML = ''; // Kosongkan grid cerita tersimpan
-
-            if (savedStories.length === 0) {
-                savedStoriesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color);">Anda belum menyimpan cerita apapun. Jelajahi katalog dan simpan cerita favorit Anda!</p>';
+            if (storiesToDisplay.length === 0) {
+                bookGrid.innerHTML = '<p style="text-align: center; color: var(--text-color);">No stories found matching your criteria.</p>';
                 return;
             }
 
-            // Untuk setiap cerita yang disimpan, tampilkan di grid
-            for (const story of savedStories) {
+            for (const story of storiesToDisplay) {
                 let views = 0;
                 let averageRating = 0;
                 let ratingsCount = 0;
                 let thumbnailUrl = 'https://via.placeholder.com/300x200/eee/333?text=No+Thumbnail';
 
-                // Ambil data views dan ratings (sama seperti di displayBooks)
                 try {
                     const viewsSnapshot = await rtdbGet(rtdbChild(rtdbRef(rtdb), `storyViews/${story.id}/views`));
                     if (viewsSnapshot.exists()) {
                         views = viewsSnapshot.val();
                     }
                 } catch (error) {
-                    console.error("Error fetching views for saved story", story.id, error);
+                    console.error("Error fetching views for story", story.id, error);
                 }
 
                 try {
@@ -830,7 +660,7 @@
                         }
                     }
                 } catch (error) {
-                    console.error("Error fetching ratings for saved story", story.id, error);
+                    console.error("Error fetching ratings for story", story.id, error);
                 }
 
                 if (story.thumbnailPath) {
@@ -838,69 +668,68 @@
                         const imageRef = storageRef(storage, story.thumbnailPath);
                         thumbnailUrl = await getDownloadURL(imageRef);
                     } catch (error) {
-                        console.error("Error fetching thumbnail URL for saved story", story.id, error);
+                        console.error("Error fetching thumbnail URL for story", story.id, error);
                         thumbnailUrl = 'https://via.placeholder.com/300x200/eee/333?text=Image+Error';
                     }
                 }
 
                 const card = document.createElement('div');
                 card.className = 'book-card';
-                card.setAttribute('data-story-id', story.id);
+                card.onclick = () => location.href = `web_story.html?id=${story.id}`;
                 card.innerHTML = `
-                    <div class="card-click-area" onclick="location.href = 'web_story.html?id=${story.id}'">
-                        <img src="${thumbnailUrl}" alt="Story Thumbnail" class="book-card-thumbnail">
-                        <div class="book-card-content">
-                            <h3>${story.title}</h3>
-                            <p>Author: ${story.authorName}</p>
-                            <p>Genre: ${story.genre || 'N/A'}</p>
-                            <div class="book-card-meta vertical-meta">
-                                <div class="rating">${generateStarRatingHtml(averageRating)} ${averageRating} (${ratingsCount} Ratings)</div>
-                                <div><i class="fas fa-eye"></i> ${views} Views</div>
-                            </div>
+                    <img src="${thumbnailUrl}" alt="Story Thumbnail" class="book-card-thumbnail">
+                    <div class="book-card-content">
+                        <h3>${story.title}</h3>
+                        <p>Author: ${story.authorName}</p>
+                        <p>Genre: ${story.genre || 'N/A'}</p> <div class="book-card-meta vertical-meta">
+                            <div class="rating">${generateStarRatingHtml(averageRating)} ${averageRating} (${ratingsCount} Ratings)</div>
+                            <div><i class="fas fa-eye"></i> ${views} Views</div>
                         </div>
                     </div>
-                    <div class="card-actions">
-                        <button class="btn remove-btn" onclick="event.stopPropagation(); removeSavedStory('${story.id}')">Hapus Simpan</button>
-                    </div>
                 `;
-                savedStoriesGrid.appendChild(card);
+                bookGrid.appendChild(card);
             }
         }
-        window.displaySavedStories = displaySavedStories; // Membuat fungsi dapat diakses secara global
 
-        // Fungsi untuk mengalihkan tampilan antara katalog utama dan cerita yang disimpan
-        function showSavedStories() {
-            document.getElementById('catalog-section').classList.remove('active');
-            document.getElementById('bookGrid').style.display = 'none'; // Sembunyikan grid katalog
-            
-            document.getElementById('saved-stories-section').classList.add('active');
-            document.getElementById('savedStoriesGrid').style.display = 'flex'; // Tampilkan grid cerita tersimpan
-            
-            displaySavedStories(); // Muat dan tampilkan cerita yang disimpan
+        // Fetch all books once and store them
+        async function fetchAllStories() {
+            const storiesCollectionRef = collection(db, "stories");
+            const q = query(storiesCollectionRef);
+
+            try {
+                const querySnapshot = await getDocs(q);
+                allStories = querySnapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(story => story.status === 'approved'); // Filter approved stories initially
+                
+                displayBooks(allStories); // Display all approved books on initial load
+            } catch (error) {
+                console.error("Error fetching all stories:", error);
+                document.getElementById('bookGrid').innerHTML = '<p style="text-align: center; color: var(--text-color);">Failed to load stories. Please try again later.</p>';
+            }
         }
-        window.showSavedStories = showSavedStories; // Membuat fungsi dapat diakses secara global
 
-        // Fungsi untuk kembali ke katalog utama
-        function showCatalog() {
-            document.getElementById('saved-stories-section').classList.remove('active');
-            document.getElementById('savedStoriesGrid').style.display = 'none'; // Sembunyikan grid cerita tersimpan
+        // Function to filter books based on search input and genre selection
+        function filterBooks() {
+            const searchInput = document.getElementById('searchBar').value.toLowerCase();
+            const selectedGenre = document.getElementById('genreFilter').value;
 
-            document.getElementById('catalog-section').classList.add('active');
-            document.getElementById('bookGrid').style.display = 'flex'; // Tampilkan grid katalog
-            
-            filterBooks(); // Perbarui dan tampilkan katalog
+            const filteredStories = allStories.filter(story => {
+                const matchesSearch = story.title.toLowerCase().includes(searchInput) ||
+                                      story.authorName.toLowerCase().includes(searchInput);
+                const matchesGenre = selectedGenre === "" || (story.genre && story.genre === selectedGenre); // Ensure story.genre exists
+
+                return matchesSearch && matchesGenre;
+            });
+
+            displayBooks(filteredStories);
         }
-        // Tambahkan ini agar link logo bisa kembali ke katalog
-        document.querySelector('.logo').onclick = (event) => {
-            event.preventDefault(); // Mencegah navigasi default
-            showCatalog();
-        };
+        window.filterBooks = filterBooks; // Make it globally accessible for onkeyup/onchange
 
-
-        document.addEventListener('DOMContentLoaded', () => {
-            applyTheme();
-            fetchAllStories(); // Fetch all stories on page load
-        });
-    </script>
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme();
+            fetchAllStories(); // Fetch all stories on page load
+        });
+    </script>
 </body>
 </html>
