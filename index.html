@@ -1,662 +1,937 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>e book AMDF.GROUP  Catalog</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e book AMDF.GROUP  Catalog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="shortcut icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
-  <meta name="description" content="Koleksi e-book gratis, cerita fantasi, cerita roman, dan hiburan cerita menarik di Perpustakaan Digital. Baca gratis dan nikmati pengalaman membaca online." />
-  <meta name="keywords" content="ebook, cerita fantasi, cerita roman, hiburan cerita, koleksi cerita, perpustakaan digital, cerita online, buku gratis, bacaan online, cerita anak, cerita petualangan, novel digital" />
-  <meta name="author" content="Perpustakaan Digital" />
-  <meta name="robots" content="index, follow" />
-  <script type="application/ld+json">
+  <meta name="description" content="Koleksi e-book gratis, cerita fantasi, cerita roman, dan hiburan cerita menarik di Perpustakaan Digital. Baca gratis dan nikmati pengalaman membaca online." />
+  <meta name="keywords" content="ebook, cerita fantasi, cerita roman, hiburan cerita, koleksi cerita, perpustakaan digital, cerita online, buku gratis, bacaan online, cerita anak, cerita petualangan, novel digital" />
+  <meta name="author" content="Perpustakaan Digital" />
+  <meta name="robots" content="index, follow" />
+  <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Koleksi Cerita",
-  "alternateName": "AMDF.GROUP",
-  "url": "https://amdf.web.id",
-  "logo": "https://amdf.web.id/logo.png",
-  "description": "Website ini dibuat oleh siswa SMK Teknik Elektronika, berisi ebook dan kumpulan cerita fantasi dari berbagai creator pelajar.",
-  "email": "info@amdf.web.id",
-  "sameAs": [
-    "https://www.instagram.com/willtorya_?igsh=MWNlc2lqb2RycDFrNA=="
-  ]
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Koleksi Cerita",
+  "alternateName": "AMDF.GROUP",
+  "url": "https://amdf.web.id",
+  "logo": "https://amdf.web.id/logo.png",
+  "description": "Website ini dibuat oleh siswa SMK Teknik Elektronika, berisi ebook dan kumpulan cerita fantasi dari berbagai creator pelajar.",
+  "email": "info@amdf.web.id",
+  "sameAs": [
+    "https://www.instagram.com/willtorya_?igsh=MWNlc2lqb2RycDFrNA=="
+  ]
 }
 </script>
 <style>
-    :root {
-        --background-start: #f0f2f5;
-        --background-end: #e0e2e5;
-        --text-color: #333;
-        --header-bg: rgba(255, 255, 255, 0.9);
-        --header-border: #eee;
-        --card-bg: #ffffff;
-        --card-border: #ddd;
-        --card-shadow: rgba(0, 0, 0, 0.08);
-        --button-bg-gradient-start: #6a11cb;
-        --button-bg-gradient-end: #2575fc;
-        --button-text-color: #fff;
-        --link-color: #007bff;
-        --icon-color: #777;
-        --toggle-bg: #ddd;
-        --toggle-circle-bg: #fff;
-        --toggle-shadow: rgba(0, 0, 0, 0.2);
-        --footer-bg: #333;
-        --footer-text: #eee;
-        --input-bg: #f9f9f9;
-        --input-border: #ccc;
-        --input-focus-border: #007bff;
-        --dropdown-bg: #f9f9f9;
-        --dropdown-border: #ccc;
-    }
+    :root {
+        --background-start: #f0f2f5;
+        --background-end: #e0e2e5;
+        --text-color: #333;
+        --header-bg: rgba(255, 255, 255, 0.9);
+        --header-border: #eee;
+        --card-bg: #ffffff;
+        --card-border: #ddd;
+        --card-shadow: rgba(0, 0, 0, 0.08);
+        --button-bg-gradient-start: #6a11cb;
+        --button-bg-gradient-end: #2575fc;
+        --button-text-color: #fff;
+        --link-color: #007bff;
+        --icon-color: #777;
+        --toggle-bg: #ddd;
+        --toggle-circle-bg: #fff;
+        --toggle-shadow: rgba(0, 0, 0, 0.2);
+        --footer-bg: #333;
+        --footer-text: #eee;
+        --input-bg: #f9f9f9;
+        --input-border: #ccc;
+        --input-focus-border: #007bff;
+        --dropdown-bg: #f9f9f9;
+        --dropdown-border: #ccc;
+        --save-button-bg: #28a745; /* Green for Save */
+        --save-button-hover-bg: #218838;
+        --remove-button-bg: #dc3545; /* Red for Remove */
+        --remove-button-hover-bg: #c82333;
+    }
 
-    body.dark-mode {
-        --background-start: #1a1a2e;
-        --background-end: #16213e;
-        --text-color: #e0e0e0;
-        --header-bg: rgba(26, 26, 46, 0.9);
-        --header-border: #333;
-        --card-bg: #22253b;
-        --card-border: #444;
-        --card-shadow: rgba(0, 0, 0, 0.4);
-        --button-bg-gradient-start: #8e2de2;
-        --button-bg-gradient-end: #4a00e0;
-        --button-text-color: #fff;
-        --link-color: #8e2de2;
-        --icon-color: #aaa;
-        --toggle-bg: #555;
-        --toggle-circle-bg: #bbb;
-        --toggle-shadow: rgba(0, 0, 0, 0.4);
-        --footer-bg: #111;
-        --footer-text: #bbb;
-        --input-bg: #333;
-        --input-border: #555;
-        --input-focus-border: #8e2de2;
-        --dropdown-bg: #333;
-        --dropdown-border: #555;
-    }
+    body.dark-mode {
+        --background-start: #1a1a2e;
+        --background-end: #16213e;
+        --text-color: #e0e0e0;
+        --header-bg: rgba(26, 26, 46, 0.9);
+        --header-border: #333;
+        --card-bg: #22253b;
+        --card-border: #444;
+        --card-shadow: rgba(0, 0, 0, 0.4);
+        --button-bg-gradient-start: #8e2de2;
+        --button-bg-gradient-end: #4a00e0;
+        --button-text-color: #fff;
+        --link-color: #8e2de2;
+        --icon-color: #aaa;
+        --toggle-bg: #555;
+        --toggle-circle-bg: #bbb;
+        --toggle-shadow: rgba(0, 0, 0, 0.4);
+        --footer-bg: #111;
+        --footer-text: #bbb;
+        --input-bg: #333;
+        --input-border: #555;
+        --input-focus-border: #8e2de2;
+        --dropdown-bg: #333;
+        --dropdown-border: #555;
+        --save-button-bg: #218838; /* Darker green for Save in dark mode */
+        --save-button-hover-bg: #1e7033;
+        --remove-button-bg: #c82333; /* Darker red for Remove in dark mode */
+        --remove-button-hover-bg: #ae1f2b;
+    }
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-    body {
-        font-family: 'Poppins', sans-serif;
-        line-height: 1.6;
-        color: var(--text-color);
-        background: linear-gradient(135deg, var(--background-start), var(--background-end));
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        transition: background 0.3s ease, color 0.3s ease;
-    }
+    body {
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background: linear-gradient(135deg, var(--background-start), var(--background-end));
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        transition: background 0.3s ease, color 0.3s ease;
+    }
 
-    header {
-        background: var(--header-bg);
-        backdrop-filter: blur(10px);
-        padding: 1rem 5%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid var(--header-border);
-        z-index: 1000;
-        box-shadow: 0 2px 10px var(--card-shadow);
-    }
+    header {
+        background: var(--header-bg);
+        backdrop-filter: blur(10px);
+        padding: 1rem 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--header-border);
+        z-index: 1000;
+        box-shadow: 0 2px 10px var(--card-shadow);
+    }
 
-    .logo {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--text-color);
-        text-decoration: none;
-        background: linear-gradient(45deg, var(--button-bg-gradient-start), var(--button-bg-gradient-end));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+    .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-color);
+        text-decoration: none;
+        background: linear-gradient(45deg, var(--button-bg-gradient-start), var(--button-bg-gradient-end));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-    .nav-links {
-        display: flex;
-        gap: 1.5rem;
-        align-items: center;
-    }
+    .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+    }
 
-    .nav-links a {
-        color: var(--text-color);
-        text-decoration: none;
-        font-weight: 600;
-        transition: color 0.3s ease;
-    }
+    .nav-links a {
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
 
-    .nav-links a:hover {
-        color: var(--link-color);
-    }
+    .nav-links a:hover {
+        color: var(--link-color);
+    }
 
-    .auth-buttons {
-        display: flex;
-        gap: 10px;
-    }
+    .auth-buttons {
+        display: flex;
+        gap: 10px;
+    }
 
-    .btn {
-        background: var(--button-bg-gradient-start);
-        background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+    .btn {
+        background: var(--button-bg-gradient-start);
+        background: linear-gradient(45deg, var(--button-bg-gradient-start) 0%, var(--button-bg-gradient-end) 100%);
+        color: var(--button-text-color);
+        padding: 0.7rem 1.4rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        white-space: nowrap;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px var(--card-shadow);
+    }
+
+    .btn.save-btn {
+        background: var(--save-button-bg);
         color: var(--button-text-color);
-        padding: 0.7rem 1.4rem;
-        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
         text-decoration: none;
         font-weight: 600;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: background-color 0.2s ease, transform 0.2s ease;
         white-space: nowrap;
         border: none;
         cursor: pointer;
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px var(--card-shadow);
+    .btn.save-btn:hover {
+        background: var(--save-button-hover-bg);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
 
-    .mode-toggle {
-        width: 50px;
-        height: 25px;
-        background-color: var(--toggle-bg);
-        border-radius: 25px;
-        position: relative;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        flex-shrink: 0;
-    }
-
-    .mode-toggle .circle {
-        width: 20px;
-        height: 20px;
-        background-color: var(--toggle-circle-bg);
-        border-radius: 50%;
-        position: absolute;
-        top: 2.5px;
-        left: 2.5px;
-        transition: transform 0.3s ease, background-color 0.3s ease;
-        box-shadow: 0 2px 5px var(--toggle-shadow);
-    }
-
-    body.dark-mode .mode-toggle .circle {
-        transform: translateX(25px);
-    }
-
-    main {
-        flex-grow: 1;
-        padding: 2rem 5%;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .catalog-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-
-    .catalog-header h1 {
-        font-size: 2.8rem;
-        font-weight: 700;
-        margin-bottom: 0.8rem;
-        color: var(--text-color);
-    }
-
-    .catalog-header p {
-        font-size: 1.1rem;
-        color: var(--text-color);
-        max-width: 700px;
-        margin: 0 auto 1.5rem;
-    }
-
-    /* Styling for search and filter controls */
-    .search-filter-controls {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 2rem;
-        margin-bottom: 2rem;
-        flex-wrap: wrap;
-    }
-
-    .search-filter-controls input[type="text"],
-    .search-filter-controls select {
-        padding: 0.7rem 1rem;
-        border: 1px solid var(--input-border);
-        border-radius: 8px;
-        font-size: 1rem;
-        width: 100%;
-        max-width: 300px;
-        background-color: var(--input-bg);
-        color: var(--text-color);
-        transition: border-color 0.3s ease;
-    }
-
-    .search-filter-controls input[type="text"]:focus,
-    .search-filter-controls select:focus {
-        outline: none;
-        border-color: var(--input-focus-border);
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
-    }
-
-    .search-filter-controls select {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23777%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-5.4H18.6c-5%200-9.3%201.8-13.2%205.4A17.6%2017.6%200%200%200%200%2082.7c0%204.8%201.8%209.3%205.4%2013.2l130.4%20130.4c4%204%208.5%206.5%2013.2%206.5s9.2-2.5%2013.2-6.5L287%2095.9c3.9-3.9%205.9-8.4%205.9-13.2s-2-9.3-5.9-13.3z%22%2F%3E%3C%2Fsvg%3E');
-        background-repeat: no-repeat;
-        background-position: right 0.7em top 50%, 0 0;
-        background-size: 0.65em auto, 100%;
-        padding-right: 2.5em;
-    }
-    body.dark-mode .search-filter-controls select {
-        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23bbb%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-5.4H18.6c-5%200-9.3%201.8-13.2%205.4A17.6%2017.6%200%200%200%200%2082.7c0%204.8%201.8%209.3%205.4%2013.2l130.4%20130.4c4%204%208.5%206.5%2013.2%206.5s9.2-2.5%2013.2-6.5L287%2095.9c3.9-3.9%205.9-8.4%205.9-13.2s-2-9.3-5.9-13.3z%22%2F%3E%3C%2Fsvg%3E');
-    }
-
-    .creator-info {
-        background-color: rgba(0, 123, 255, 0.1);
-        border-left: 5px solid var(--link-color);
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        font-size: 0.95rem;
-        color: var(--text-color);
-        margin-top: 1.5rem;
-        text-align: left;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        margin-bottom: 2rem;
-    }
-
-    .creator-info a {
-        color: var(--link-color);
-        font-weight: 600;
+    .btn.remove-btn {
+        background: var(--remove-button-bg);
+        color: var(--button-text-color);
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
         text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        white-space: nowrap;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
     }
 
-    .creator-info a:hover {
-        text-decoration: underline;
+    .btn.remove-btn:hover {
+        background: var(--remove-button-hover-bg);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
 
-    .book-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px; /* Jarak antar card */
-        justify-content: center;
-    }
 
-    .book-card {
-        background-color: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 8px 25px var(--card-shadow);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .mode-toggle {
+        width: 50px;
+        height: 25px;
+        background-color: var(--toggle-bg);
+        border-radius: 25px;
+        position: relative;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .mode-toggle .circle {
+        width: 20px;
+        height: 20px;
+        background-color: var(--toggle-circle-bg);
+        border-radius: 50%;
+        position: absolute;
+        top: 2.5px;
+        left: 2.5px;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+        box-shadow: 0 2px 5px var(--toggle-shadow);
+    }
+
+    body.dark-mode .mode-toggle .circle {
+        transform: translateX(25px);
+    }
+
+    main {
+        flex-grow: 1;
+        padding: 2rem 5%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .catalog-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .catalog-header h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+        color: var(--text-color);
+    }
+
+    .catalog-header p {
+        font-size: 1.1rem;
+        color: var(--text-color);
+        max-width: 700px;
+        margin: 0 auto 1.5rem;
+    }
+
+    /* Styling for search and filter controls */
+    .search-filter-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .search-filter-controls input[type="text"],
+    .search-filter-controls select {
+        padding: 0.7rem 1rem;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 300px;
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        transition: border-color 0.3s ease;
+    }
+
+    .search-filter-controls input[type="text"]:focus,
+    .search-filter-controls select:focus {
+        outline: none;
+        border-color: var(--input-focus-border);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    }
+
+    .search-filter-controls select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23777%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-5.4H18.6c-5%200-9.3%201.8-13.2%205.4A17.6%2017.6%200%200%200%200%2082.7c0%204.8%201.8%209.3%205.4%2013.2l130.4%20130.4c4%204%208.5%206.5%2013.2%206.5s9.2-2.5%2013.2-6.5L287%2095.9c3.9-3.9%205.9-8.4%205.9-13.2s-2-9.3-5.9-13.3z%22%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: right 0.7em top 50%, 0 0;
+        background-size: 0.65em auto, 100%;
+        padding-right: 2.5em;
+    }
+    body.dark-mode .search-filter-controls select {
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23bbb%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-5.4H18.6c-5%200-9.3%201.8-13.2%205.4A17.6%2017.6%200%200%200%200%2082.7c0%204.8%201.8%209.3%205.4%2013.2l130.4%20130.4c4%204%208.5%206.5%2013.2%206.5s9.2-2.5%2013.2-6.5L287%2095.9c3.9-3.9%205.9-8.4%205.9-13.2s-2-9.3-5.9-13.3z%22%2F%3E%3C%2Fsvg%3E');
+    }
+
+    .creator-info {
+        background-color: rgba(0, 123, 255, 0.1);
+        border-left: 5px solid var(--link-color);
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        color: var(--text-color);
+        margin-top: 1.5rem;
+        text-align: left;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+    }
+
+    .creator-info a {
+        color: var(--link-color);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .creator-info a:hover {
+        text-decoration: underline;
+    }
+
+    .book-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px; /* Jarak antar card */
+        justify-content: center;
+    }
+
+    .book-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px var(--card-shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        /* cursor: pointer; */ /* Remove click behavior from card itself to allow button clicks */
+        /* Default for larger screens (4 columns) */
+        flex: 1 1 calc(25% - 12px);
+        max-width: calc(25% - 12px);
+        text-align: center;
+        padding: 8px;
+    }
+
+    .book-card .card-click-area {
+        cursor: pointer;
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
-        cursor: pointer;
-        /* Default for larger screens (4 columns) */
-        flex: 1 1 calc(25% - 12px);
-        max-width: calc(25% - 12px);
-        text-align: center;
-        padding: 8px;
+        justify-content: space-between;
     }
 
-  .save-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-left: 8px;
-}
 
-    @media (min-width: 600px) and (max-width: 992px) { /* Tablet view: 3 columns */
-        .book-card {
+    @media (min-width: 600px) and (max-width: 992px) { /* Tablet view: 3 columns */
+        .book-card {
+            flex: 1 1 calc(33.333% - 12px);
+            max-width: calc(33.333% - 12px);
+        }
+    }
+
+    .book-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px var(--card-shadow);
+    }
+
+    .book-card-thumbnail {
+        width: 100%;
+        aspect-ratio: 3/4;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #262626;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        margin-bottom: 8px;
+        border-bottom: none;
+        height: auto;
+    }
+
+    .book-card-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .book-card-content h3 {
+        font-size: 0.95rem;
+        line-height: 1.2;
+        margin-bottom: 0.3rem;
+        color: var(--text-color);
+        font-weight: bold;
+    }
+
+    .book-card-content p {
+        font-size: 0.95rem;
+        line-height: 1.2;
+        color: var(--text-color);
+        margin-bottom: 0.3rem;
+    }
+
+    .book-card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--icon-color);
+    }
+    .book-card-meta.vertical-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.2rem;
+        margin-top: 0.5rem;
+    }
+
+    .book-card-meta.vertical-meta .rating,
+    .book-card-meta.vertical-meta .views {
+        font-size: 0.85rem;
+        line-height: 1.1;
+        letter-spacing: 0.2px;
+        margin-bottom: 0.1rem;
+    }
+
+    .book-card-meta span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .book-card-meta i {
+        color: var(--link-color);
+    }
+
+    .rating .stars {
+        color: gold;
+    }
+
+    .card-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    /* Style for the saved stories section */
+    .saved-stories-section {
+        display: none; /* Hidden by default */
+        margin-top: 2rem;
+    }
+
+    .saved-stories-section.active {
+        display: block; /* Shown when active */
+    }
+
+    .saved-stories-section h2 {
+        text-align: center;
+        font-size: 2rem;
+        color: var(--text-color);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Adjust book grid for saved stories */
+    .saved-stories-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .saved-stories-grid .book-card {
+        flex: 1 1 calc(25% - 12px);
+        max-width: calc(25% - 12px);
+    }
+    @media (min-width: 600px) and (max-width: 992px) {
+        .saved-stories-grid .book-card {
             flex: 1 1 calc(33.333% - 12px);
             max-width: calc(33.333% - 12px);
         }
     }
-
-    .book-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 35px var(--card-shadow);
-    }
-
-    .book-card-thumbnail {
-        width: 100%;
-        aspect-ratio: 3/4;
-        object-fit: cover;
-        border-radius: 8px;
-        background: #262626;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        margin-bottom: 8px;
-        border-bottom: none;
-        height: auto;
-    }
-
-    .book-card-content {
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .book-card-content h3 {
-        font-size: 0.95rem;
-        line-height: 1.2;
-        margin-bottom: 0.3rem;
-        color: var(--text-color);
-        font-weight: bold;
-    }
-
-    .book-card-content p {
-        font-size: 0.95rem;
-        line-height: 1.2;
-        color: var(--text-color);
-        margin-bottom: 0.3rem;
-    }
-
-    .book-card-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 0.5rem;
-        font-size: 0.9rem;
-        color: var(--icon-color);
-    }
-    .book-card-meta.vertical-meta {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 0.2rem;
-        margin-top: 0.5rem;
-    }
-
-    .book-card-meta.vertical-meta .rating,
-    .book-card-meta.vertical-meta .views {
-        font-size: 0.85rem;
-        line-height: 1.1;
-        letter-spacing: 0.2px;
-        margin-bottom: 0.1rem;
-    }
-
-    .book-card-meta span {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .book-card-meta i {
-        color: var(--link-color);
-    }
-
-    .rating .stars {
-        color: gold;
-    }
-
-    footer {
-        background-color: var(--footer-bg);
-        color: var(--footer-text);
-        text-align: center;
-        padding: 1.5rem 5%;
-        margin-top: 3rem;
-        border-top: 1px solid var(--header-border);
-    }
-
-    footer nav a {
-        color: var(--footer-text);
-        text-decoration: none;
-        margin: 0 10px;
-        transition: color 0.3s ease;
-    }
-
-    footer nav a:hover {
-        color: var(--link-color);
-    }
-
     @media (max-width: 768px) {
-        header {
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 1rem 4%;
-        }
-
-        .logo {
-            margin-bottom: 1rem;
-        }
-
-        .nav-links {
-            width: 100%;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .auth-buttons {
-            width: 100%;
-            justify-content: space-around;
-        }
-
-        .btn {
-            flex-grow: 1;
-            text-align: center;
-            padding: 0.6rem 1rem;
-        }
-
-        main {
-            padding: 1.5rem 4%;
-        }
-
-        .catalog-header h1 {
-            font-size: 2rem;
-        }
-
-        .catalog-header p {
-            font-size: 1rem;
-        }
-
-        .search-filter-controls {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .search-filter-controls input[type="text"],
-        .search-filter-controls select {
-            max-width: 100%;
-        }
-
-        /* Aturan ini untuk ponsel (lebar maksimum 768px dan di bawahnya) */
-        .book-card {
-            flex: 1 1 calc(50% - 12px); /* Mengatur 2 kolom dengan jarak 12px */
-            max-width: calc(50% - 12px); /* Memastikan lebar maksimum 2 kolom */
-            margin: 0; /* Pastikan margin card individual direset jika ada */
-        }
-
-        /* Penting: Pastikan .book-grid memiliki padding atau margin horizontal */
-        .book-grid {
-            padding: 0 5%; /* Menambahkan padding horizontal agar card tidak menempel ke tepi layar */
-            justify-content: space-between; /* Untuk meratakan 2 kolom */
-            gap: 12px; /* Pastikan gap sudah terdefinisi */
+        .saved-stories-grid .book-card {
+            flex: 1 1 calc(50% - 12px);
+            max-width: calc(50% - 12px);
         }
     }
-
     @media (max-width: 480px) {
-        /* Untuk layar yang lebih kecil dari 480px, tetap 2 kolom */
-        .book-card {
-            flex: 1 1 calc(50% - 10px); /* Sedikit menyesuaikan gap untuk layar sangat kecil */
+        .saved-stories-grid .book-card {
+            flex: 1 1 calc(50% - 10px);
             max-width: calc(50% - 10px);
-            margin: 0; /* Pastikan margin card individual direset jika ada */
-        }
-        .book-grid {
-            padding: 0 4%; /* Sesuaikan padding untuk layar sangat kecil */
-            justify-content: space-between;
-            gap: 10px; /* Sesuaikan gap */
-        }
-        .logo {
-            font-size: 1.5rem;
-        }
-        .nav-links a {
-            font-size: 0.9rem;
-        }
-        .btn {
-            padding: 0.5rem 0.8rem;
-            font-size: 0.9rem;
-        }
-        .catalog-header h1 {
-            font-size: 1.8rem;
         }
     }
+
+
+    footer {
+        background-color: var(--footer-bg);
+        color: var(--footer-text);
+        text-align: center;
+        padding: 1.5rem 5%;
+        margin-top: 3rem;
+        border-top: 1px solid var(--header-border);
+    }
+
+    footer nav a {
+        color: var(--footer-text);
+        text-decoration: none;
+        margin: 0 10px;
+        transition: color 0.3s ease;
+    }
+
+    footer nav a:hover {
+        color: var(--link-color);
+    }
+
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 1rem 4%;
+        }
+
+        .logo {
+            margin-bottom: 1rem;
+        }
+
+        .nav-links {
+            width: 100%;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .auth-buttons {
+            width: 100%;
+            justify-content: space-around;
+        }
+
+        .btn {
+            flex-grow: 1;
+            text-align: center;
+            padding: 0.6rem 1rem;
+        }
+
+        main {
+            padding: 1.5rem 4%;
+        }
+
+        .catalog-header h1 {
+            font-size: 2rem;
+        }
+
+        .catalog-header p {
+            font-size: 1rem;
+        }
+
+        .search-filter-controls {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-filter-controls input[type="text"],
+        .search-filter-controls select {
+            max-width: 100%;
+        }
+
+        /* Aturan ini untuk ponsel (lebar maksimum 768px dan di bawahnya) */
+        .book-card {
+            flex: 1 1 calc(50% - 12px); /* Mengatur 2 kolom dengan jarak 12px */
+            max-width: calc(50% - 12px); /* Memastikan lebar maksimum 2 kolom */
+            margin: 0; /* Pastikan margin card individual direset jika ada */
+        }
+
+        /* Penting: Pastikan .book-grid memiliki padding atau margin horizontal */
+        .book-grid {
+            padding: 0 5%; /* Menambahkan padding horizontal agar card tidak menempel ke tepi layar */
+            justify-content: space-between; /* Untuk meratakan 2 kolom */
+            gap: 12px; /* Pastikan gap sudah terdefinisi */
+        }
+    }
+
+    @media (max-width: 480px) {
+        /* Untuk layar yang lebih kecil dari 480px, tetap 2 kolom */
+        .book-card {
+            flex: 1 1 calc(50% - 10px); /* Sedikit menyesuaikan gap untuk layar sangat kecil */
+            max-width: calc(50% - 10px);
+            margin: 0; /* Pastikan margin card individual direset jika ada */
+        }
+        .book-grid {
+            padding: 0 4%; /* Sesuaikan padding untuk layar sangat kecil */
+            justify-content: space-between;
+            gap: 10px; /* Sesuaikan gap */
+        }
+        .logo {
+            font-size: 1.5rem;
+        }
+        .nav-links a {
+            font-size: 0.9rem;
+        }
+        .btn {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        .catalog-header h1 {
+            font-size: 1.8rem;
+        }
+    }
 </style>
 </head>
 <body>
-    <header>
-        <a href="catalog.html" class="logo">AMDF.GROUP E-Books</a>
-        <div class="nav-links">
-            <a href="contact.html">Contact Us</a>
-            <a href="about.html">About</a>
-            <a href="privacy_policy.html">Privacy Policy</a>
-        <div id="ceritaTersimpanContainer" style="margin-top:10px;"></div>
-            <div class="mode-toggle" onclick="toggleDarkMode()">
-                <div class="circle"></div>
-            </div>
-        </div>
-        <div class="auth-buttons">
-            <a href="login_register_creator.html" class="btn">Login / Register</a>
-        </div>
-    </header>
+    <header>
+        <a href="catalog.html" class="logo">AMDF.GROUP E-Books</a>
+        <div class="nav-links">
+            <a href="#" onclick="showSavedStories()">Cerita Tersimpan</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="about.html">About</a>
+            <a href="privacy_policy.html">Privacy Policy</a>
+            <div class="mode-toggle" onclick="toggleDarkMode()">
+                <div class="circle"></div>
+            </div>
+        </div>
+        <div class="auth-buttons">
+            <a href="login_register_creator.html" class="btn">Login / Register</a>
+        </div>
+    </header>
 
-    <main>
-        <section id="catalog" class="catalog-header">
-            <h1>Discover Amazing Stories</h1>
-            <p>Dive into a world of captivating tales, from thrilling adventures to heartwarming romances. Enjoy free e-books and explore new narratives every day.</p>
-            <div class="creator-info">
-                If you wish to become a story creator and share your own narratives, please <a href="login_register_creator.html">Login or Register here</a>. Reading stories is always free and doesn't require an account.
-            </div>
+    <main>
+        <section id="catalog-section" class="catalog-header active">             <h1>Discover Amazing Stories</h1>
+            <p>Dive into a world of captivating tales, from thrilling adventures to heartwarming romances. Enjoy free e-books and explore new narratives every day.</p>
+            <div class="creator-info">
+                If you wish to become a story creator and share your own narratives, please <a href="login_register_creator.html">Login or Register here</a>. Reading stories is always free and doesn't require an account.
+            </div>
 
-            <section class="search-filter-controls">
-                <input type="text" id="searchBar" placeholder="Search by title or author..." onkeyup="filterBooks()">
-                <select id="genreFilter" onchange="filterBooks()">
-                    <option value="">All Genres</option>
-                    <option value="Action">Action</option>
-                    <option value="Adventure">Adventure</option>
-                    <option value="Comedy">Comedy</option>
-                    <option value="Drama">Drama</option>
-                    <option value="Fantasy">Fantasy</option>
-                    <option value="Horror">Horror</option>
-                    <option value="Mystery">Mystery</option>
-                    <option value="Romance">Romance</option>
-                    <option value="Sci-Fi">Science Fiction</option>
-                    <option value="Thriller">Thriller</option>
-                    <option value="Historical">Historical</option>
-                    <option value="Slice of Life">Slice of Life</option>
-                    <option value="Supernatural">Supernatural</option>
-                    <option value="Biography">Biography</option>
-                    <option value="Young Adult">Young Adult</option>
-                    <option value="Children">Children</option>
-                    <option value="Poetry">Poetry</option>
-                    </select>
-            </section>
+            <section class="search-filter-controls">
+                <input type="text" id="searchBar" placeholder="Search by title or author..." onkeyup="filterBooks()">
+                <select id="genreFilter" onchange="filterBooks()">
+                    <option value="">All Genres</option>
+                    <option value="Action">Action</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Sci-Fi">Science Fiction</option>
+                    <option value="Thriller">Thriller</option>
+                    <option value="Historical">Historical</option>
+                    <option value="Slice of Life">Slice of Life</option>
+                    <option value="Supernatural">Supernatural</option>
+                    <option value="Biography">Biography</option>
+                    <option value="Young Adult">Young Adult</option>
+                    <option value="Children">Children</option>
+                    <option value="Poetry">Poetry</option>
+                    </select>
+            </section>
+        </section>
+
+        <section class="book-grid" id="bookGrid"></section>
+
+        <section id="saved-stories-section" class="saved-stories-section">
+            <h2>Cerita Tersimpan Anda 📚</h2>
+            <div class="book-grid saved-stories-grid" id="savedStoriesGrid">
+                </div>
         </section>
+    </main>
 
-        <section class="book-grid" id="bookGrid">
-            </section>
-    </main>
+    <footer>
+        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
+        <nav>
+            <a href="about.html">About Us</a> |
+            <a href="privacy_policy.html">Privacy Policy</a> |
+            <a href="terms_of_service.html">Terms of Service</a>
+        </nav>
+    </footer>
 
-    <footer>
-        <p>&copy; 2025 AMDF.GROUP. All rights reserved.</p>
-        <nav>
-            <a href="about.html">About Us</a> |
-            <a href="privacy_policy.html">Privacy Policy</a> |
-            <a href="terms_of_service.html">Terms of Service</a>
-        </nav>
-    </footer>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getFirestore, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { getDatabase, ref as rtdbRef, get as rtdbGet, child as rtdbChild } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+        import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-        import { getDatabase, ref as rtdbRef, get as rtdbGet, child as rtdbChild } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
-        import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+            authDomain: "tamplatedoc.firebaseapp.com",
+            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "tamplatedoc",
+            storageBucket: "tamplatedoc.firebasestorage.app",
+            appId: "1:264966107720:web:868abe93cdff209040de7d",
+            measurementId: "G-S5WTZ7S5PG"
+        };
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-            authDomain: "tamplatedoc.firebaseapp.com",
-            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "tamplatedoc",
-            storageBucket: "tamplatedoc.firebasestorage.app",
-            appId: "1:264966107720:web:868abe93cdff209040de7d",
-            measurementId: "G-S5WTZ7S5PG"
-        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const rtdb = getDatabase(app);
+        const storage = getStorage(app);
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const rtdb = getDatabase(app);
-        const storage = getStorage(app);
+        let allStories = []; // Array to hold all fetched stories
+        const SAVED_STORIES_KEY = 'savedStories'; // Kunci untuk local storage
 
-        let allStories = []; // Array to hold all fetched stories
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        window.toggleDarkMode = toggleDarkMode;
 
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        function generateStarRatingHtml(rating) {
+            let starsHtml = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+
+            for (let i = 0; i < fullStars; i++) {
+                starsHtml += '<i class="fas fa-star stars"></i>';
+            }
+            if (hasHalfStar) {
+                starsHtml += '<i class="fas fa-star-half-alt stars"></i>';
+            }
+            for (let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++) {
+                starsHtml += '<i class="far fa-star"></i>';
+            }
+            return starsHtml;
+        }
+
+        // Fungsi untuk mendapatkan cerita yang disimpan dari local storage
+        function getSavedStories() {
+            const savedStoriesJson = localStorage.getItem(SAVED_STORIES_KEY);
+            return savedStoriesJson ? JSON.parse(savedStoriesJson) : [];
+        }
+
+        // Fungsi untuk menyimpan cerita ke local storage
+        function saveStory(story) {
+            let savedStories = getSavedStories();
+            // Cek apakah cerita sudah ada di daftar
+            if (!savedStories.some(s => s.id === story.id)) {
+                savedStories.push(story);
+                localStorage.setItem(SAVED_STORIES_KEY, JSON.stringify(savedStories));
+                alert(`"${story.title}" telah disimpan!`);
             } else {
-                localStorage.setItem('theme', 'light');
+                alert(`"${story.title}" sudah ada di daftar tersimpan.`);
+            }
+            // Perbarui tampilan jika sedang melihat cerita tersimpan
+            if (document.getElementById('saved-stories-section').classList.contains('active')) {
+                displaySavedStories();
             }
         }
-        window.toggleDarkMode = toggleDarkMode;
+        window.saveStory = saveStory; // Membuat fungsi dapat diakses secara global
 
-        function applyTheme() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
+        // Fungsi untuk menghapus cerita dari local storage
+        function removeSavedStory(storyId) {
+            let savedStories = getSavedStories();
+            const initialLength = savedStories.length;
+            savedStories = savedStories.filter(story => story.id !== storyId);
+            if (savedStories.length < initialLength) {
+                localStorage.setItem(SAVED_STORIES_KEY, JSON.stringify(savedStories));
+                alert("Cerita berhasil dihapus dari daftar tersimpan.");
             } else {
-                document.body.classList.remove('dark-mode');
+                alert("Cerita tidak ditemukan di daftar tersimpan.");
             }
+            // Perbarui tampilan jika sedang melihat cerita tersimpan
+            if (document.getElementById('saved-stories-section').classList.contains('active')) {
+                displaySavedStories();
+            }
+            // Juga perbarui tampilan di grid utama untuk tombol "Simpan"
+            displayBooks(allStories);
         }
+        window.removeSavedStory = removeSavedStory; // Membuat fungsi dapat diakses secara global
 
-        function generateStarRatingHtml(rating) {
-            let starsHtml = '';
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 !== 0;
+        // Function to display books based on a given array of stories
+        async function displayBooks(storiesToDisplay, targetElementId = 'bookGrid', isSavedList = false) {
+            const bookGrid = document.getElementById(targetElementId);
+            bookGrid.innerHTML = ''; // Clear existing books
 
-            for (let i = 0; i < fullStars; i++) {
-                starsHtml += '<i class="fas fa-star stars"></i>';
-            }
-            if (hasHalfStar) {
-                starsHtml += '<i class="fas fa-star-half-alt stars"></i>';
-            }
-            for (let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++) {
-                starsHtml += '<i class="far fa-star"></i>';
-            }
-            return starsHtml;
-        }
+            const savedStoryIds = getSavedStories().map(s => s.id);
 
-        // Function to display books based on a given array of stories
-        async function displayBooks(storiesToDisplay) {
-            const bookGrid = document.getElementById('bookGrid');
-            bookGrid.innerHTML = ''; // Clear existing books
 
-            if (storiesToDisplay.length === 0) {
-                bookGrid.innerHTML = '<p style="text-align: center; color: var(--text-color);">No stories found matching your criteria.</p>';
+            if (storiesToDisplay.length === 0) {
+                bookGrid.innerHTML = '<p style="text-align: center; color: var(--text-color);">No stories found matching your criteria.</p>';
+                return;
+            }
+
+            for (const story of storiesToDisplay) {
+                let views = 0;
+                let averageRating = 0;
+                let ratingsCount = 0;
+                let thumbnailUrl = 'https://via.placeholder.com/300x200/eee/333?text=No+Thumbnail';
+
+                try {
+                    const viewsSnapshot = await rtdbGet(rtdbChild(rtdbRef(rtdb), `storyViews/${story.id}/views`));
+                    if (viewsSnapshot.exists()) {
+                        views = viewsSnapshot.val();
+                    }
+                } catch (error) {
+                    console.error("Error fetching views for story", story.id, error);
+                }
+
+                try {
+                    const ratingsSnapshot = await rtdbGet(rtdbChild(rtdbRef(rtdb), `storyRatings/${story.id}/ratings`));
+                    if (ratingsSnapshot.exists()) {
+                        const ratingData = ratingsSnapshot.val();
+                        ratingsCount = ratingData.count || 0;
+                        if (ratingsCount > 0) {
+                            averageRating = (ratingData.total / ratingsCount).toFixed(1);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching ratings for story", story.id, error);
+                }
+
+                if (story.thumbnailPath) {
+                    try {
+                        const imageRef = storageRef(storage, story.thumbnailPath);
+                        thumbnailUrl = await getDownloadURL(imageRef);
+                    } catch (error) {
+                        console.error("Error fetching thumbnail URL for story", story.id, error);
+                        thumbnailUrl = 'https://via.placeholder.com/300x200/eee/333?text=Image+Error';
+                    }
+                }
+
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.setAttribute('data-story-id', story.id); // Set data-story-id
+                
+                const isStorySaved = savedStoryIds.includes(story.id);
+
+                card.innerHTML = `
+                    <div class="card-click-area" onclick="location.href = 'web_story.html?id=${story.id}'">
+                        <img src="${thumbnailUrl}" alt="Story Thumbnail" class="book-card-thumbnail">
+                        <div class="book-card-content">
+                            <h3>${story.title}</h3>
+                            <p>Author: ${story.authorName}</p>
+                            <p>Genre: ${story.genre || 'N/A'}</p>
+                            <div class="book-card-meta vertical-meta">
+                                <div class="rating">${generateStarRatingHtml(averageRating)} ${averageRating} (${ratingsCount} Ratings)</div>
+                                <div><i class="fas fa-eye"></i> ${views} Views</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        ${isStorySaved ?
+                            `<button class="btn remove-btn" onclick="event.stopPropagation(); removeSavedStory('${story.id}')">Hapus Simpan</button>` :
+                            `<button class="btn save-btn" onclick="event.stopPropagation(); saveStory(${JSON.stringify(story).replace(/'/g, "&apos;")})">Simpan</button>`
+                        }
+                    </div>
+                `;
+                bookGrid.appendChild(card);
+            }
+        }
+
+
+        // Fetch all books once and store them
+        async function fetchAllStories() {
+            const storiesCollectionRef = collection(db, "stories");
+            const q = query(storiesCollectionRef);
+
+            try {
+                const querySnapshot = await getDocs(q);
+                allStories = querySnapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() }))
+                    .filter(story => story.status === 'approved'); // Filter approved stories initially
+                
+                displayBooks(allStories); // Display all approved books on initial load
+            } catch (error) {
+                console.error("Error fetching all stories:", error);
+                document.getElementById('bookGrid').innerHTML = '<p style="text-align: center; color: var(--text-color);">Failed to load stories. Please try again later.</p>';
+            }
+        }
+
+        // Function to filter books based on search input and genre selection
+        function filterBooks() {
+            const searchInput = document.getElementById('searchBar').value.toLowerCase();
+            const selectedGenre = document.getElementById('genreFilter').value;
+
+            const filteredStories = allStories.filter(story => {
+                const matchesSearch = story.title.toLowerCase().includes(searchInput) ||
+                                      story.authorName.toLowerCase().includes(searchInput);
+                const matchesGenre = selectedGenre === "" || (story.genre && story.genre === selectedGenre); // Ensure story.genre exists
+
+                return matchesSearch && matchesGenre;
+            });
+
+            displayBooks(filteredStories);
+        }
+        window.filterBooks = filterBooks; // Make it globally accessible for onkeyup/onchange
+
+        // Fungsi untuk menampilkan cerita yang disimpan
+        async function displaySavedStories() {
+            const savedStories = getSavedStories();
+            const savedStoriesGrid = document.getElementById('savedStoriesGrid');
+            savedStoriesGrid.innerHTML = ''; // Kosongkan grid cerita tersimpan
+
+            if (savedStories.length === 0) {
+                savedStoriesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color);">Anda belum menyimpan cerita apapun. Jelajahi katalog dan simpan cerita favorit Anda!</p>';
                 return;
             }
 
-            for (const story of storiesToDisplay) {
+            // Untuk setiap cerita yang disimpan, tampilkan di grid
+            for (const story of savedStories) {
                 let views = 0;
                 let averageRating = 0;
                 let ratingsCount = 0;
                 let thumbnailUrl = 'https://via.placeholder.com/300x200/eee/333?text=No+Thumbnail';
 
+                // Ambil data views dan ratings (sama seperti di displayBooks)
                 try {
                     const viewsSnapshot = await rtdbGet(rtdbChild(rtdbRef(rtdb), `storyViews/${story.id}/views`));
                     if (viewsSnapshot.exists()) {
                         views = viewsSnapshot.val();
                     }
                 } catch (error) {
-                    console.error("Error fetching views for story", story.id, error);
+                    console.error("Error fetching views for saved story", story.id, error);
                 }
 
                 try {
@@ -669,7 +944,7 @@
                         }
                     }
                 } catch (error) {
-                    console.error("Error fetching ratings for story", story.id, error);
+                    console.error("Error fetching ratings for saved story", story.id, error);
                 }
 
                 if (story.thumbnailPath) {
@@ -677,120 +952,69 @@
                         const imageRef = storageRef(storage, story.thumbnailPath);
                         thumbnailUrl = await getDownloadURL(imageRef);
                     } catch (error) {
-                        console.error("Error fetching thumbnail URL for story", story.id, error);
+                        console.error("Error fetching thumbnail URL for saved story", story.id, error);
                         thumbnailUrl = 'https://via.placeholder.com/300x200/eee/333?text=Image+Error';
                     }
                 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('ceritaTersimpanContainer');
-  const saved = JSON.parse(localStorage.getItem('ceritaFavorit')) || [];
-  
-  if (saved.length > 0) {
-    const list = document.createElement('ul');
-    saved.forEach(id => {
-      const item = document.createElement('li');
-      item.innerHTML = `<a href="web_story.html?id=${id}">Lanjut Cerita ${id}</a>`;
-      list.appendChild(item);
-    });
-    container.innerHTML = "<h3>Cerita yang Disimpan:</h3>";
-    container.appendChild(list);
-  }
-});
-
                 const card = document.createElement('div');
                 card.className = 'book-card';
-                card.onclick = () => location.href = `web_story.html?id=${story.id}`;
+                card.setAttribute('data-story-id', story.id);
                 card.innerHTML = `
-    <img src="${thumbnailUrl}" alt="Story Thumbnail" class="book-card-thumbnail">
-    <div class="book-card-content">
-        <h3>${story.title}</h3>
-        <p>Author: ${story.authorName}</p>
-        <p>Genre: ${story.genre || 'N/A'}</p>
-        <div class="book-card-meta vertical-meta">
-            <div class="rating">
-                ${generateStarRatingHtml(averageRating)} ${averageRating} (${ratingsCount} Ratings)
-            </div>
-            <div>
-                <i class="fas fa-eye"></i> ${views} Views 
-                <button class="save-button" onclick="event.stopPropagation(); simpanCerita('${story.id}')">💾</button>
-            </div>
-        </div>
-    </div>
-`;
-                bookGrid.appendChild(card);
+                    <div class="card-click-area" onclick="location.href = 'web_story.html?id=${story.id}'">
+                        <img src="${thumbnailUrl}" alt="Story Thumbnail" class="book-card-thumbnail">
+                        <div class="book-card-content">
+                            <h3>${story.title}</h3>
+                            <p>Author: ${story.authorName}</p>
+                            <p>Genre: ${story.genre || 'N/A'}</p>
+                            <div class="book-card-meta vertical-meta">
+                                <div class="rating">${generateStarRatingHtml(averageRating)} ${averageRating} (${ratingsCount} Ratings)</div>
+                                <div><i class="fas fa-eye"></i> ${views} Views</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn remove-btn" onclick="event.stopPropagation(); removeSavedStory('${story.id}')">Hapus Simpan</button>
+                    </div>
+                `;
+                savedStoriesGrid.appendChild(card);
             }
         }
+        window.displaySavedStories = displaySavedStories; // Membuat fungsi dapat diakses secara global
 
-        // Fetch all books once and store them
-        async function fetchAllStories() {
-            const storiesCollectionRef = collection(db, "stories");
-            const q = query(storiesCollectionRef);
-
-            try {
-                const querySnapshot = await getDocs(q);
-                allStories = querySnapshot.docs
-                    .map(doc => ({ id: doc.id, ...doc.data() }))
-                    .filter(story => story.status === 'approved'); // Filter approved stories initially
-                
-                displayBooks(allStories); // Display all approved books on initial load
-            } catch (error) {
-                console.error("Error fetching all stories:", error);
-                document.getElementById('bookGrid').innerHTML = '<p style="text-align: center; color: var(--text-color);">Failed to load stories. Please try again later.</p>';
-            }
+        // Fungsi untuk mengalihkan tampilan antara katalog utama dan cerita yang disimpan
+        function showSavedStories() {
+            document.getElementById('catalog-section').classList.remove('active');
+            document.getElementById('bookGrid').style.display = 'none'; // Sembunyikan grid katalog
+            
+            document.getElementById('saved-stories-section').classList.add('active');
+            document.getElementById('savedStoriesGrid').style.display = 'flex'; // Tampilkan grid cerita tersimpan
+            
+            displaySavedStories(); // Muat dan tampilkan cerita yang disimpan
         }
-function simpanCerita(id) {
-  let ceritaTersimpan = JSON.parse(localStorage.getItem('ceritaFavorit')) || [];
+        window.showSavedStories = showSavedStories; // Membuat fungsi dapat diakses secara global
 
-  if (!ceritaTersimpan.includes(id)) {
-    ceritaTersimpan.push(id);
-    localStorage.setItem('ceritaFavorit', JSON.stringify(ceritaTersimpan));
-    alert("Cerita berhasil disimpan!");
-  } else {
-    alert("Cerita sudah disimpan sebelumnya.");
-  }
-}
+        // Fungsi untuk kembali ke katalog utama
+        function showCatalog() {
+            document.getElementById('saved-stories-section').classList.remove('active');
+            document.getElementById('savedStoriesGrid').style.display = 'none'; // Sembunyikan grid cerita tersimpan
 
-        // Function to filter books based on search input and genre selection
-        function filterBooks() {
-            const searchInput = document.getElementById('searchBar').value.toLowerCase();
-            const selectedGenre = document.getElementById('genreFilter').value;
-
-            const filteredStories = allStories.filter(story => {
-                const matchesSearch = story.title.toLowerCase().includes(searchInput) ||
-                                      story.authorName.toLowerCase().includes(searchInput);
-                const matchesGenre = selectedGenre === "" || (story.genre && story.genre === selectedGenre); // Ensure story.genre exists
-
-                return matchesSearch && matchesGenre;
-            });
-
-            displayBooks(filteredStories);
+            document.getElementById('catalog-section').classList.add('active');
+            document.getElementById('bookGrid').style.display = 'flex'; // Tampilkan grid katalog
+            
+            filterBooks(); // Perbarui dan tampilkan katalog
         }
-        window.filterBooks = filterBooks; // Make it globally accessible for onkeyup/onchange
+        // Tambahkan ini agar link logo bisa kembali ke katalog
+        document.querySelector('.logo').onclick = (event) => {
+            event.preventDefault(); // Mencegah navigasi default
+            showCatalog();
+        };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            applyTheme();
-            fetchAllStories(); // Fetch all stories on page load
-        });
-      function tampilkanCeritaTersimpanKeNav() {
-  const container = document.getElementById('ceritaTersimpanContainer');
-  const saved = JSON.parse(localStorage.getItem('ceritaFavorit')) || [];
 
-  container.innerHTML = ""; // Kosongkan kontainer dulu
-
-  if (saved.length === 0) {
-    container.innerHTML = `<a href="#" style="pointer-events:none; color:#888;">No Saved Stories</a>`;
-    return;
-  }
-
-  saved.forEach(id => {
-    const link = document.createElement('a');
-    link.href = `web_story.html?id=${id}`;
-    link.textContent = `Lanjut Cerita ${id}`;
-    container.appendChild(link);
-  });
-}
-
-    </script>
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme();
+            fetchAllStories(); // Fetch all stories on page load
+        });
+    </script>
 </body>
 </html>
