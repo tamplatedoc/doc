@@ -1,28 +1,248 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kontak Kami - AMDF.Group</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak Kami - AMDF.Group</title>
     <link rel="icon" href="images/FAVVV.png" type="image/png">
-  <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <style>
+        /* Gaya tambahan atau override khusus untuk halaman kontak jika diperlukan */
+        /* Menggunakan kelas dari CSS sebelumnya untuk konsistensi */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6; /* Light background, harusnya sudah diatur di style.css */
+            color: #333; /* Dark text, harusnya sudah diatur di style.css */
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 800px; /* Lebar maksimum seperti dashboard */
+            margin: 30px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        h1, h2 {
+            color: #3498db; /* Warna biru konsisten */
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        .contact-info p {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            color: #555;
+        }
+
+        .social-links ul {
+            list-style: none;
+            padding: 0;
+            display: flex; /* Untuk menata item secara horizontal */
+            justify-content: center; /* Pusatkan item */
+            gap: 20px; /* Jarak antar item */
+            margin-top: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap; /* Agar responsif di layar kecil */
+        }
+
+        .social-links li {
+            font-size: 1.2em;
+        }
+
+        .social-links a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Jarak antara ikon dan teks */
+        }
+
+        .social-links a:hover {
+            color: #2980b9;
+        }
+
+        .social-links a i {
+            font-size: 1.5em; /* Ukuran ikon */
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-container .btn { /* Menggunakan kelas .btn yang sudah ada dari CSS sebelumnya */
+            display: inline-block; /* Agar bisa diatur padding dan margin */
+            margin: 0 10px; /* Jarak antar tombol jika ada lebih dari satu */
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            cursor: pointer;
+            border: 1px solid;
+        }
+
+        /* Gaya spesifik untuk tombol */
+        .btn.primary { /* Anda bisa menggunakan kelas ini untuk tombol utama seperti 'Kirim Pesan' */
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .btn.primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .btn.back { /* Anda bisa menggunakan kelas ini untuk tombol 'Kembali' */
+            background-color: #95a5a6; /* Warna abu-abu yang lebih netral */
+            color: white;
+            border-color: #95a5a6;
+        }
+        .btn.back:hover {
+            background-color: #7f8c8d;
+            border-color: #7f8c8d;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            main {
+                padding: 20px;
+                margin: 20px auto;
+            }
+            .social-links ul {
+                flex-direction: column; /* Tumpuk item sosial di layar kecil */
+                align-items: center;
+                gap: 15px;
+            }
+            .btn-container .btn {
+                width: calc(100% - 20px); /* Hampir selebar layar */
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Dark Mode compatibility */
+        body.dark-mode main {
+            background-color: #34495e;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode .contact-info p {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .social-links a {
+            color: #85c1e9;
+        }
+        body.dark-mode .social-links a:hover {
+            color: #aed6f1;
+        }
+
+        body.dark-mode .btn.primary {
+            background-color: #3a536f;
+            color: #ecf0f1;
+            border-color: #55799e;
+        }
+        body.dark-mode .btn.primary:hover {
+            background-color: #4a6c8e;
+        }
+
+        body.dark-mode .btn.back {
+            background-color: #7f8c8d;
+            border-color: #95a5a6;
+            color: #ecf0f1;
+        }
+        body.dark-mode .btn.back:hover {
+            background-color: #6c7a89;
+        }
+
+    </style>
 </head>
 <body>
-<header>AMDF.Group</header>
-<main>
-  <h2>Kontak Kami</h2>
-  <p>
-    Silakan hubungi kami melalui email <a href="mailto:info@amdf.web.id">📧info@amdf.web.id</a> atau melalui media sosial:
+    <header>
+        <a href="catalog.html" class="logo">AMDF.GROUP</a>
+        <div class="header-actions">
+            <div class="mode-toggle" onclick="toggleDarkMode()">
+                <div class="circle"></div>
+            </div>
+        </div>
+    </header>
 
-  </p>
-  <ul>
-    <li>Instagram: <a href="https://www.instagram.com/ahmad.fahril16/?utm_source=qr#" target="_blank">📷ahmad.fahril16</a></li>
-    <li>WhatsApp: <a href="kunci.html" target="_blank">☎️WA</a></li>
-  </ul>
-    <button type="submit">Kirim Pesan</button>
-    <a class="btn-kembali" href="index.html">⬅ Kembali</a>
-  </form>
-</main>
-  <script type='text/javascript' src='//pl27093314.profitableratecpm.com/fa/77/8c/fa778c656545a5105858d9d11511d106.js'></script>
+    <main>
+        <section class="dashboard-header"> <h1>Kontak Kami</h1>
+            <p class="contact-info">
+                Silakan hubungi kami melalui email:
+            </p>
+            <p class="contact-info">
+                <a href="mailto:info@amdf.web.id">📧 info@amdf.web.id</a>
+            </p>
+        </section>
+
+        <section class="social-media-links">
+            <h2>Media Sosial</h2>
+            <ul class="social-links">
+                <li><a href="https://www.instagram.com/ahmad.fahril16/?utm_source=qr#" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                </ul>
+        </section>
+
+        <section class="action-buttons">
+            <div class="btn-container">
+                <button type="button" class="btn primary">Kirim Pesan</button>
+                <a class="btn back" href="index.html">⬅ Kembali</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 AMDF.Group. All rights reserved.</p>
+        <nav>
+            <a href="privacy.html">Privacy Policy</a> |
+            <a href="terms.html">Terms of Service</a>
+        </nav>
+    </footer>
+
+    <script type='text/javascript' src='//pl27093314.profitableratecpm.com/fa/77/8c/fa778c656545a5105858d9d11511d106.js'></script>
+    <script>
+        // Logika Dark Mode (diambil dari script dashboard Anda)
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme(); // Apply theme on load
+            const toggleButton = document.querySelector('.mode-toggle');
+            if (toggleButton) {
+                toggleButton.addEventListener('click', toggleDarkMode);
+            }
+        });
+    </script>
 </body>
 </html>
