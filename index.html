@@ -520,7 +520,7 @@
             <a href="contact.html">Contact Us</a>
             <a href="about.html">About</a>
             <a href="privacy_policy.html">Privacy Policy</a>
-          <div id="ceritaTersimpanContainer"></div>
+        <div id="ceritaTersimpanContainer" style="margin-top:10px;"></div>
             <div class="mode-toggle" onclick="toggleDarkMode()">
                 <div class="circle"></div>
             </div>
@@ -772,6 +772,25 @@ function simpanCerita(id) {
             applyTheme();
             fetchAllStories(); // Fetch all stories on page load
         });
+      function tampilkanCeritaTersimpanKeNav() {
+  const container = document.getElementById('ceritaTersimpanContainer');
+  const saved = JSON.parse(localStorage.getItem('ceritaFavorit')) || [];
+
+  container.innerHTML = ""; // Kosongkan kontainer dulu
+
+  if (saved.length === 0) {
+    container.innerHTML = `<a href="#" style="pointer-events:none; color:#888;">No Saved Stories</a>`;
+    return;
+  }
+
+  saved.forEach(id => {
+    const link = document.createElement('a');
+    link.href = `web_story.html?id=${id}`;
+    link.textContent = `Lanjut Cerita ${id}`;
+    container.appendChild(link);
+  });
+}
+
     </script>
 </body>
 </html>
