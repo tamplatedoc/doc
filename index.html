@@ -308,6 +308,14 @@
         padding: 8px;
     }
 
+  .save-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 8px;
+}
+
     @media (min-width: 600px) and (max-width: 992px) { /* Tablet view: 3 columns */
         .book-card {
             flex: 1 1 calc(33.333% - 12px);
@@ -512,6 +520,7 @@
             <a href="contact.html">Contact Us</a>
             <a href="about.html">About</a>
             <a href="privacy_policy.html">Privacy Policy</a>
+          <div id="ceritaTersimpanContainer"></div>
             <div class="mode-toggle" onclick="toggleDarkMode()">
                 <div class="circle"></div>
             </div>
@@ -673,20 +682,42 @@
                     }
                 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('ceritaTersimpanContainer');
+  const saved = JSON.parse(localStorage.getItem('ceritaFavorit')) || [];
+  
+  if (saved.length > 0) {
+    const list = document.createElement('ul');
+    saved.forEach(id => {
+      const item = document.createElement('li');
+      item.innerHTML = `<a href="web_story.html?id=${id}">Lanjut Cerita ${id}</a>`;
+      list.appendChild(item);
+    });
+    container.innerHTML = "<h3>Cerita yang Disimpan:</h3>";
+    container.appendChild(list);
+  }
+});
+
                 const card = document.createElement('div');
                 card.className = 'book-card';
                 card.onclick = () => location.href = `web_story.html?id=${story.id}`;
                 card.innerHTML = `
-                    <img src="${thumbnailUrl}" alt="Story Thumbnail" class="book-card-thumbnail">
-                    <div class="book-card-content">
-                        <h3>${story.title}</h3>
-                        <p>Author: ${story.authorName}</p>
-                        <p>Genre: ${story.genre || 'N/A'}</p> <div class="book-card-meta vertical-meta">
-                            <div class="rating">${generateStarRatingHtml(averageRating)} ${averageRating} (${ratingsCount} Ratings)</div>
-                            <div><i class="fas fa-eye"></i> ${views} Views</div>
-                        </div>
-                    </div>
-                `;
+    <img src="${thumbnailUrl}" alt="Story Thumbnail" class="book-card-thumbnail">
+    <div class="book-card-content">
+        <h3>${story.title}</h3>
+        <p>Author: ${story.authorName}</p>
+        <p>Genre: ${story.genre || 'N/A'}</p>
+        <div class="book-card-meta vertical-meta">
+            <div class="rating">
+                ${generateStarRatingHtml(averageRating)} ${averageRating} (${ratingsCount} Ratings)
+            </div>
+            <div>
+                <i class="fas fa-eye"></i> ${views} Views 
+                <button class="save-button" onclick="event.stopPropagation(); simpanCerita('${story.id}')">💾</button>
+            </div>
+        </div>
+    </div>
+`;
                 bookGrid.appendChild(card);
             }
         }
@@ -708,6 +739,17 @@
                 document.getElementById('bookGrid').innerHTML = '<p style="text-align: center; color: var(--text-color);">Failed to load stories. Please try again later.</p>';
             }
         }
+function simpanCerita(id) {
+  let ceritaTersimpan = JSON.parse(localStorage.getItem('ceritaFavorit')) || [];
+
+  if (!ceritaTersimpan.includes(id)) {
+    ceritaTersimpan.push(id);
+    localStorage.setItem('ceritaFavorit', JSON.stringify(ceritaTersimpan));
+    alert("Cerita berhasil disimpan!");
+  } else {
+    alert("Cerita sudah disimpan sebelumnya.");
+  }
+}
 
         // Function to filter books based on search input and genre selection
         function filterBooks() {
