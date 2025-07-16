@@ -460,173 +460,194 @@
         </nav>
     </footer>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-        import { getDatabase, ref as rtdbRef, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
-        import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { getDatabase, ref as rtdbRef, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+    import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-storage.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
-            authDomain: "tamplatedoc.firebaseapp.com",
-            databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "tamplatedoc",
-            storageBucket: "tamplatedoc.firebasestorage.app",
-            messagingSenderId: "264966107720",
-            appId: "1:264966107720:web:868abe93cdff209040de7d",
-            measurementId: "G-S5WTZ7S5PG"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDeiLybtGc6evATj5O7M1FiJd1GPYd-rYc",
+        authDomain: "tamplatedoc.firebaseapp.com",
+        databaseURL: "https://tamplatedoc-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "tamplatedoc",
+        storageBucket: "tamplatedoc.firebasestorage.app",
+        messagingSenderId: "264966107720",
+        appId: "1:264966107720:web:868abe93cdff209040de7d",
+        measurementId: "G-S5WTZ7S5PG"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const rtdb = getDatabase(app);
-        const storage = getStorage(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const rtdb = getDatabase(app);
+    const storage = getStorage(app);
 
-        function applyTheme() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
+    function applyTheme() {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
         }
-        document.addEventListener('DOMContentLoaded', applyTheme);
+    }
+    document.addEventListener('DOMContentLoaded', applyTheme);
 
-        const storyTitleElem = document.getElementById('storyTitle');
-        const storyAuthorElem = document.getElementById('storyAuthor');
-        const storyGenreElem = document.getElementById('storyGenre');
-        const storyThumbnailElem = document.getElementById('storyThumbnail');
-        const storyContentElem = document.getElementById('storyContent');
-        const speakerButton = document.getElementById('speakerButton');
-        const ratingStars = document.getElementById('ratingStars');
-        const ratingMessage = document.getElementById('ratingMessage');
-        const commentForm = document.getElementById('commentForm');
-        const commentInput = document.getElementById('commentInput');
-        const commentsList = document.getElementById('commentsList');
+    const storyTitleElem = document.getElementById('storyTitle');
+    const storyAuthorElem = document.getElementById('storyAuthor');
+    const storyGenreElem = document.getElementById('storyGenre');
+    const storyThumbnailElem = document.getElementById('storyThumbnail');
+    const storyContentElem = document.getElementById('storyContent');
+    const speakerButton = document.getElementById('speakerButton');
+    const ratingStars = document.getElementById('ratingStars');
+    const ratingMessage = document.getElementById('ratingMessage');
+    const commentForm = document.getElementById('commentForm');
+    const commentInput = document.getElementById('commentInput');
+    const commentsList = document.getElementById('commentsList');
 
-        let currentStoryId = '';
+    let currentStoryId = '';
 
-        function getStoryIdFromUrl() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('id');
+    function getStoryIdFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('id');
+    }
+
+    async function loadStory(storyId) {
+        if (!storyId) {
+            storyTitleElem.textContent = "Error: Story Not Found";
+            storyContentElem.innerHTML = "Please return to the <a href='catalog.html'>catalog</a> and select a valid story.";
+            return;
         }
 
-        async function loadStory(storyId) {
-            if (!storyId) {
-                storyTitleElem.textContent = "Error: Story Not Found";
-                storyContentElem.innerHTML = "Please return to the <a href='catalog.html'>catalog</a> and select a valid story.";
-                return;
-            }
+        currentStoryId = storyId;
 
-            currentStoryId = storyId;
+        try {
+            const storyDocRef = doc(db, "stories", storyId);
+            const storyDocSnap = await getDoc(storyDocRef);
 
-            try {
-                const storyDocRef = doc(db, "stories", storyId);
-                const storyDocSnap = await getDoc(storyDocRef);
+            if (storyDocSnap.exists()) {
+                const storyData = storyDocSnap.data();
+                storyTitleElem.textContent = storyData.title;
+                storyAuthorElem.textContent = storyData.authorName;
+                storyGenreElem.textContent = storyData.genre;
+                storyContentElem.textContent = storyData.content;
+                document.title = `${storyData.title} - AMDF.GROUP`;
 
-                if (storyDocSnap.exists()) {
-                    const storyData = storyDocSnap.data();
-                    storyTitleElem.textContent = storyData.title;
-                    storyAuthorElem.textContent = storyData.authorName;
-                    storyGenreElem.textContent = storyData.genre;
-                    storyContentElem.textContent = storyData.content;
-                    document.title = `${storyData.title} - AMDF.GROUP`;
-
-                    if (storyData.thumbnailPath) {
-                        try {
-                            const imageRef = storageRef(storage, storyData.thumbnailPath);
-                            const imageUrl = await getDownloadURL(imageRef);
-                            storyThumbnailElem.src = imageUrl;
-                        } catch (error) {
-                            storyThumbnailElem.src = 'https://via.placeholder.com/600x400/eee/333?text=Image+Load+Error';
-                        }
-                    } else {
-                        storyThumbnailElem.src = 'https://via.placeholder.com/600x400/eee/333?text=No+Thumbnail';
+                if (storyData.thumbnailPath) {
+                    try {
+                        const imageRef = storageRef(storage, storyData.thumbnailPath);
+                        const imageUrl = await getDownloadURL(imageRef);
+                        storyThumbnailElem.src = imageUrl;
+                    } catch (error) {
+                        storyThumbnailElem.src = 'https://via.placeholder.com/600x400/eee/333?text=Image+Load+Error';
                     }
-                    
-                    const viewsRef = rtdbRef(rtdb, `storyViews/${storyId}/views`);
-                    runTransaction(viewsRef, (currentViews) => {
-                        return (currentViews || 0) + 1;
-                    });
-
-                    listenForAverageRating(storyId);
                 } else {
-                    storyTitleElem.textContent = "Story Not Found";
-                    storyContentElem.innerHTML = "The story you are looking for does not exist. Please return to the <a href='catalog.html'>catalog</a>.";
+                    storyThumbnailElem.src = 'https://via.placeholder.com/600x400/eee/333?text=No+Thumbnail';
                 }
-            } catch (error) {
-                storyTitleElem.textContent = "Error Loading Story";
-                storyContentElem.innerHTML = "An error occurred while loading the story. Please try again later.";
+                
+                const viewsRef = rtdbRef(rtdb, `storyViews/${storyId}/views`);
+                runTransaction(viewsRef, (currentViews) => {
+                    return (currentViews || 0) + 1;
+                });
+
+                listenForAverageRating(storyId);
+            } else {
+                storyTitleElem.textContent = "Story Not Found";
+                storyContentElem.innerHTML = "The story you are looking for does not exist. Please return to the <a href='catalog.html'>catalog</a>.";
+            }
+        } catch (error) {
+            storyTitleElem.textContent = "Error Loading Story";
+            storyContentElem.innerHTML = "An error occurred while loading the story. Please try again later.";
+        }
+    }
+
+    let currentUtterance = null; // Variabel untuk menyimpan instance SpeechSynthesisUtterance
+
+    /**
+     * Mendeteksi bahasa dari teks berdasarkan keberadaan kata-kata umum.
+     * Ini adalah metode sederhana dan mungkin tidak 100% akurat untuk semua teks.
+     * @param {string} text - Teks yang akan dideteksi bahasanya.
+     * @returns {string} - Kode bahasa ('en-US' untuk Inggris, 'id-ID' untuk Indonesia).
+     */
+    function detectLanguage(text) {
+        const lowerCaseText = text.toLowerCase();
+        const indonesianKeywords = ['dan', 'yang', 'untuk', 'dengan', 'saya', 'adalah'];
+        const englishKeywords = ['the', 'and', 'for', 'with', 'i', 'is'];
+
+        let indonesianCount = 0;
+        for (const keyword of indonesianKeywords) {
+            if (lowerCaseText.includes(keyword)) {
+                indonesianCount++;
             }
         }
 
-        let currentUtterance = null; // Variabel untuk menyimpan instance SpeechSynthesisUtterance
+        let englishCount = 0;
+        for (const keyword of englishKeywords) {
+            if (lowerCaseText.includes(keyword)) {
+                englishCount++;
+            }
+        }
 
-        speakerButton.addEventListener('click', () => {
-            const storyText = storyContentElem.textContent;
+        if (indonesianCount > englishCount) {
+            return 'id-ID';
+        } else {
+            return 'en-US'; // Default ke Inggris jika tidak ada deteksi kuat
+        }
+    }
 
-            if ('speechSynthesis' in window) {
-                if (speechSynthesis.speaking) {
-                    // Jika sedang berbicara, hentikan
-                    speechSynthesis.cancel();
+    speakerButton.addEventListener('click', () => {
+        const storyText = storyContentElem.textContent;
+
+        if ('speechSynthesis' in window) {
+            if (speechSynthesis.speaking) {
+                // Jika sedang berbicara, hentikan
+                speechSynthesis.cancel();
+                speakerButton.innerHTML = '<i class="fas fa-volume-up"></i> Listen to Story';
+                speakerButton.style.background = 'linear-gradient(45deg, #11998e 0%, #38ef7d 100%)'; // Kembalikan warna awal
+            } else {
+                // Jika tidak berbicara, mulai TTS
+                currentUtterance = new SpeechSynthesisUtterance(storyText);
+                
+                // Deteksi bahasa dan atur properti lang
+                currentUtterance.lang = detectLanguage(storyText);
+                console.log(`Detected language for TTS: ${currentUtterance.lang}`); // Untuk debugging
+
+                currentUtterance.onend = () => {
+                    // Ketika TTS selesai, kembalikan teks tombol ke "Listen to Story"
                     speakerButton.innerHTML = '<i class="fas fa-volume-up"></i> Listen to Story';
                     speakerButton.style.background = 'linear-gradient(45deg, #11998e 0%, #38ef7d 100%)'; // Kembalikan warna awal
-                } else {
-                    // Jika tidak berbicara, mulai TTS
-                    currentUtterance = new SpeechSynthesisUtterance(storyText);
-                    currentUtterance.lang = 'id-ID';
+                };
 
-                    currentUtterance.onend = () => {
-                        // Ketika TTS selesai, kembalikan teks tombol ke "Listen to Story"
-                        speakerButton.innerHTML = '<i class="fas fa-volume-up"></i> Listen to Story';
-                        speakerButton.style.background = 'linear-gradient(45deg, #11998e 0%, #38ef7d 100%)'; // Kembalikan warna awal
-                    };
+                currentUtterance.onerror = (event) => {
+                    console.error('SpeechSynthesisUtterance error:', event);
+                    alert("Terjadi kesalahan saat memutar suara.");
+                    speakerButton.innerHTML = '<i class="fas fa-volume-up"></i> Listen to Story';
+                    speakerButton.style.background = 'linear-gradient(45deg, #11998e 0%, #38ef7d 100%)'; // Kembalikan warna awal
+                };
 
-                    currentUtterance.onerror = (event) => {
-                        console.error('SpeechSynthesisUtterance error:', event);
-                        alert("Terjadi kesalahan saat memutar suara.");
-                        speakerButton.innerHTML = '<i class="fas fa-volume-up"></i> Listen to Story';
-                        speakerButton.style.background = 'linear-gradient(45deg, #11998e 0%, #38ef7d 100%)'; // Kembalikan warna awal
-                    };
-
-                    speechSynthesis.speak(currentUtterance);
-                    speakerButton.innerHTML = '<i class="fas fa-volume-mute"></i> Stop Speaking';
-                    speakerButton.style.background = 'linear-gradient(45deg, #ff6b6b 0%, #ee4d2d 100%)'; // Ubah warna tombol menjadi merah saat berbicara
-                }
-            } else {
-                alert("Browser Anda tidak mendukung text-to-speech. Silakan coba browser lain.");
+                speechSynthesis.speak(currentUtterance);
+                speakerButton.innerHTML = '<i class="fas fa-volume-mute"></i> Stop Speaking';
+                speakerButton.style.background = 'linear-gradient(45deg, #ff6b6b 0%, #ee4d2d 100%)'; // Ubah warna tombol menjadi merah saat berbicara
             }
-        });
+        } else {
+            alert("Browser Anda tidak mendukung text-to-speech. Silakan coba browser lain.");
+        }
+    });
 
-        // Tambahkan event listener untuk mengembalikan tombol ke keadaan awal jika pengguna menghentikan secara manual (misal dengan menutup tab)
-        window.addEventListener('beforeunload', () => {
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
-            }
-        });
+    // Tambahkan event listener untuk mengembalikan tombol ke keadaan awal jika pengguna menghentikan secara manual (misal dengan menutup tab)
+    window.addEventListener('beforeunload', () => {
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+    });
 
 
-        let userRating = 0;
+    let userRating = 0;
 
-        ratingStars.addEventListener('mouseover', (e) => {
-            if (e.target.tagName === 'I') {
-                const hoveredRating = parseInt(e.target.dataset.rating);
-                Array.from(ratingStars.children).forEach(star => {
-                    const starRating = parseInt(star.dataset.rating);
-                    if (starRating <= hoveredRating) {
-                        star.classList.add('active', 'fas');
-                        star.classList.remove('far');
-                    } else {
-                        star.classList.remove('active', 'fas');
-                        star.classList.add('far');
-                    }
-                });
-            }
-        });
-
-        ratingStars.addEventListener('mouseout', () => {
+    ratingStars.addEventListener('mouseover', (e) => {
+        if (e.target.tagName === 'I') {
+            const hoveredRating = parseInt(e.target.dataset.rating);
             Array.from(ratingStars.children).forEach(star => {
                 const starRating = parseInt(star.dataset.rating);
-                if (starRating <= userRating) {
+                if (starRating <= hoveredRating) {
                     star.classList.add('active', 'fas');
                     star.classList.remove('far');
                 } else {
@@ -634,109 +655,126 @@
                     star.classList.add('far');
                 }
             });
-        });
+        }
+    });
 
-        ratingStars.addEventListener('click', async (e) => {
-            if (e.target.tagName === 'I') {
-                const clickedRating = parseInt(e.target.dataset.rating);
-                userRating = clickedRating;
-                ratingMessage.textContent = `You rated ${userRating} stars!`;
-
-                try {
-                    const ratingRef = rtdbRef(rtdb, `storyRatings/${currentStoryId}/ratings`);
-                    await runTransaction(ratingRef, (currentRatings) => {
-                        if (!currentRatings) {
-                            return { total: clickedRating, count: 1 };
-                        }
-                        currentRatings.total = (currentRatings.total || 0) + clickedRating;
-                        currentRatings.count = (currentRatings.count || 0) + 1;
-                        return currentRatings;
-                    });
-                } catch (error) {
-                    ratingMessage.textContent = "Failed to submit rating. Please try again.";
-                }
+    ratingStars.addEventListener('mouseout', () => {
+        Array.from(ratingStars.children).forEach(star => {
+            const starRating = parseInt(star.dataset.rating);
+            if (starRating <= userRating) {
+                star.classList.add('active', 'fas');
+                star.classList.remove('far');
+            } else {
+                star.classList.remove('active', 'fas');
+                star.classList.add('far');
             }
         });
+    });
 
-        function listenForAverageRating(storyId) {
-            const ratingsRef = rtdbRef(rtdb, `storyRatings/${storyId}/ratings`);
-            onValue(ratingsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data && data.count > 0) {
-                    const average = (data.total / data.count).toFixed(1);
-                } else {
-                }
-            });
-        }
-
-        function generateRandomCommentId() {
-            const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
-            let result = '';
-            for (let i = 0; i < 3; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-
-        commentForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const commentText = commentInput.value.trim();
-
-            if (commentText.length > 100) {
-                alert("Comment cannot exceed 100 characters.");
-                return;
-            }
-            if (!commentText) {
-                alert("Comment cannot be empty.");
-                return;
-            }
+    ratingStars.addEventListener('click', async (e) => {
+        if (e.target.tagName === 'I') {
+            const clickedRating = parseInt(e.target.dataset.rating);
+            userRating = clickedRating;
+            ratingMessage.textContent = `You rated ${userRating} stars!`;
 
             try {
-                await addDoc(collection(db, "stories", currentStoryId, "comments"), {
-                    comment_id: generateRandomCommentId(),
-                    text: commentText,
-                    timestamp: new Date()
+                const ratingRef = rtdbRef(rtdb, `storyRatings/${currentStoryId}/ratings`);
+                await runTransaction(ratingRef, (currentRatings) => {
+                    if (!currentRatings) {
+                        return { total: clickedRating, count: 1 };
+                    }
+                    currentRatings.total = (currentRatings.total || 0) + clickedRating;
+                    currentRatings.count = (currentRatings.count || 0) + 1;
+                    return currentRatings;
                 });
-                commentInput.value = '';
             } catch (error) {
-                alert("Failed to post comment. Please try again.");
+                ratingMessage.textContent = "Failed to submit rating. Please try again.";
+            }
+        }
+    });
+
+    function listenForAverageRating(storyId) {
+        const ratingsRef = rtdbRef(rtdb, `storyRatings/${storyId}/ratings`);
+        onValue(ratingsRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data && data.count > 0) {
+                const average = (data.total / data.count).toFixed(1);
+                // Anda bisa menampilkan rata-rata rating di sini jika diinginkan
+                // Contoh: document.getElementById('averageRating').textContent = `Average Rating: ${average}`;
+            } else {
+                // console.log("No ratings yet.");
             }
         });
+    }
 
-        function listenForComments(storyId) {
-            const commentsCollectionRef = collection(db, "stories", storyId, "comments");
-            const q = query(commentsCollectionRef, orderBy("timestamp", "asc"));
+    function generateRandomCommentId() {
+        const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+        let result = '';
+        for (let i = 0; i < 3; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
 
-            onSnapshot(q, (snapshot) => {
-                commentsList.innerHTML = '';
-                snapshot.forEach((doc) => {
-                    const commentData = doc.data();
-                    const commentItem = document.createElement('div');
-                    commentItem.className = 'comment-item';
-                    commentItem.innerHTML = `
-                        <div class="comment-header">
-                            <span class="comment-id">ID: ${commentData.comment_id}</span>
-                        </div>
-                        <p class="comment-text">${commentData.text}</p>
-                    `;
-                    commentsList.appendChild(commentItem);
-                });
-            }, (error) => {
-                commentsList.innerHTML = '<p style="color: var(--text-color);">Failed to load comments.</p>';
-            });
+    commentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const commentText = commentInput.value.trim();
+
+        if (commentText.length > 100) {
+            alert("Comment cannot exceed 100 characters.");
+            return;
+        }
+        if (!commentText) {
+            alert("Comment cannot be empty.");
+            return;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const storyId = getStoryIdFromUrl();
-            if (storyId) {
-                loadStory(storyId);
-                listenForComments(storyId);
-            } else {
-                storyTitleElem.textContent = "No Story Selected";
-                storyContentElem.innerHTML = "Please go back to the <a href='catalog.html'>catalog</a> to select a story.";
-            }
+        try {
+            await addDoc(collection(db, "stories", currentStoryId, "comments"), {
+                comment_id: generateRandomCommentId(),
+                text: commentText,
+                timestamp: new Date()
+            });
+            commentInput.value = '';
+        } catch (error) {
+            alert("Failed to post comment. Please try again.");
+        }
+    });
+
+    function listenForComments(storyId) {
+        const commentsCollectionRef = collection(db, "stories", storyId, "comments");
+        const q = query(commentsCollectionRef, orderBy("timestamp", "asc"));
+
+        onSnapshot(q, (snapshot) => {
+            commentsList.innerHTML = '';
+            snapshot.forEach((doc) => {
+                const commentData = doc.data();
+                const commentItem = document.createElement('div');
+                commentItem.className = 'comment-item';
+                commentItem.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-id">ID: ${commentData.comment_id}</span>
+                    </div>
+                    <p class="comment-text">${commentData.text}</p>
+                `;
+                commentsList.appendChild(commentItem);
+            });
+        }, (error) => {
+            commentsList.innerHTML = '<p style="color: var(--text-color);">Failed to load comments.</p>';
         });
-    </script>
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const storyId = getStoryIdFromUrl();
+        if (storyId) {
+            loadStory(storyId);
+            listenForComments(storyId);
+        } else {
+            storyTitleElem.textContent = "No Story Selected";
+            storyContentElem.innerHTML = "Please go back to the <a href='catalog.html'>catalog</a> to select a story.";
+        }
+    });
+</script>
             <script async="async" data-cfasync="false" src="//pl27093350.profitableratecpm.com/830ae6ee7b7572376212c48dff0eeeb8/invoke.js"></script>
 <div id="container-830ae6ee7b7572376212c48dff0eeeb8"></div>
 </body>
