@@ -26,8 +26,13 @@
             --toggle-bg: #ddd;
             --toggle-circle-bg: #fff;
             --toggle-shadow: rgba(0, 0, 0, 0.2);
-            --footer-bg: #333;
-            --footer-text: #eee;
+            /* New colors for social buttons */
+            --google-blue: #4285F4;
+            --google-blue-hover: #357ae8;
+            --apple-black: #000000;
+            --apple-black-hover: #333333;
+            --apple-white-text: #ffffff;
+            --divider-color: #e0e0e0;
         }
 
         body.dark-mode {
@@ -49,8 +54,13 @@
             --toggle-bg: #555;
             --toggle-circle-bg: #bbb;
             --toggle-shadow: rgba(0, 0, 0, 0.4);
-            --footer-bg: #111;
-            --footer-text: #bbb;
+            /* Dark mode for social buttons */
+            --google-blue: #4285F4; /* Keep Google blue consistent */
+            --google-blue-hover: #357ae8;
+            --apple-black: #e0e0e0; /* Lighter color for Apple in dark mode */
+            --apple-black-hover: #ffffff;
+            --apple-white-text: #000000; /* Darker text for Apple in dark mode */
+            --divider-color: #555555;
         }
 
         * {
@@ -261,6 +271,77 @@
             box-shadow: 0 5px 15px var(--container-shadow);
         }
 
+        .social-login {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* Space between social buttons */
+        }
+
+        .social-login button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.9rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .social-login button i {
+            margin-right: 0.8rem;
+            font-size: 1.3em;
+        }
+
+        .social-login .google-btn {
+            background-color: var(--google-blue);
+            color: #fff;
+        }
+
+        .social-login .google-btn:hover {
+            background-color: var(--google-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        .social-login .apple-btn {
+            background-color: var(--apple-black);
+            color: var(--apple-white-text);
+        }
+
+        .social-login .apple-btn:hover {
+            background-color: var(--apple-black-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--container-shadow);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--text-color);
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--divider-color);
+        }
+
+        .divider:not(:empty)::before {
+            margin-right: .25em;
+        }
+
+        .divider:not(:empty)::after {
+            margin-left: .25em;
+        }
+
         footer {
             background-color: var(--footer-bg);
             color: var(--footer-text);
@@ -308,7 +389,7 @@
             .auth-container h2 {
                 font-size: 1.8rem;
             }
-            .form-group input, .auth-container button {
+            .form-group input, .auth-container button, .social-login button {
                 padding: 0.7rem;
                 font-size: 1rem;
             }
@@ -380,7 +461,13 @@
                 <span id="toggleText">Don't have an account?</span>
                 <a href="#" id="toggleAuth">Register here</a>
             </div>
-        </section>
+
+            <div class="divider">OR</div>
+            <div class="social-login">
+                <button type="button" id="googleLoginBtn" class="google-btn"><i class="fab fa-google"></i> Continue with Google</button>
+                <button type="button" id="appleLoginBtn" class="apple-btn"><i class="fab fa-apple"></i> Continue with Apple</button>
+            </div>
+            </section>
     </main>
 
     <footer>
@@ -394,7 +481,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, OAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
         // Konfigurasi Firebase Anda
@@ -438,6 +525,8 @@
         const toggleAuth = document.getElementById('toggleAuth');
         const toggleText = document.getElementById('toggleText');
         const messageDiv = document.getElementById('message');
+        const googleLoginBtn = document.getElementById('googleLoginBtn'); // New
+        const appleLoginBtn = document.getElementById('appleLoginBtn');   // New
 
         // Login Form Elements
         const loginEmailInput = document.getElementById('loginEmail');
@@ -488,7 +577,28 @@
             handleCodeInApp: true,
         };
 
-        // --- Register Functionality ---
+        // --- Handle User Data Storage in Firestore ---
+        async function saveAuthorData(user, name, email, whatsapp) {
+            const authorDocRef = doc(db, "authors", user.uid);
+            const authorDocSnap = await getDoc(authorDocRef);
+
+            if (!authorDocSnap.exists()) {
+                // Only create if it doesn't exist to avoid overwriting existing manual data
+                await setDoc(authorDocRef, {
+                    name: name || user.displayName || user.email.split('@')[0], // Use provided name, or display name, or part of email
+                    email: email || user.email,
+                    whatsapp: whatsapp || null, // WhatsApp is optional for social logins
+                    uid: user.uid,
+                    providerId: user.providerData[0]?.providerId || 'email/password',
+                    createdAt: new Date()
+                }, { merge: true }); // Use merge to avoid overwriting if partial data exists
+            } else {
+                console.log("Author data already exists for this user, skipping creation.");
+            }
+        }
+
+
+        // --- Register Functionality (Manual Email/PIN) ---
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -509,29 +619,18 @@
             }
 
             try {
-                // Create user with email and PIN (password)
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pin);
                 const user = userCredential.user;
 
-                // Save author details to Firestore
-                await setDoc(doc(db, "authors", user.uid), {
-                    name: authorName,
-                    email: email,
-                    whatsapp: whatsapp,
-                    uid: user.uid,
-                    createdAt: new Date()
-                });
-
-                // Send email verification
+                await saveAuthorData(user, authorName, email, whatsapp);
+                
                 await sendEmailVerification(user);
 
-                // Store email in local storage for magic link sign-in (if using)
                 localStorage.setItem('emailForSignIn', email);
 
                 showMessage(`Registration successful! A verification email has been sent to ${email}. Please check your inbox and click the link to verify your account.`, "success");
                 registerForm.reset();
                 
-                // Optionally, switch to login form after successful registration
                 isLoginMode = true;
                 authTitle.textContent = 'Login as Creator';
                 loginForm.style.display = 'block';
@@ -553,7 +652,7 @@
             }
         });
 
-        // --- Login Functionality (with PIN as password) ---
+        // --- Login Functionality (Manual Email/PIN) ---
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -571,14 +670,15 @@
 
                 if (!user.emailVerified) {
                     showMessage("Your email is not verified. Please check your inbox for a verification link.", "error");
-                    // Optionally, resend verification email if needed
                     await sendEmailVerification(user);
                     showMessage("Verification email resent. Please check your inbox.", "success");
-                    return; // Do not redirect to dashboard if email not verified
+                    return;
                 }
                 
-                // Redirect to dashboard upon successful login and verification
-                window.location.href = 'web_creator.html'; // Or 'web_creator.html'
+                // Save basic author data if not already existing (e.g., if user registered via email/password)
+                await saveAuthorData(user, null, null, null); // Name and WhatsApp are not available from basic email/password auth
+                
+                window.location.href = 'web_creator.html';
                 
             } catch (error) {
                 console.error("Login error:", error);
@@ -591,7 +691,66 @@
                 showMessage(errorMessage, "error");
             }
         });
-        
+
+        // --- Social Login Functionality ---
+
+        // Google Login
+        googleLoginBtn.addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // Save/update author data from Google profile
+                await saveAuthorData(user, user.displayName, user.email, null); // WhatsApp usually not available from social login
+                
+                showMessage("Logged in successfully with Google! Redirecting...", "success");
+                window.location.href = 'web_creator.html';
+            } catch (error) {
+                console.error("Google login error:", error);
+                let errorMessage = "Google login failed. Please try again.";
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = "Login cancelled by user.";
+                } else if (error.code === 'auth/cancelled-popup-request') {
+                    errorMessage = "Please allow pop-ups for Google login.";
+                }
+                showMessage(errorMessage, "error");
+            }
+        });
+
+        // Apple Login (Requires specific configuration on Firebase and Apple Developer account)
+        appleLoginBtn.addEventListener('click', async () => {
+            const provider = new OAuthProvider('apple.com');
+            provider.addScope('email');
+            provider.addScope('name'); // Request name for registration
+
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // Save/update author data from Apple profile
+                // Apple might not always return display name/email on subsequent logins for privacy.
+                // Firebase handles merging, so existing data isn't lost.
+                await saveAuthorData(user, user.displayName, user.email, null);
+                
+                showMessage("Logged in successfully with Apple! Redirecting...", "success");
+                window.location.href = 'web_creator.html';
+            } catch (error) {
+                console.error("Apple login error:", error);
+                let errorMessage = "Apple login failed. Please try again.";
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = "Login cancelled by user.";
+                } else if (error.code === 'auth/cancelled-popup-request') {
+                    errorMessage = "Please allow pop-ups for Apple login.";
+                } else if (error.code === 'auth/account-exists-with-different-credential') {
+                    // This error occurs if the email from Apple is already linked to another provider (e.g., email/password)
+                    errorMessage = "An account with this email already exists. Please login with your existing method.";
+                }
+                showMessage(errorMessage, "error");
+            }
+        });
+
+
         // --- Dark Mode Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             applyTheme();
@@ -601,13 +760,7 @@
             }
         });
 
-        // This script runs on the login_register_creator.html page.
-        // It's not the dashboard script, so the onAuthStateChanged listener
-        // that handles dashboard redirection upon successful login or magic link
-        // needs to be in the dashboard's script (creator_dashboard.html).
-
-        // However, we still need to handle magic link sign-in if a user
-        // lands on THIS page after clicking a magic link.
+        // --- Handle Magic Link Sign-in (existing logic, mostly unchanged) ---
         document.addEventListener('DOMContentLoaded', async () => {
             if (isSignInWithEmailLink(auth, window.location.href)) {
                 console.log("Detected email sign-in link on login/register page.");
@@ -621,13 +774,15 @@
                         const result = await signInWithEmailLink(auth, email, window.location.href);
                         console.log("Magic link sign-in successful:", result.user);
                         window.localStorage.removeItem('emailForSignIn');
+                        
+                        // Save author data for magic link users if not already present
+                        await saveAuthorData(result.user, null, null, null);
+
                         showMessage("Login successful via magic link. Redirecting...", "success");
-                        // Redirect to the dashboard after successful magic link sign-in
-                        window.location.href = 'web_creator.html'; // Or 'web_creator.html'
+                        window.location.href = 'web_creator.html';
                     } catch (error) {
                         console.error("Error signing in with email link:", error);
                         showMessage("Magic link login failed: " + error.message + ". Please try again.", "error");
-                        // Stay on login/register page if magic link failed
                     }
                 } else {
                     showMessage("Email is required to complete verification via magic link.", "error");
